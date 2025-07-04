@@ -1,13 +1,13 @@
-import { getDMMF } from "@prisma/internals";
-import { NextApiRequest, NextApiResponse } from "next";
-import stripAnsi from "strip-ansi";
+import { getDMMF } from '@prisma/internals';
+import { NextApiRequest, NextApiResponse } from 'next';
+import stripAnsi from 'strip-ansi';
 
-import { parseDMMFError } from "~/util";
-import { ErrorTypes } from "~/util/types";
+import { parseDMMFError } from '~/util';
+import { ErrorTypes } from '~/util/types';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    res.status(405).json({ message: "Method Not Allowed" });
+  if (req.method !== 'POST') {
+    res.status(405).json({ message: 'Method Not Allowed' });
     return;
   }
 
@@ -21,7 +21,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     let errors: any;
     let errType: ErrorTypes;
 
-    if (message.includes("error: ")) {
+    if (message.includes('error: ')) {
       errors = parseDMMFError(message);
       errType = ErrorTypes.Prisma;
     } else {

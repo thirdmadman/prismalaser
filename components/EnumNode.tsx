@@ -1,10 +1,10 @@
-import cc from "classcat";
-import React, { useState } from "react";
-import { Handle, Position } from "reactflow";
+import cc from 'classcat';
+import React, { useState } from 'react';
+import { Handle, Position } from 'reactflow';
 
-import styles from "./Node.module.scss";
+import styles from './Node.module.scss';
 
-import { EnumNodeData } from "~/util/types";
+import { EnumNodeData } from '~/util/types';
 
 const MAX_VALUES = 12;
 
@@ -18,32 +18,23 @@ const EnumNode = ({ data }: EnumNodeProps) => {
     >
       <thead title={data.documentation}>
         <tr>
-          <th
-            className="p-2 font-extrabold border-b-2 border-black bg-emerald-200 rounded-t-md"
-            colSpan={1}
-          >
+          <th className="p-2 font-extrabold border-b-2 border-black bg-emerald-200 rounded-t-md" colSpan={1}>
             {data.name}
-            {!!data.dbName && (
-              <span className="font-mono font-normal">
-                &nbsp;({data.dbName})
-              </span>
-            )}
+            {!!data.dbName && <span className="font-mono font-normal">&nbsp;({data.dbName})</span>}
           </th>
         </tr>
       </thead>
       <tbody
         className={cc([
-          "flex",
-          "flex-col",
-          "overflow-hidden",
-          { "max-h-[500px]": !expanded && data.values.length > MAX_VALUES },
+          'flex',
+          'flex-col',
+          'overflow-hidden',
+          { 'max-h-[500px]': !expanded && data.values.length > MAX_VALUES },
         ])}
       >
         {data.values.map((val) => (
           <tr key={val} className={styles.row}>
-            <td className="flex p-2 font-mono border-t-2 border-gray-300">
-              {val}
-            </td>
+            <td className="flex p-2 font-mono border-t-2 border-gray-300">{val}</td>
           </tr>
         ))}
       </tbody>
@@ -56,7 +47,7 @@ const EnumNode = ({ data }: EnumNodeProps) => {
                 className="w-full px-4 py-2 font-semibold bg-blue-200 rounded"
                 onClick={() => setExpanded(!expanded)}
               >
-                {expanded ? "Fold" : "Expand"}
+                {expanded ? 'Fold' : 'Expand'}
               </button>
             </td>
           </tr>

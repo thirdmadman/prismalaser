@@ -1,17 +1,13 @@
-import cc from "classcat";
-import React from "react";
-import { Handle, Position, useReactFlow, useStoreApi } from "reactflow";
+import cc from 'classcat';
+import React from 'react';
+import { Handle, Position, useReactFlow, useStoreApi } from 'reactflow';
 
-import styles from "./Node.module.scss";
+import styles from './Node.module.scss';
 
-import {
-  enumEdgeTargetHandleId,
-  relationEdgeSourceHandleId,
-  relationEdgeTargetHandleId,
-} from "~/util/prismaToFlow";
-import { ModelNodeData } from "~/util/types";
+import { enumEdgeTargetHandleId, relationEdgeSourceHandleId, relationEdgeTargetHandleId } from '~/util/prismaToFlow';
+import { ModelNodeData } from '~/util/types';
 
-type ColumnData = ModelNodeData["columns"][number];
+type ColumnData = ModelNodeData['columns'][number];
 
 const isRelationed = ({ relationData }: ColumnData) => !!relationData?.side;
 
@@ -43,16 +39,9 @@ const ModelNode = ({ data }: ModelNodeProps) => {
     >
       <thead title={data.documentation}>
         <tr>
-          <th
-            className="p-2 font-extrabold bg-gray-200 border-b-2 border-black rounded-t-md"
-            colSpan={4}
-          >
+          <th className="p-2 font-extrabold bg-gray-200 border-b-2 border-black rounded-t-md" colSpan={4}>
             {data.name}
-            {!!data.dbName && (
-              <span className="font-mono font-normal">
-                &nbsp;({data.dbName})
-              </span>
-            )}
+            {!!data.dbName && <span className="font-mono font-normal">&nbsp;({data.dbName})</span>}
           </th>
         </tr>
       </thead>
@@ -62,7 +51,7 @@ const ModelNode = ({ data }: ModelNodeProps) => {
           let targetHandle: JSX.Element | null = null;
           let sourceHandle: JSX.Element | null = null;
 
-          if (col.kind === "enum") {
+          if (col.kind === 'enum') {
             const handleId = enumEdgeTargetHandleId(data.name, col.name);
             targetHandle = (
               <Handle
@@ -75,19 +64,11 @@ const ModelNode = ({ data }: ModelNodeProps) => {
               />
             );
           } else if (col.relationData) {
-            const targetHandleId = relationEdgeTargetHandleId(
-              data.name,
-              col.relationData.name,
-              col.name,
-            );
-            const sourceHandleId = relationEdgeSourceHandleId(
-              data.name,
-              col.relationData.name,
-              col.name,
-            );
+            const targetHandleId = relationEdgeTargetHandleId(data.name, col.relationData.name, col.name);
+            const sourceHandleId = relationEdgeSourceHandleId(data.name, col.relationData.name, col.name);
 
             targetHandle =
-              col.relationData.side === "target" ? (
+              col.relationData.side === 'target' ? (
                 <Handle
                   key={targetHandleId}
                   className={cc([styles.handle, styles.left])}
@@ -98,7 +79,7 @@ const ModelNode = ({ data }: ModelNodeProps) => {
                 />
               ) : null;
             sourceHandle =
-              col.relationData.side === "source" ? (
+              col.relationData.side === 'source' ? (
                 <Handle
                   key={sourceHandleId}
                   className={cc([styles.handle, styles.right])}
@@ -115,11 +96,7 @@ const ModelNode = ({ data }: ModelNodeProps) => {
               <td className="font-mono font-semibold border-t-2 border-r-2 border-gray-300">
                 <button
                   type="button"
-                  className={cc([
-                    "relative",
-                    "p-2",
-                    { "cursor-pointer": reled },
-                  ])}
+                  className={cc(['relative', 'p-2', { 'cursor-pointer': reled }])}
                   onClick={() => {
                     if (!reled) return;
                     focusNode(col.type);
@@ -129,12 +106,10 @@ const ModelNode = ({ data }: ModelNodeProps) => {
                   {targetHandle}
                 </button>
               </td>
-              <td className="p-2 font-mono border-t-2 border-r-2 border-gray-300">
-                {col.displayType}
-              </td>
+              <td className="p-2 font-mono border-t-2 border-r-2 border-gray-300">{col.displayType}</td>
               <td className="font-mono border-t-2 border-gray-300">
                 <div className="relative p-2">
-                  {col.defaultValue || ""}
+                  {col.defaultValue || ''}
                   {sourceHandle}
                 </div>
               </td>

@@ -1,22 +1,16 @@
-import Editor, { useMonaco } from "@monaco-editor/react";
-import React, { useEffect } from "react";
+import Editor, { useMonaco } from '@monaco-editor/react';
+import React, { useEffect } from 'react';
 
-import * as prismaLanguage from "~/util/prisma-language";
+import * as prismaLanguage from '~/util/prisma-language';
 
 const EditorView = ({ value, onChange }: EditorViewProps) => {
   const monaco = useMonaco();
 
   useEffect(() => {
     if (monaco) {
-      monaco.languages.register({ id: "prisma" });
-      monaco.languages.setLanguageConfiguration(
-        "prisma",
-        prismaLanguage.config,
-      );
-      monaco.languages.setMonarchTokensProvider(
-        "prisma",
-        prismaLanguage.language,
-      );
+      monaco.languages.register({ id: 'prisma' });
+      monaco.languages.setLanguageConfiguration('prisma', prismaLanguage.config);
+      monaco.languages.setMonarchTokensProvider('prisma', prismaLanguage.language);
     }
   }, [monaco]);
 
@@ -30,7 +24,7 @@ const EditorView = ({ value, onChange }: EditorViewProps) => {
       options={{
         minimap: { enabled: false },
         smoothScrolling: true,
-        cursorSmoothCaretAnimation: "on",
+        cursorSmoothCaretAnimation: 'on',
         scrollBeyondLastLine: true,
       }}
       value={value}

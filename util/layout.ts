@@ -1,14 +1,14 @@
-import Elk, { ElkExtendedEdge, ElkNode } from "elkjs/lib/elk.bundled";
-import { Edge, Node } from "reactflow";
+import Elk, { ElkExtendedEdge, ElkNode } from 'elkjs/lib/elk.bundled';
+import { Edge, Node } from 'reactflow';
 
-import { EnumNodeData, ModelNodeData } from "./types";
+import { EnumNodeData, ModelNodeData } from './types';
 
 const elk = new Elk({
   defaultLayoutOptions: {
-    "elk.algorithm": "layered",
-    "elk.direction": "DOWN",
-    "elk.spacing.nodeNode": "75",
-    "elk.layered.spacing.nodeNodeBetweenLayers": "75",
+    'elk.algorithm': 'layered',
+    'elk.direction': 'DOWN',
+    'elk.spacing.nodeNode': '75',
+    'elk.layered.spacing.nodeNodeBetweenLayers': '75',
   },
 });
 
@@ -26,12 +26,9 @@ const normalizeSize = (value: number) => Math.max(value, MIN_SIZE) + MARGIN * 2;
  * For enums max height is MAX_ENUM_HEIGHT being height of a folded enum values
  */
 const calculateHeight = (node: Node<EnumNodeData> | Node<ModelNodeData>) => {
-  if (node.data.type === "enum") {
+  if (node.data.type === 'enum') {
     const fieldsHeight = node.data.values.length * FIELD_HEIGHT;
-    const height =
-      fieldsHeight > MAX_ENUM_HEIGHT
-        ? MAX_ENUM_HEIGHT
-        : fieldsHeight + FIELD_HEIGHT;
+    const height = fieldsHeight > MAX_ENUM_HEIGHT ? MAX_ENUM_HEIGHT : fieldsHeight + FIELD_HEIGHT;
 
     return normalizeSize(height);
   }
@@ -46,11 +43,11 @@ const calculateHeight = (node: Node<EnumNodeData> | Node<ModelNodeData>) => {
  * Calculates node width based on column text lengths (CHAR_WIDTH per character in a text field)
  */
 const calculateWidth = (node: Node<EnumNodeData> | Node<ModelNodeData>) => {
-  if (node.data.type === "enum") {
+  if (node.data.type === 'enum') {
     const width =
       node.data.values.reduce(
         (acc, curr) => (acc < curr.length ? curr.length : acc),
-        node.data.name.length + (node.data.dbName?.length || 0),
+        node.data.name.length + (node.data.dbName?.length || 0)
       ) * CHAR_WIDTH;
 
     return normalizeSize(width);
@@ -68,23 +65,17 @@ const calculateWidth = (node: Node<EnumNodeData> | Node<ModelNodeData>) => {
         acc[2] < currDefaultValueLength ? currDefaultValueLength : acc[2],
       ];
     },
-    [0, 0, 0],
+    [0, 0, 0]
   );
 
   const columnsLength = nameLength + typeLength + defaultValueLength;
 
-  const width =
-    headerLength > columnsLength
-      ? headerLength * CHAR_WIDTH
-      : columnsLength * CHAR_WIDTH;
+  const width = headerLength > columnsLength ? headerLength * CHAR_WIDTH : columnsLength * CHAR_WIDTH;
 
   return normalizeSize(width);
 };
 
-export const getLayout = async (
-  nodes: Array<Node<EnumNodeData> | Node<ModelNodeData>>,
-  edges: Edge[],
-) => {
+export const getLayout = async (nodes: Array<Node<EnumNodeData> | Node<ModelNodeData>>, edges: Edge[]) => {
   const elkNodes: ElkNode[] = [];
   const elkEdges: ElkExtendedEdge[] = [];
 
@@ -105,7 +96,7 @@ export const getLayout = async (
   });
 
   const layout = await elk.layout({
-    id: "root",
+    id: 'root',
     children: elkNodes,
     edges: elkEdges,
   });

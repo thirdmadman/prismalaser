@@ -1,19 +1,11 @@
-import cc from "classcat";
-import React from "react";
+import cc from 'classcat';
+import React from 'react';
 
-import styles from "./Layout.module.scss";
-import Nav from "./Nav";
+import styles from './Layout.module.scss';
+import Nav from './Nav';
 
 const Layout = ({ children, noEditor = false }: LayoutProps) => (
-  <main
-    className={cc([
-      styles.grid,
-      "relative",
-      "h-screen",
-      "w-screen",
-      { [styles.noEditor as any]: noEditor },
-    ])}
-  >
+  <main className={cc([styles.grid, 'relative', 'h-screen', 'w-screen', { [styles.noEditor as any]: noEditor }])}>
     <Nav />
     {children}
   </main>

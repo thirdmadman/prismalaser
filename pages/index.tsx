@@ -1,17 +1,17 @@
-import { useMonaco } from "@monaco-editor/react";
-import React, { useEffect, useState } from "react";
-import { useDebounce, useLocalStorage } from "react-use";
-import useFetch from "use-http";
+import { useMonaco } from '@monaco-editor/react';
+import React, { useEffect, useState } from 'react';
+import { useDebounce, useLocalStorage } from 'react-use';
+import useFetch from 'use-http';
 
-import CopyButton from "~/components/CopyButton";
-import EditorView from "~/components/EditorView";
-import FlowView from "~/components/FlowView";
-import Layout from "~/components/Layout";
-import { fromUrlSafeB64 } from "~/util";
-import { ErrorTypes, SchemaError } from "~/util/types";
+import CopyButton from '~/components/CopyButton';
+import EditorView from '~/components/EditorView';
+import FlowView from '~/components/FlowView';
+import Layout from '~/components/Layout';
+import { fromUrlSafeB64 } from '~/util';
+import { ErrorTypes, SchemaError } from '~/util/types';
 
-import type { DMMF } from "@prisma/generator-helper";
-import type { editor } from "monaco-editor";
+import type { DMMF } from '@prisma/generator-helper';
+import type { editor } from 'monaco-editor';
 
 const initial = `
 datasource db {
@@ -50,16 +50,13 @@ enum Role {
 
 const IndexPage = () => {
   // TODO: multiple save states.
-  const [storedText, setStoredText] = useLocalStorage(
-    "prismaliser.text",
-    initial,
-  );
+  const [storedText, setStoredText] = useLocalStorage('prismaliser.text', initial);
   const [text, setText] = useState(storedText!);
   const [schemaErrors, setSchemaErrors] = useState<SchemaError[]>([]);
   const [dmmf, setDMMF] = useState<DMMF.Datamodel | null>(null);
   const [editorVisible, setEditorVisible] = useState(true);
 
-  const { post, response, loading } = useFetch("/api");
+  const { post, response, loading } = useFetch('/api');
   const monaco = useMonaco();
 
   const submit = async () => {
@@ -74,7 +71,7 @@ const IndexPage = () => {
   };
 
   const format = async () => {
-    const resp = await post("/format", { schema: text });
+    const resp = await post('/format', { schema: text });
     if (response.ok) setText(resp.formatted);
   };
 
@@ -94,15 +91,15 @@ const IndexPage = () => {
     }));
     const [model] = monaco.editor.getModels();
 
-    monaco.editor.setModelMarkers(model!, "prismaliser", markers);
+    monaco.editor.setModelMarkers(model!, 'prismaliser', markers);
   }, [monaco, schemaErrors]);
 
   useEffect(() => {
     // Populate state from a shared link if one is present
     const params = new URLSearchParams(location.search);
 
-    if (params.has("code")) {
-      const code = params.get("code")!;
+    if (params.has('code')) {
+      const code = params.get('code')!;
       const decoded = fromUrlSafeB64(code);
 
       setText(decoded);

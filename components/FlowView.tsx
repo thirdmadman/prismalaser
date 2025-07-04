@@ -1,8 +1,8 @@
-import doubleChevron from "@iconify/icons-gg/chevron-double-left";
-import listTree from "@iconify/icons-gg/list-tree";
-import { Icon } from "@iconify/react";
-import { ElkNode } from "elkjs/lib/elk.bundled";
-import React, { useEffect, useState } from "react";
+import doubleChevron from '@iconify/icons-gg/chevron-double-left';
+import listTree from '@iconify/icons-gg/list-tree';
+import { Icon } from '@iconify/react';
+import { ElkNode } from 'elkjs/lib/elk.bundled';
+import React, { useEffect, useState } from 'react';
 import ReactFlow, {
   applyNodeChanges,
   Background,
@@ -10,19 +10,19 @@ import ReactFlow, {
   ControlButton,
   Controls,
   OnNodesChange,
-} from "reactflow";
+} from 'reactflow';
 
-import DownloadButton from "./DownloadButton";
-import styles from "./FlowView.module.css";
+import DownloadButton from './DownloadButton';
+import styles from './FlowView.module.css';
 
-import EnumNode from "~/components/EnumNode";
-import ModelNode from "~/components/ModelNode";
-import RelationEdge from "~/components/RelationEdge";
-import { getLayout } from "~/util/layout";
-import { generateFlowFromDMMF } from "~/util/prismaToFlow";
-import { DMMFToElementsResult } from "~/util/types";
+import EnumNode from '~/components/EnumNode';
+import ModelNode from '~/components/ModelNode';
+import RelationEdge from '~/components/RelationEdge';
+import { getLayout } from '~/util/layout';
+import { generateFlowFromDMMF } from '~/util/prismaToFlow';
+import { DMMFToElementsResult } from '~/util/types';
 
-import type { DMMF } from "@prisma/generator-helper";
+import type { DMMF } from '@prisma/generator-helper';
 
 const nodeTypes = {
   model: ModelNode,
@@ -34,8 +34,8 @@ const edgeTypes = {
 };
 
 const FlowView = ({ dmmf, toggleEditor }: FlowViewProps) => {
-  const [nodes, setNodes] = useState<DMMFToElementsResult["nodes"]>([]);
-  const [edges, setEdges] = useState<DMMFToElementsResult["edges"]>([]);
+  const [nodes, setNodes] = useState<DMMFToElementsResult['nodes']>([]);
+  const [edges, setEdges] = useState<DMMFToElementsResult['edges']>([]);
 
   const regenerateNodes = (layout: ElkNode | null) => {
     const { nodes: newNodes, edges: newEdges } = dmmf
@@ -52,8 +52,7 @@ const FlowView = ({ dmmf, toggleEditor }: FlowViewProps) => {
     regenerateNodes(layout);
   };
 
-  const onNodesChange: OnNodesChange = (changes) =>
-    setNodes((nodes) => applyNodeChanges(changes, nodes as any) as any);
+  const onNodesChange: OnNodesChange = (changes) => setNodes((nodes) => applyNodeChanges(changes, nodes as any) as any);
 
   useEffect(() => {
     regenerateNodes(null);
@@ -67,16 +66,10 @@ const FlowView = ({ dmmf, toggleEditor }: FlowViewProps) => {
         edgeTypes={edgeTypes}
         nodeTypes={nodeTypes}
         minZoom={0.05}
-        style={{ gridArea: "flow" }}
+        style={{ gridArea: 'flow' }}
         onNodesChange={onNodesChange}
       >
-        <Background
-          variant={BackgroundVariant.Dots}
-          gap={24}
-          size={2}
-          color="currentColor"
-          className="text-gray-200"
-        />
+        <Background variant={BackgroundVariant.Dots} gap={24} size={2} color="currentColor" className="text-gray-200" />
         <Controls>
           <ControlButton title="Disperse nodes" onClick={refreshLayout}>
             <Icon icon={listTree} />
@@ -84,17 +77,8 @@ const FlowView = ({ dmmf, toggleEditor }: FlowViewProps) => {
           <DownloadButton />
         </Controls>
 
-        <Controls
-          position="top-left"
-          showZoom={false}
-          showFitView={false}
-          showInteractive={false}
-        >
-          <ControlButton
-            className={styles.noShrinkIcon}
-            title="Hide editor"
-            onClick={toggleEditor}
-          >
+        <Controls position="top-left" showZoom={false} showFitView={false} showInteractive={false}>
+          <ControlButton className={styles.noShrinkIcon} title="Hide editor" onClick={toggleEditor}>
             <Icon icon={doubleChevron} height={24} width={24} />
           </ControlButton>
         </Controls>

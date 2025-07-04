@@ -1,7 +1,7 @@
-import { Edge, Node } from "reactflow";
+import { Edge, Node } from 'reactflow';
 
-export type RelationType = "1-1" | "1-n" | "m-n";
-export type RelationSide = "source" | "target";
+export type RelationType = '1-1' | '1-n' | 'm-n';
+export type RelationSide = 'source' | 'target';
 
 export interface SchemaError {
   reason: string;
@@ -15,7 +15,7 @@ export interface ModelRelationData {
 }
 
 export interface EnumNodeData {
-  type: "enum";
+  type: 'enum';
   name: string;
   dbName?: string | null;
   documentation?: string;
@@ -23,7 +23,7 @@ export interface EnumNodeData {
 }
 
 export interface ModelNodeData {
-  type: "model";
+  type: 'model';
   name: string;
   dbName?: string | null;
   documentation?: string;

@@ -1,6 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState } from 'react';
 
-import { toUrlSafeB64 } from "~/util";
+import { toUrlSafeB64 } from '~/util';
 
 const CopyButton = ({ input }: CopyButtonProps) => {
   const [showCopied, setShowCopied] = useState(false);
@@ -21,14 +21,8 @@ const CopyButton = ({ input }: CopyButtonProps) => {
   };
 
   return (
-    <button
-      type="button"
-      className="button floating"
-      title="Copy link"
-      aria-label="Copy link"
-      onClick={copy}
-    >
-      {showCopied ? "Copied!" : "Copy link"}
+    <button type="button" className="button floating" title="Copy link" aria-label="Copy link" onClick={copy}>
+      {showCopied ? 'Copied!' : 'Copy link'}
     </button>
   );
 };
