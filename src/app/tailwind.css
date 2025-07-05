@@ -1,0 +1,27 @@
+@reference "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+  .button {
+    @apply px-4 py-2;
+    @apply bg-indigo-400 text-white hover:bg-indigo-500 focus-visible:bg-indigo-500;
+    /* @apply dark:bg-opacity-[15%] dark:hover:bg-opacity-30 dark:focus-visible:bg-opacity-30 dark:text-gray-50; */
+    @apply sm:text-sm font-medium;
+    @apply rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500;
+
+    &.floating {
+      @apply shadow-md hover:shadow-lg;
+    }
+
+    &.icon {
+      @apply p-2;
+    }
+
+    &.light {
+      @apply bg-white text-black hover:bg-gray-200 hover:text-indigo-900;
+    }
+  }
+}

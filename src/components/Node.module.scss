@@ -1,0 +1,26 @@
+@reference "../app/globals.css"
+@reference "tailwindcss"
+
+.row:first-child > * {
+  border-top-width: 0 !important;
+}
+
+.handle {
+
+
+  &.bottom {
+    @apply -bottom-2;
+  }
+
+  &.left {
+    left: calc(-2px - theme('spacing.2')) !important;
+  }
+
+  &.right {
+    right: calc(-2px - theme('spacing.2')) !important;
+  }
+
+  &.top {
+    @apply -top-2;
+  }
+}

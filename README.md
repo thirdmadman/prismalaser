@@ -1,83 +1,36 @@
-<p align="center">
-  <a href="https://prismaliser.app">
-    <img src=".resources/readme-banner.svg" alt="Visualise your Prisma schema - Prismaliser">
-  </a>
-</p>
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
----
+## Getting Started
 
-**Prismaliser** is a visualisation webapp for [Prisma](https://prisma.io)
-schemas. It allows you to visually explore your schema and the relations between
-your models, by showing links between the different types of relations in the
-schema (many-to-many, one-to-many, one-to-one), similar to an
-[Entity-relationship model](https://en.wikipedia.org/wiki/Entity-relationship_model).
-
-Prismaliser is a fully open-source Next.js application and is easily self-hostable if
-you wish to, but a hosted version is also available at
-[prismaliser.app](https://prismaliser.app) if you just want to use it instead.
-
-## Installation
-
-Prismaliser is a Next.js application, and as such it requires
-[Node.js](https://nodejs.org) to be installed in order to run.
-[Yarn](https://yarnpkg.com) is also recommended as it has a (subjectively) nicer
-CLI interface.
-
-With Node installed, and the repository cloned, you can simply run the following
-commands to get it running:
+First, run the development server:
 
 ```bash
-yarn install  # or `npm install`
-yarn build  # or `npm run build`
-yarn start  # or `npm start`
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-The latter command can be run in anything like PM2, systemd or any other process
-daemon of your choice.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Or if you're looking to run it for development purposes, you can use the
-following commands instead:
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-```bash
-yarn install  # or `npm install`
-yarn dev  # or `npm run dev`
-```
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-### Docker
+## Learn More
 
-A
-[Docker image](https://github.com/Ovyerus/prismaliser/pkgs/container/prismaliser)
-is also available if that's more your thing.
+To learn more about Next.js, take a look at the following resources:
 
-```bash
-$ docker run -p 3000:3000 ghcr.io/ovyerus/prismaliser
-```
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-or if you wanna live on the edge and run the dev branch
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-```bash
-$ docker run -p 3000:3000 ghcr.io/ovyerus/prismaliser:dev
-```
+## Deploy on Vercel
 
-## Roadmap
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-This is a list of what I've currently got planned for the future. I'm open to
-accepting PRs for any of these, but I'd prefer it if you could first open an
-issue regarding it so we can discuss it/make sure there's not multiple people
-working on the same thing.
-
-I'm also open to PRs for other features not listed here, but also please open a
-corresponding issue to discuss it, just like above.
-
-- [ ] Multi-history support (user defined saves).
-- [x] Sharing a schema with other users via a generated link (similar to
-      TypeScript's [playground](https://www.typescriptlang.org/play/)).
-- [ ] Saving node positions across page resets.
-- [ ] Autocomplete for the editor (very big, Monaco is a bit fiddly at times,
-      would probably need to do some looking at the VSCode plugin for Prisma to
-      figure out some stuff).
-
-## License
-
-Prismaliser is licensed under the MIT License - see the [LICENSE](LICENSE) file
-for details.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
