@@ -18,9 +18,9 @@ import styles from './FlowView.module.css';
 import EnumNode from '@/components/EnumNode';
 import ModelNode from '@/components/ModelNode';
 import RelationEdge from '@/components/RelationEdge';
-import { getLayout } from '@/util/layout';
-import { generateFlowFromDMMF } from '@/util/prismaToFlow';
-import { DMMFToElementsResult } from '@/util/types';
+import { getLayout } from '@/shared/lib/layout';
+import { generateFlowFromDMMF } from '@/shared/lib/prismaToFlow';
+import { DMMFToElementsResult } from '@/shared/lib/types';
 
 import type { DMMF } from '@prisma/generator-helper';
 
@@ -33,7 +33,12 @@ const edgeTypes = {
   relation: RelationEdge,
 };
 
-const FlowView = ({ dmmf, toggleEditor }: FlowViewProps) => {
+export interface FlowViewProps {
+  dmmf: DMMF.Datamodel | null;
+  toggleEditor(): void;
+}
+
+export default function FlowView({ dmmf, toggleEditor }: FlowViewProps) {
   const [nodes, setNodes] = useState<DMMFToElementsResult['nodes']>([]);
   const [edges, setEdges] = useState<DMMFToElementsResult['edges']>([]);
 
@@ -127,11 +132,4 @@ const FlowView = ({ dmmf, toggleEditor }: FlowViewProps) => {
       </svg>
     </>
   );
-};
-
-export interface FlowViewProps {
-  dmmf: DMMF.Datamodel | null;
-  toggleEditor(): void;
 }
-
-export default FlowView;

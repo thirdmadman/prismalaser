@@ -6,7 +6,7 @@ import {
   getSmoothStepPath,
 } from 'reactflow';
 
-import { RelationEdgeData } from '@/util/types';
+import { RelationEdgeData } from '@/shared/lib/types';
 
 const RelationEdge = ({
   sourceX,

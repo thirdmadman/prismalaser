@@ -4,14 +4,22 @@ import { Handle, Position, useReactFlow, useStoreApi } from 'reactflow';
 
 import styles from './Node.module.scss';
 
-import { enumEdgeTargetHandleId, relationEdgeSourceHandleId, relationEdgeTargetHandleId } from '@/util/prismaToFlow';
-import { ModelNodeData } from '@/util/types';
+import {
+  enumEdgeTargetHandleId,
+  relationEdgeSourceHandleId,
+  relationEdgeTargetHandleId,
+} from '@/shared/lib/prismaToFlow';
+import { ModelNodeData } from '@/shared/lib/types';
 
 type ColumnData = ModelNodeData['columns'][number];
 
 const isRelationed = ({ relationData }: ColumnData) => !!relationData?.side;
 
-const ModelNode = ({ data }: ModelNodeProps) => {
+export interface ModelNodeProps {
+  data: ModelNodeData;
+}
+
+export default function ModelNode({ data }: ModelNodeProps) {
   const store = useStoreApi();
   const { setCenter, getZoom } = useReactFlow();
 
@@ -119,9 +127,4 @@ const ModelNode = ({ data }: ModelNodeProps) => {
       </tbody>
     </table>
   );
-};
-export interface ModelNodeProps {
-  data: ModelNodeData;
 }
-
-export default ModelNode;

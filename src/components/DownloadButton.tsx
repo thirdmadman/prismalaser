@@ -15,7 +15,7 @@ const downloadImage = (dataUrl: string) => {
 };
 
 // Mostly a copy from the React Flow example: https://reactflow.dev/examples/misc/download-image
-const DownloadButton = () => {
+export default function DownloadButton() {
   const { getNodes } = useReactFlow();
   const onClick = () => {
     // we calculate a transform for the nodes so that all nodes are visible
@@ -47,6 +47,4 @@ const DownloadButton = () => {
       <Icon icon={downloadIcon} />
     </ControlButton>
   );
-};
-
-export default DownloadButton;
+}

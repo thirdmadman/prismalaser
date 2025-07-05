@@ -4,16 +4,17 @@ import { useMonaco } from '@monaco-editor/react';
 import React, { useEffect, useState } from 'react';
 import { useDebounce, useLocalStorage } from 'react-use';
 
-import CopyButton from '@/components/CopyButton';
+
 import EditorView from '@/components/EditorView';
 import FlowView from '@/components/FlowView';
 import Layout from '@/components/Layout';
-import { fromUrlSafeB64 } from '@/util';
-import { SchemaError } from '@/util/types';
+import { fromUrlSafeB64 } from '@/shared/lib';
+import { SchemaError } from '@/shared/lib/types';
 
 import type { DMMF } from '@prisma/generator-helper';
 import type { editor } from 'monaco-editor';
-import { INITIAL_PLACEHOLDER_SCHEMA } from '@/shared/constatns';
+import { INITIAL_PLACEHOLDER_SCHEMA } from '@/shared/config';
+import CopyButton from '@/components/CopyButton';
 
 interface ISchemaValidationResult {
   isOk?: boolean;

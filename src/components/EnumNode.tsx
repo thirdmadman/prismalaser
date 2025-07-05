@@ -4,11 +4,15 @@ import { Handle, Position } from 'reactflow';
 
 import styles from './Node.module.scss';
 
-import { EnumNodeData } from '@/util/types';
+import { EnumNodeData } from '@/shared/lib/types';
 
 const MAX_VALUES = 12;
 
-const EnumNode = ({ data }: EnumNodeProps) => {
+export interface EnumNodeProps {
+  data: EnumNodeData;
+}
+
+export default function EnumNode({ data }: EnumNodeProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -62,10 +66,4 @@ const EnumNode = ({ data }: EnumNodeProps) => {
       />
     </table>
   );
-};
-
-export interface EnumNodeProps {
-  data: EnumNodeData;
 }
-
-export default EnumNode;

@@ -16,27 +16,6 @@ import type { DMMF } from '@prisma/generator-helper';
 
 const letters = ['A', 'B'];
 
-/**
- * Entrypoint into creating a React Flow network from the Prisma datamodel.
- */
-export const generateFlowFromDMMF = (
-  datamodel: DMMF.Datamodel,
-  previousNodes: Array<Node<EnumNodeData> | Node<ModelNodeData>>,
-  layout: ElkNode | null
-): DMMFToElementsResult => {
-  const modelRelations = getModelRelations(datamodel);
-  const enumRelations = getEnumRelations(datamodel);
-  const nodeData = generateNodes(datamodel, modelRelations);
-
-  const nodes = positionNodes(nodeData, previousNodes, layout);
-  const edges = relationsToEdges(modelRelations, enumRelations);
-
-  return {
-    nodes,
-    edges,
-  };
-};
-
 const relationType = (listCount: number): RelationType => (listCount > 1 ? 'm-n' : listCount === 1 ? '1-n' : '1-1');
 
 const relationSide = (field: DMMF.Field): RelationSide =>
@@ -372,3 +351,24 @@ const positionNodes = (
       data: n as any,
     };
   });
+
+/**
+ * Entrypoint into creating a React Flow network from the Prisma datamodel.
+ */
+export const generateFlowFromDMMF = (
+  datamodel: DMMF.Datamodel,
+  previousNodes: Array<Node<EnumNodeData> | Node<ModelNodeData>>,
+  layout: ElkNode | null
+): DMMFToElementsResult => {
+  const modelRelations = getModelRelations(datamodel);
+  const enumRelations = getEnumRelations(datamodel);
+  const nodeData = generateNodes(datamodel, modelRelations);
+
+  const nodes = positionNodes(nodeData, previousNodes, layout);
+  const edges = relationsToEdges(modelRelations, enumRelations);
+
+  return {
+    nodes,
+    edges,
+  };
+};

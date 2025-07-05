@@ -1,5 +1,5 @@
+import { validateSchema } from '@/shared/lib/validateSchema';
 import { NextRequest } from 'next/server';
-import { validateSchema } from '@/util/validateSchema';
 
 export async function POST(request: NextRequest) {
   let result = null;

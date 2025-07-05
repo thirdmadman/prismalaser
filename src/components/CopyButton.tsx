@@ -1,8 +1,12 @@
 import React, { useRef, useState } from 'react';
 
-import { toUrlSafeB64 } from '@/util';
+import { toUrlSafeB64 } from '@/shared/lib';
 
-const CopyButton = ({ input }: CopyButtonProps) => {
+interface CopyButtonProps {
+  input: string;
+}
+
+export default function CopyButton({ input }: CopyButtonProps) {
   const [showCopied, setShowCopied] = useState(false);
   const timerRef: React.MutableRefObject<NodeJS.Timeout | null> = useRef(null);
 
@@ -25,10 +29,4 @@ const CopyButton = ({ input }: CopyButtonProps) => {
       {showCopied ? 'Copied!' : 'Copy link'}
     </button>
   );
-};
-
-interface CopyButtonProps {
-  input: string;
 }
-
-export default CopyButton;
