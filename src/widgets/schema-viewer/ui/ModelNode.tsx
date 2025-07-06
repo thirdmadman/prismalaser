@@ -5,9 +5,9 @@ import { Handle, Position, useReactFlow, useStoreApi } from 'reactflow';
 import styles from './Node.module.scss';
 
 import {
-  enumEdgeTargetHandleId,
-  relationEdgeSourceHandleId,
-  relationEdgeTargetHandleId,
+  generateEnumEdgeTargetHandleId,
+  generateRelationEdgeSourceHandleId,
+  generateRelationEdgeTargetHandleId,
 } from '@/shared/lib/prismaToFlow';
 import { ModelNodeData } from '@/shared/lib/types';
 
@@ -62,7 +62,7 @@ export default function ModelNode({ data }: ModelNodeProps) {
           let sourceHandle: JSX.Element | null = null;
 
           if (col.kind === 'enum') {
-            const handleId = enumEdgeTargetHandleId(data.name, col.name);
+            const handleId = generateEnumEdgeTargetHandleId(data.name, col.name);
             targetHandle = (
               <Handle
                 key={handleId}
@@ -74,8 +74,8 @@ export default function ModelNode({ data }: ModelNodeProps) {
               />
             );
           } else if (col.relationData) {
-            const targetHandleId = relationEdgeTargetHandleId(data.name, col.relationData.name, col.name);
-            const sourceHandleId = relationEdgeSourceHandleId(data.name, col.relationData.name, col.name);
+            const targetHandleId = generateRelationEdgeTargetHandleId(data.name, col.relationData.name, col.name);
+            const sourceHandleId = generateRelationEdgeSourceHandleId(data.name, col.relationData.name, col.name);
 
             targetHandle =
               col.relationData.side === 'target' ? (

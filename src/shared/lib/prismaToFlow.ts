@@ -1,5 +1,5 @@
 import { ElkNode } from 'elkjs';
-import { concat, count, filter, groupBy, map, mergeWith, pick, reduce } from 'ramda';
+import { count, groupBy, pick } from 'ramda';
 import { Edge, Node } from 'reactflow';
 
 import {
@@ -16,30 +16,7 @@ import type { DMMF } from '@prisma/generator-helper';
 
 const letters = ['A', 'B'];
 
-const relationType = (listCount: number): RelationType => (listCount > 1 ? 'm-n' : listCount === 1 ? '1-n' : '1-1');
-
-const relationSide = (field: DMMF.Field): RelationSide =>
-  // `source` owns the relation in the schema
-  field.relationFromFields?.length || field.relationToFields?.length ? 'source' : 'target';
-
-// Functions for various IDs so that consistency is ensured across all parts of
-// the app easily.
-export const edgeId = (target: string, source: string, targetColumn: string) =>
-  `edge-${target}-${targetColumn}-${source}`;
-
-export const enumEdgeTargetHandleId = (table: string, column: string) => `${table}-${column}`;
-
-const implicitManyToManyModelNodeId = (relation: string) => `_${relation}`;
-
-export const relationEdgeSourceHandleId = (table: string, relation: string, column: string) =>
-  `${table}-${relation}-${column}`;
-
-export const relationEdgeTargetHandleId = (table: string, relation: string, column: string) =>
-  `${table}-${relation}-${column}`;
-
-const virtualTableName = (relation: string, table: string) => `${relation}-${table}`;
-
-interface GotModelRelations {
+interface IGotModelRelations {
   name: string;
   dbName?: string;
   type: RelationType;
@@ -58,99 +35,143 @@ interface GotModelRelations {
   }>;
 }
 
+const getRelationType = (listCount: number): RelationType => {
+  if (listCount > 1) {
+    return 'm-n';
+  }
+
+  if (listCount === 1) {
+    return '1-n';
+  }
+
+  return '1-1';
+};
+
+const getRelationSide = (field: DMMF.Field): RelationSide => {
+  if (field.relationFromFields?.length || field.relationToFields?.length) {
+    return 'source';
+  }
+
+  return 'target';
+};
+
+// Functions for various IDs so that consistency is ensured across all parts of the app easily.
+export const generateEdgeId = (target: string, source: string, targetColumn: string) =>
+  `edge-${target}-${targetColumn}-${source}`;
+
+export const generateEnumEdgeTargetHandleId = (table: string, column: string) => `${table}-${column}`;
+
+const generateImplicitManyToManyModelNodeId = (relation: string) => `_${relation}`;
+
+export const generateRelationEdgeSourceHandleId = (table: string, relation: string, column: string) =>
+  `${table}-${relation}-${column}`;
+
+export const generateRelationEdgeTargetHandleId = (table: string, relation: string, column: string) =>
+  `${table}-${relation}-${column}`;
+
+const generateVirtualTableName = (relation: string, table: string) => `${relation}-${table}`;
+
 /**
  * Filter through a schema to find all the models that are part of a
  * relationship, as well as what side of the relationships they are on.
  */
-const getModelRelations = ({ models }: DMMF.Datamodel): Record<string, GotModelRelations> => {
+const getModelRelations = ({ models }: DMMF.Datamodel): Record<string, IGotModelRelations> => {
   // if (!models) {
   //   return null;
   // }
 
-  const groupedRelations: Record<string, Array<DMMF.Field & { tableName: string }>> = filter(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (_: any, prop: string) => prop !== 'undefined',
-    // Match both ends of relation together, and collapse everything into the
-    // same object. (relation names should be unique so this is safe).
-    reduce(
-      mergeWith(concat),
-      {},
-      models.map((m) =>
-        // Create a object mapping `relationName: field[]`.
-        groupBy(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          (f) => f.relationName!,
-          m.fields
-            // Don't bother processing any fields that aren't part of a relationship.
-            .filter((f) => f.relationName)
-            .map((f) => ({ ...f, tableName: m.name }))
-        )
-      )
-    )
+  const objectMapping = models.map((m) => {
+    const groupByObject = m.fields
+      // Don't bother processing any fields that aren't part of a relationship.
+      .filter((f) => f.relationName)
+      .map((f) => ({ ...f, tableName: m.name }));
+
+    const result = groupByObject.reduce<Record<string, typeof groupByObject>>((acc, f) => {
+      const key = f.relationName;
+      if (!key) {
+        return acc;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+
+      acc[key].push(f);
+      return acc;
+    }, {});
+
+    return result;
+  });
+
+  // Match both ends of relation together, and collapse everything into the same object.
+  // (relation names should be unique so this is safe).
+  const relationsObject = objectMapping.reduce((acc, curr) => {
+    for (const [key, value] of Object.entries(curr)) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      acc[key] = acc[key] ? acc[key].concat(value) : value;
+    }
+    return acc;
+  }, {});
+
+  const groupedRelations: Record<string, Array<DMMF.Field & { tableName: string }>> = Object.fromEntries(
+    Object.entries(relationsObject).filter(([key]) => key !== 'undefined')
   );
 
-  const output = map((fields, key) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
-    const listCount = count((f) => f.isList, fields);
-    const type = relationType(listCount);
+  const output = Object.keys(groupedRelations).map((key) => {
+    const fields = groupedRelations[key];
 
+    const listCount = count((f) => f.isList, fields);
+    const type = getRelationType(listCount);
+
+    const relationFields = fields.map((f) => ({
+      name: f.name,
+
+      tableName: f.tableName,
+
+      side: getRelationSide(f),
+
+      type: f.type,
+    }));
     return {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       name: key,
       type,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      fields: fields.map((f) => ({
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        name: f.name,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        tableName: f.tableName,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        side: relationSide(f),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        type: f.type,
-      })),
+      fields: relationFields,
     };
-  }, groupedRelations);
+  });
 
-  const withVirtuals = Object.values(output).reduce<Record<string, GotModelRelations>>((acc, curr) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (curr.type === 'm-n')
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      for (const [i, field] of curr.fields.entries()) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-        const newName = virtualTableName(curr.name, field.tableName);
-        // There's probably a better way around this
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const virtualLetter = letters[i] || '';
+  const withVirtuals = Object.values(output).reduce<Record<string, IGotModelRelations>>((acc, curr) => {
+    if (curr.type !== 'm-n') {
+      acc[curr.name] = curr;
+      return acc;
+    }
 
-        acc[newName] = {
-          name: newName,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          dbName: curr.name,
-          type: '1-n',
-          virtual: {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-            name: implicitManyToManyModelNodeId(curr.name),
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-            field: { name: virtualLetter, type: field.tableName },
+    for (const [i, field] of curr.fields.entries()) {
+      const newName = generateVirtualTableName(curr.name, field.tableName);
+      // There's probably a better way around this
+      const virtualLetter = letters[i] || '';
+
+      acc[newName] = {
+        name: newName,
+
+        dbName: curr.name,
+        type: '1-n',
+        virtual: {
+          name: generateImplicitManyToManyModelNodeId(curr.name),
+          field: { name: virtualLetter, type: field.tableName },
+        },
+        // Reuse current field straight up because they're always `target`.
+        fields: [
+          field,
+          {
+            name: virtualLetter,
+            tableName: generateImplicitManyToManyModelNodeId(curr.name),
+            side: 'source',
+            type: field.tableName,
           },
-          // Reuse current field straight up because they're always `target`.
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          fields: [
-            field,
-            {
-              name: virtualLetter,
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-              tableName: implicitManyToManyModelNodeId(curr.name),
-              side: 'source',
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-              type: field.tableName,
-            },
-          ],
-        };
-      }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    else acc[curr.name] = curr;
+        ],
+      };
+    }
 
     return acc;
   }, {});
@@ -189,43 +210,52 @@ const relationsToEdges = (
   let result: Array<Edge<RelationEdgeData | {}>> = [];
 
   // Enum edges are dead shrimple
-  for (const rel of enumRelations) {
-    const edges = rel.relations.map(
+  for (const relation of enumRelations) {
+    const { relations } = relation;
+
+    const edges = relations.map(
       (r): Edge => ({
-        id: edgeId(rel.name, r.enum, r.column),
+        id: generateEdgeId(relation.name, r.enum, r.column),
         type: 'smoothstep',
         source: r.enum,
-        target: rel.name,
+        target: relation.name,
         sourceHandle: r.enum,
-        targetHandle: enumEdgeTargetHandleId(rel.name, r.column),
+        targetHandle: generateEnumEdgeTargetHandleId(relation.name, r.column),
       })
     );
 
     result = result.concat(edges);
   }
 
-  for (const rel of Object.values(modelRelations)) {
+  for (const relation of Object.values(modelRelations)) {
     const base = {
-      id: `edge-${rel.name}`,
+      id: `edge-${relation.name}`,
       type: 'relation',
-      label: rel.name,
-      data: { relationType: rel.type },
+      label: relation.name,
+      data: { relationType: relation.type },
     };
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const source = rel.fields.find((f) => f.side === 'source')!;
-    let target = rel.fields.find((f) => f.side === 'target');
+    const source = relation.fields.find((f) => f.side === 'source')!;
+    let target = relation.fields.find((f) => f.side === 'target');
 
-    if (!target && rel.virtual) target = rel.fields.find((f) => f.tableName === rel.virtual?.name);
+    if (!target && relation.virtual) {
+      target = relation.fields.find((field) => field.tableName === relation.virtual?.name);
+    }
 
-    if (!target) throw new Error('Invalid target');
+    if (!target) {
+      throw new Error('Invalid target');
+    }
+
+    const sourceHandle = generateRelationEdgeSourceHandleId(source.tableName, relation.name, source.name);
+    const targetHandle = generateRelationEdgeTargetHandleId(target.tableName, relation.name, target.name);
 
     result.push({
       ...base,
       source: source.tableName,
       target: target.tableName,
-      sourceHandle: relationEdgeSourceHandleId(source.tableName, rel.name, source.name),
-      targetHandle: relationEdgeTargetHandleId(target.tableName, rel.name, target.name),
+      sourceHandle,
+      targetHandle,
     });
   }
 
@@ -236,7 +266,7 @@ const relationsToEdges = (
  * Map a Prisma datamodel into React Flow node data.
  * Does not generate position data.
  */
-const generateNodes = ({ enums, models }: DMMF.Datamodel, relations: Record<string, GotModelRelations>) => {
+const generateNodes = ({ enums, models }: DMMF.Datamodel, relations: Record<string, IGotModelRelations>) => {
   let nodes = [] as Array<EnumNodeData | ModelNodeData>;
 
   nodes = nodes.concat(generateModelNodes(models, relations));
@@ -257,7 +287,7 @@ const generateEnumNodes = (enums: ReadonlyArray<DMMF.DatamodelEnum>): Array<Enum
 
 const generateModelNodes = (
   models: ReadonlyArray<DMMF.Model>,
-  relations: Record<string, GotModelRelations>
+  relations: Record<string, IGotModelRelations>
 ): Array<ModelNodeData> =>
   models.map(({ name, dbName, documentation, fields }) => {
     const columns: ModelNodeData['columns'] = fields.map((f) => {
@@ -274,7 +304,7 @@ const generateModelNodes = (
         else defaultValue = JSON.stringify(f.default);
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-non-null-assertion
-      const relData = relations[f.relationName!] || relations[virtualTableName(f.relationName!, name)];
+      const relData = relations[f.relationName!] || relations[generateVirtualTableName(f.relationName!, name)];
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       const thisRel = relData?.fields.find((g) => g.name === f.name && g.tableName === name);
 
@@ -311,12 +341,12 @@ const generateModelNodes = (
  * relationships work under the hood (mostly because I'm too lazy to distinguish
  * between implicit and explicit).
  */
-const generateImplicitModelNodes = (relations: Record<string, GotModelRelations>): Array<ModelNodeData> => {
+const generateImplicitModelNodes = (relations: Record<string, IGotModelRelations>): Array<ModelNodeData> => {
   const hasVirtuals = Object.values(relations).filter((rel) => rel.virtual);
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const grouped = Object.values(groupBy((rel) => rel.virtual!.name, hasVirtuals)).map(
-    (rel: Array<GotModelRelations> | undefined) => {
+    (rel: Array<IGotModelRelations> | undefined) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const fields = rel!.map((r) => r.virtual!.field);
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -334,7 +364,7 @@ const generateImplicitModelNodes = (relations: Record<string, GotModelRelations>
       type: col.type,
       displayType: col.type,
       relationData: {
-        name: virtualTableName(relationName, col.type),
+        name: generateVirtualTableName(relationName, col.type),
         side: 'source',
         type: '1-n',
       },
@@ -393,8 +423,10 @@ export const generateFlowFromDMMF = (
   const nodes = positionNodes(nodeData, previousNodes, layout);
   const edges = relationsToEdges(modelRelations, enumRelations);
 
-  return {
+  const result = {
     nodes,
     edges,
   };
+
+  return result;
 };
