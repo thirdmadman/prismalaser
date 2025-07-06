@@ -9,7 +9,7 @@ export interface EditorViewProps {
   onChange: (text?: string) => void;
 }
 
-export default function EditorView({ value, onChange }: EditorViewProps) {
+export function EditorView({ value, onChange }: EditorViewProps) {
   const monaco = useMonaco();
 
   useEffect(() => {

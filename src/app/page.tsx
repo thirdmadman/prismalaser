@@ -4,17 +4,16 @@ import { useMonaco } from '@monaco-editor/react';
 import React, { useEffect, useState } from 'react';
 import { useDebounce, useLocalStorage } from 'react-use';
 
-
-import EditorView from '@/components/EditorView';
-import FlowView from '@/components/FlowView';
-import Layout from '@/components/Layout';
+import { EditorView } from '@/widgets/schema-editor/';
+import { FlowView } from '@/widgets/schema-viewer/';
+import Layout from '@/shared/ui/page-layout/Layout';
 import { fromUrlSafeB64 } from '@/shared/lib';
 import { SchemaError } from '@/shared/lib/types';
 
 import type { DMMF } from '@prisma/generator-helper';
 import type { editor } from 'monaco-editor';
 import { INITIAL_PLACEHOLDER_SCHEMA } from '@/shared/config';
-import CopyButton from '@/components/CopyButton';
+import CopyButton from '@/widgets/schema-editor/ui/CopyButton';
 
 interface ISchemaValidationResult {
   isOk?: boolean;
@@ -51,7 +50,7 @@ export default function IndexPage() {
   };
 
   const format = async () => {
-    const response = await fetch('api/format', { method: 'POST', body: JSON.stringify({ text })});
+    const response = await fetch('api/format', { method: 'POST', body: JSON.stringify({ text }) });
     const responseData = await response.json();
 
     if (responseData.isOk) {

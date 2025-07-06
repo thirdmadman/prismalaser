@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react';
 import Image from 'next/image';
 import React from 'react';
 
-export default function Nav() {
+export function HeaderNavigation() {
   return (
     <nav className="flex items-center w-full py-4 pl-5 pr-4 text-white bg-gray-600" style={{ gridArea: 'nav' }}>
       <Image src="/img/logo.svg" alt="Prismaliser" width={200} height={20} />

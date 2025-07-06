@@ -15,9 +15,9 @@ import ReactFlow, {
 import DownloadButton from './DownloadButton';
 import styles from './FlowView.module.css';
 
-import EnumNode from '@/components/EnumNode';
-import ModelNode from '@/components/ModelNode';
-import RelationEdge from '@/components/RelationEdge';
+import EnumNode from '@/widgets/schema-viewer/ui/EnumNode';
+import ModelNode from '@/widgets/schema-viewer/ui/ModelNode';
+import RelationEdge from '@/widgets/schema-viewer/ui/RelationEdge';
 import { getLayout } from '@/shared/lib/layout';
 import { generateFlowFromDMMF } from '@/shared/lib/prismaToFlow';
 import { DMMFToElementsResult } from '@/shared/lib/types';
@@ -38,7 +38,7 @@ export interface FlowViewProps {
   toggleEditor(): void;
 }
 
-export default function FlowView({ dmmf, toggleEditor }: FlowViewProps) {
+export function FlowView({ dmmf, toggleEditor }: FlowViewProps) {
   const [nodes, setNodes] = useState<DMMFToElementsResult['nodes']>([]);
   const [edges, setEdges] = useState<DMMFToElementsResult['edges']>([]);
 

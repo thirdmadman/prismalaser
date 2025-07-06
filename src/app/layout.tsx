@@ -52,7 +52,10 @@ export default function RootLayout({
           <script data-website-id={process.env.NEXT_PUBLIC_UMAMI_SITE} src="/script.js" defer />
         )}
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+
+        {children}
+      </body>
     </html>
   );
 }
