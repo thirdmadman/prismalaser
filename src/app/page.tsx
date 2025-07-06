@@ -24,8 +24,7 @@ interface ISchemaValidationResult {
 export default function IndexPage() {
   // TODO: multiple save states.
   const [storedText, setStoredText] = useLocalStorage('prismaliser.text', INITIAL_PLACEHOLDER_SCHEMA);
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const [text, setText] = useState(storedText!);
+  const [text, setText] = useState(storedText ?? null);
   const [schemaErrors, setSchemaErrors] = useState<Array<SchemaError>>([]);
   const [dmmf, setDMMF] = useState<DMMF.Datamodel | null>(null);
   const [editorVisible, setEditorVisible] = useState(true);
@@ -34,7 +33,7 @@ export default function IndexPage() {
   const monaco = useMonaco();
 
   const submit = async () => {
-    setStoredText(text);
+    setStoredText(text ?? '');
     setSchemaValidationResult({ isLoading: true });
     const response = await fetch('api/validate', { method: 'POST', body: JSON.stringify({ text }) });
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -108,7 +107,7 @@ export default function IndexPage() {
       {editorVisible && (
         <section className="relative flex flex-col items-start border-r-2">
           <EditorView
-            value={text}
+            value={text ?? ''}
             onChange={(val) => {
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               setText(val!);
@@ -116,7 +115,7 @@ export default function IndexPage() {
           />
 
           <div className="absolute flex gap-2 left-4 bottom-4">
-            <CopyButton input={text} />
+            <CopyButton input={text ?? ''} />
 
             <button type="button" className="button floating" onClick={format}>
               Format
@@ -128,7 +127,14 @@ export default function IndexPage() {
           ) : null}
         </section>
       )}
-      <FlowView dmmf={dmmf} toggleEditor={toggleEditor} />
+      <FlowView
+        dmmf={dmmf}
+        toggleEditor={toggleEditor}
+        schemaText={text ?? ''}
+        onTextChange={(text) => {
+          setText(text ?? null);
+        }}
+      />
     </Layout>
   );
 }

@@ -392,12 +392,39 @@ const positionNodes = (
     const positionedNode = layout?.children?.find((layoutNode) => layoutNode.id === n.name);
     const previousNode = previousNodes.find((prev) => prev.id === n.name);
 
+    const schemaNodeDocumentation = n.documentation;
+    const isNodeHasDocumentation = !!schemaNodeDocumentation;
+    let schemaNodePosition = null;
+
+    if (isNodeHasDocumentation) {
+      const isDocumentationStartPosition = schemaNodeDocumentation.indexOf('@prli-position');
+
+      if (isDocumentationStartPosition > -1) {
+        const positionJsonStart = schemaNodeDocumentation.indexOf('{', isDocumentationStartPosition);
+        const positionJsonEnd = schemaNodeDocumentation.indexOf('}', positionJsonStart);
+
+        const positionJson = schemaNodeDocumentation.substring(positionJsonStart, positionJsonEnd + 1);
+
+        let positionJsonObject = null;
+
+        try {
+          positionJsonObject = JSON.parse(positionJson) as { x: number; y: number };
+        } catch {
+          console.error('Position JSON is not valid');
+        }
+
+        if (positionJsonObject?.x && positionJsonObject.y) {
+          schemaNodePosition = { x: positionJsonObject.x, y: positionJsonObject.y };
+        }
+      }
+    }
+
     return {
       id: n.name,
       type: n.type,
       position: {
-        x: positionedNode?.x ?? previousNode?.position.x ?? 0,
-        y: positionedNode?.y ?? previousNode?.position.y ?? 0,
+        x: positionedNode?.x ?? schemaNodePosition?.x ?? previousNode?.position.x ?? 0,
+        y: positionedNode?.y ?? schemaNodePosition?.x ?? previousNode?.position.y ?? 0,
       },
       width: previousNode?.width ?? 0,
       height: previousNode?.height ?? 0,
