@@ -424,7 +424,7 @@ const positionNodes = (
       type: n.type,
       position: {
         x: positionedNode?.x ?? schemaNodePosition?.x ?? previousNode?.position.x ?? 0,
-        y: positionedNode?.y ?? schemaNodePosition?.x ?? previousNode?.position.y ?? 0,
+        y: positionedNode?.y ?? schemaNodePosition?.y ?? previousNode?.position.y ?? 0,
       },
       width: previousNode?.width ?? 0,
       height: previousNode?.height ?? 0,
