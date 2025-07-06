@@ -1,0 +1,12 @@
+name: prismaliser
+services:
+  frontend:
+    container_name: prismaliser-frontend
+    env_file: ./.env
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    ports:
+      - 3333:3000
+

@@ -6,7 +6,10 @@
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docker:build": "docker-compose -f docker-compose.yaml build",
+    "docker:start": "docker-compose -f docker-compose.yaml up --detach ",
+    "start:prod": "npm run docker:build && npm run docker:start"
   },
   "dependencies": {
     "@iconify/icons-gg": "^1.2.4",
