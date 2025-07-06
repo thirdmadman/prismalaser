@@ -28,6 +28,7 @@ export async function validateSchema(schemaString: string) {
     }
     isError = true;
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     result = { errors, type: errType };
   }
 

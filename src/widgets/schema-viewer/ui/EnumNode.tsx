@@ -1,5 +1,5 @@
 import cc from 'classcat';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 
 import styles from './Node.module.scss';
@@ -49,7 +49,9 @@ export default function EnumNode({ data }: EnumNodeProps) {
               <button
                 type="button"
                 className="w-full px-4 py-2 font-semibold bg-blue-200 rounded"
-                onClick={() => setExpanded(!expanded)}
+                onClick={() => {
+                  setExpanded(!expanded);
+                }}
               >
                 {expanded ? 'Fold' : 'Expand'}
               </button>

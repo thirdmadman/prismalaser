@@ -3,7 +3,6 @@ import mastodon from '@iconify/icons-simple-icons/mastodon';
 import prisma from '@iconify/icons-simple-icons/prisma';
 import { Icon } from '@iconify/react';
 import Image from 'next/image';
-import React from 'react';
 
 export function HeaderNavigation() {
   return (

@@ -8,6 +8,7 @@ interface CopyButtonProps {
 
 export default function CopyButton({ input }: CopyButtonProps) {
   const [showCopied, setShowCopied] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-deprecated
   const timerRef: React.MutableRefObject<NodeJS.Timeout | null> = useRef(null);
 
   const copy = async () => {

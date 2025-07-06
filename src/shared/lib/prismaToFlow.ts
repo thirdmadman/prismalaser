@@ -63,9 +63,9 @@ interface GotModelRelations {
  * relationship, as well as what side of the relationships they are on.
  */
 const getModelRelations = ({ models }: DMMF.Datamodel): Record<string, GotModelRelations> => {
-  if (!models) {
-    return null;
-  }
+  // if (!models) {
+  //   return null;
+  // }
 
   const groupedRelations: Record<string, Array<DMMF.Field & { tableName: string }>> = filter(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -78,6 +78,7 @@ const getModelRelations = ({ models }: DMMF.Datamodel): Record<string, GotModelR
       models.map((m) =>
         // Create a object mapping `relationName: field[]`.
         groupBy(
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           (f) => f.relationName!,
           m.fields
             // Don't bother processing any fields that aren't part of a relationship.
@@ -89,48 +90,66 @@ const getModelRelations = ({ models }: DMMF.Datamodel): Record<string, GotModelR
   );
 
   const output = map((fields, key) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
     const listCount = count((f) => f.isList, fields);
     const type = relationType(listCount);
 
     return {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       name: key,
       type,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       fields: fields.map((f) => ({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         name: f.name,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         tableName: f.tableName,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         side: relationSide(f),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         type: f.type,
       })),
     };
   }, groupedRelations);
 
   const withVirtuals = Object.values(output).reduce<Record<string, GotModelRelations>>((acc, curr) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (curr.type === 'm-n')
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       for (const [i, field] of curr.fields.entries()) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         const newName = virtualTableName(curr.name, field.tableName);
         // There's probably a better way around this
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const virtualLetter = letters[i] || '';
 
         acc[newName] = {
           name: newName,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           dbName: curr.name,
           type: '1-n',
           virtual: {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
             name: implicitManyToManyModelNodeId(curr.name),
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             field: { name: virtualLetter, type: field.tableName },
           },
           // Reuse current field straight up because they're always `target`.
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           fields: [
             field,
             {
               name: virtualLetter,
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
               tableName: implicitManyToManyModelNodeId(curr.name),
               side: 'source',
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
               type: field.tableName,
             },
           ],
         };
       }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     else acc[curr.name] = curr;
 
     return acc;
@@ -193,6 +212,7 @@ const relationsToEdges = (
       data: { relationType: rel.type },
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const source = rel.fields.find((f) => f.side === 'source')!;
     let target = rel.fields.find((f) => f.side === 'target');
 
@@ -226,7 +246,7 @@ const generateNodes = ({ enums, models }: DMMF.Datamodel, relations: Record<stri
   return nodes;
 };
 
-const generateEnumNodes = (enums: readonly DMMF.DatamodelEnum[]): EnumNodeData[] =>
+const generateEnumNodes = (enums: ReadonlyArray<DMMF.DatamodelEnum>): Array<EnumNodeData> =>
   enums.map(({ name, dbName, documentation, values }) => ({
     type: 'enum',
     name,
@@ -236,9 +256,9 @@ const generateEnumNodes = (enums: readonly DMMF.DatamodelEnum[]): EnumNodeData[]
   }));
 
 const generateModelNodes = (
-  models: readonly DMMF.Model[],
+  models: ReadonlyArray<DMMF.Model>,
   relations: Record<string, GotModelRelations>
-): ModelNodeData[] =>
+): Array<ModelNodeData> =>
   models.map(({ name, dbName, documentation, fields }) => {
     const columns: ModelNodeData['columns'] = fields.map((f) => {
       // `isList` and `isRequired` are mutually exclusive as per the spec
@@ -253,16 +273,19 @@ const generateModelNodes = (
         else if (f.kind === 'enum') defaultValue = f.default.toString();
         else defaultValue = JSON.stringify(f.default);
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-non-null-assertion
       const relData = relations[f.relationName!] || relations[virtualTableName(f.relationName!, name)];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       const thisRel = relData?.fields.find((g) => g.name === f.name && g.tableName === name);
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       const relationData: ModelRelationData | null = relData
         ? {
             name: relData.name,
             type: relData.type,
             // If we can't find the matching field, sucks to suck I guess.
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            side: thisRel?.side || ('' as any),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
+            side: thisRel?.side ?? ('' as any),
           }
         : null;
 
@@ -288,19 +311,22 @@ const generateModelNodes = (
  * relationships work under the hood (mostly because I'm too lazy to distinguish
  * between implicit and explicit).
  */
-const generateImplicitModelNodes = (relations: Record<string, GotModelRelations>): ModelNodeData[] => {
+const generateImplicitModelNodes = (relations: Record<string, GotModelRelations>): Array<ModelNodeData> => {
   const hasVirtuals = Object.values(relations).filter((rel) => rel.virtual);
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const grouped = Object.values(groupBy((rel) => rel.virtual!.name, hasVirtuals)).map(
-    (rel: GotModelRelations[] | undefined) => {
+    (rel: Array<GotModelRelations> | undefined) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const fields = rel!.map((r) => r.virtual!.field);
-      return { relationName: rel![0]!.dbName!, fields };
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return { relationName: rel![0].dbName!, fields };
     }
   );
 
   return Object.entries(grouped).map(([name, { relationName, fields }]) => {
     const columns: ModelNodeData['columns'] = fields.map((col, i) => ({
-      name: letters[i]!,
+      name: letters[i],
       kind: 'scalar',
       isList: false,
       isRequired: true,
@@ -347,7 +373,7 @@ const positionNodes = (
       height: previousNode?.height ?? 0,
       // Shhhhh
       // TODO: fix types to not need cast
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
       data: n as any,
     };
   });

@@ -1,8 +1,6 @@
 import { config, language } from '@/shared/lib/monacoPrismaLanguage';
 import Editor, { useMonaco } from '@monaco-editor/react';
-import React, { useEffect } from 'react';
-
-
+import { useEffect } from 'react';
 
 export interface EditorViewProps {
   value: string;

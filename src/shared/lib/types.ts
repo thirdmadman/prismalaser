@@ -19,7 +19,7 @@ export interface EnumNodeData {
   name: string;
   dbName?: string | null;
   documentation?: string;
-  values: string[];
+  values: Array<string>;
 }
 
 export interface ModelNodeData {
@@ -44,14 +44,12 @@ export interface RelationEdgeData {
   relationType: RelationType;
 }
 
-/* eslint-disable @typescript-eslint/prefer-enum-initializers */
 export enum ErrorTypes {
   Prisma,
   Other,
 }
-/* eslint-enable */
 
 export interface DMMFToElementsResult {
   nodes: Array<Node<EnumNodeData> | Node<ModelNodeData>>;
-  edges: Edge[];
+  edges: Array<Edge>;
 }

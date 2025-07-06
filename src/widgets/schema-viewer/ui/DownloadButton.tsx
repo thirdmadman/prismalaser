@@ -1,8 +1,7 @@
 import downloadIcon from '@iconify/icons-gg/software-download';
 import { Icon } from '@iconify/react';
 import { toPng } from 'html-to-image';
-import React from 'react';
-import { ControlButton, useReactFlow, getRectOfNodes, getViewportForBounds } from 'reactflow';
+import { ControlButton, getRectOfNodes, getViewportForBounds, useReactFlow } from 'reactflow';
 
 import styles from './FlowView.module.css';
 
@@ -24,6 +23,7 @@ export default function DownloadButton() {
     const nodesBounds = getRectOfNodes(getNodes());
     const { height: imageHeight, width: imageWidth } = nodesBounds;
     const transform = getViewportForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const viewport: HTMLDivElement = document.querySelector('.react-flow__viewport')!;
 
     toPng(viewport, {
@@ -31,10 +31,11 @@ export default function DownloadButton() {
       width: imageWidth,
       height: imageHeight,
       style: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
         width: imageWidth as any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
         height: imageHeight as any,
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.zoom})`,
       },
     })

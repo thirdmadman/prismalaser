@@ -1,7 +1,7 @@
 'use client';
 
 import { useMonaco } from '@monaco-editor/react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDebounce, useLocalStorage } from 'react-use';
 
 import { EditorView } from '@/widgets/schema-editor/';
@@ -18,14 +18,15 @@ import CopyButton from '@/widgets/schema-editor/ui/CopyButton';
 interface ISchemaValidationResult {
   isOk?: boolean;
   isLoading?: boolean;
-  errors?: SchemaError[];
+  errors?: Array<SchemaError>;
 }
 
 export default function IndexPage() {
   // TODO: multiple save states.
   const [storedText, setStoredText] = useLocalStorage('prismaliser.text', INITIAL_PLACEHOLDER_SCHEMA);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const [text, setText] = useState(storedText!);
-  const [schemaErrors, setSchemaErrors] = useState<SchemaError[]>([]);
+  const [schemaErrors, setSchemaErrors] = useState<Array<SchemaError>>([]);
   const [dmmf, setDMMF] = useState<DMMF.Datamodel | null>(null);
   const [editorVisible, setEditorVisible] = useState(true);
   const [schemaValidationResult, setSchemaValidationResult] = useState<ISchemaValidationResult | null>(null);
@@ -36,10 +37,14 @@ export default function IndexPage() {
     setStoredText(text);
     setSchemaValidationResult({ isLoading: true });
     const response = await fetch('api/validate', { method: 'POST', body: JSON.stringify({ text }) });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const responseData = await response.json();
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (responseData.isOk) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       const data = JSON.parse(responseData.data);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       setDMMF(data);
       setSchemaErrors([]);
       setSchemaValidationResult({ isLoading: false, isOk: true });
@@ -51,9 +56,12 @@ export default function IndexPage() {
 
   const format = async () => {
     const response = await fetch('api/format', { method: 'POST', body: JSON.stringify({ text }) });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const responseData = await response.json();
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (responseData.isOk) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       setText(responseData.data);
     }
   };
@@ -74,7 +82,7 @@ export default function IndexPage() {
     }));
     const [model] = monaco.editor.getModels();
 
-    monaco.editor.setModelMarkers(model!, 'prismaliser', markers);
+    monaco.editor.setModelMarkers(model, 'prismaliser', markers);
   }, [monaco, schemaErrors]);
 
   useEffect(() => {
@@ -82,6 +90,7 @@ export default function IndexPage() {
     const params = new URLSearchParams(location.search);
 
     if (params.has('code')) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const code = params.get('code')!;
       const decoded = fromUrlSafeB64(code);
 
@@ -89,14 +98,22 @@ export default function IndexPage() {
     }
   }, []);
 
-  const toggleEditor = () => setEditorVisible((v) => !v);
+  const toggleEditor = () => {
+    setEditorVisible((v) => !v);
+  };
 
   return (
     <Layout noEditor={!editorVisible}>
       {}
       {editorVisible && (
         <section className="relative flex flex-col items-start border-r-2">
-          <EditorView value={text} onChange={(val) => setText(val!)} />
+          <EditorView
+            value={text}
+            onChange={(val) => {
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              setText(val!);
+            }}
+          />
 
           <div className="absolute flex gap-2 left-4 bottom-4">
             <CopyButton input={text} />

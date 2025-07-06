@@ -1,1 +1,1 @@
-export {FlowView} from './ui/FlowView';
+export { FlowView } from './ui/FlowView';

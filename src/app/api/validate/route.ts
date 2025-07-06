@@ -6,11 +6,13 @@ export async function POST(request: NextRequest) {
   let isOk = false;
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const requestData = await request.json();
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     result = await validateSchema(requestData.text);
 
-    isOk = !result?.isError;
+    isOk = !result.isError;
   } catch (error) {
     console.error(error);
   }

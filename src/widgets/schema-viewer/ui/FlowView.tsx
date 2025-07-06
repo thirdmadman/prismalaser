@@ -2,14 +2,14 @@ import doubleChevron from '@iconify/icons-gg/chevron-double-left';
 import listTree from '@iconify/icons-gg/list-tree';
 import { Icon } from '@iconify/react';
 import { ElkNode } from 'elkjs/lib/elk.bundled';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactFlow, {
-  applyNodeChanges,
   Background,
   BackgroundVariant,
   ControlButton,
   Controls,
   OnNodesChange,
+  applyNodeChanges,
 } from 'reactflow';
 
 import DownloadButton from './DownloadButton';
@@ -38,6 +38,7 @@ export interface FlowViewProps {
   toggleEditor(): void;
 }
 
+// eslint-disable-next-line @typescript-eslint/unbound-method
 export function FlowView({ dmmf, toggleEditor }: FlowViewProps) {
   const [nodes, setNodes] = useState<DMMFToElementsResult['nodes']>([]);
   const [edges, setEdges] = useState<DMMFToElementsResult['edges']>([]);
@@ -57,8 +58,10 @@ export function FlowView({ dmmf, toggleEditor }: FlowViewProps) {
     regenerateNodes(layout);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onNodesChange: OnNodesChange = (changes) => setNodes((nodes) => applyNodeChanges(changes, nodes as any) as any);
+  const onNodesChange: OnNodesChange = (changes) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+    setNodes((nodes) => applyNodeChanges(changes, nodes as any) as any);
+  };
 
   useEffect(() => {
     regenerateNodes(null);

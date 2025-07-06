@@ -32,7 +32,9 @@ export default function ModelNode({ data }: ModelNodeProps) {
 
       if (!node) return;
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const x = node.position.x + node.width! / 2;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const y = node.position.y + node.height! / 2;
       const zoom = getZoom();
 
@@ -117,7 +119,7 @@ export default function ModelNode({ data }: ModelNodeProps) {
               <td className="p-2 font-mono border-t-2 border-r-2 border-gray-300">{col.displayType}</td>
               <td className="font-mono border-t-2 border-gray-300">
                 <div className="relative p-2">
-                  {col.defaultValue || ''}
+                  {col.defaultValue ?? ''}
                   {sourceHandle}
                 </div>
               </td>

@@ -47,17 +47,17 @@ const calculateWidth = (node: Node<EnumNodeData> | Node<ModelNodeData>) => {
     const width =
       node.data.values.reduce(
         (acc, curr) => (acc < curr.length ? curr.length : acc),
-        node.data.name.length + (node.data.dbName?.length || 0)
+        node.data.name.length + (node.data.dbName?.length ?? 0)
       ) * CHAR_WIDTH;
 
     return normalizeSize(width);
   }
 
-  const headerLength = node.data.name.length + (node.data.dbName?.length || 0);
+  const headerLength = node.data.name.length + (node.data.dbName?.length ?? 0);
 
   const [nameLength, typeLength, defaultValueLength] = node.data.columns.reduce(
     (acc, curr) => {
-      const currDefaultValueLength = curr.defaultValue?.length || 0;
+      const currDefaultValueLength = curr.defaultValue?.length ?? 0;
 
       return [
         acc[0] < curr.name.length ? curr.name.length : acc[0],
@@ -75,9 +75,9 @@ const calculateWidth = (node: Node<EnumNodeData> | Node<ModelNodeData>) => {
   return normalizeSize(width);
 };
 
-export const getLayout = async (nodes: Array<Node<EnumNodeData> | Node<ModelNodeData>>, edges: Edge[]) => {
-  const elkNodes: ElkNode[] = [];
-  const elkEdges: ElkExtendedEdge[] = [];
+export const getLayout = async (nodes: Array<Node<EnumNodeData> | Node<ModelNodeData>>, edges: Array<Edge>) => {
+  const elkNodes: Array<ElkNode> = [];
+  const elkEdges: Array<ElkExtendedEdge> = [];
 
   nodes.forEach((node) => {
     elkNodes.push({

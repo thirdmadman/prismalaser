@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import {
   EdgeProps,
   EdgeText,
@@ -46,6 +46,7 @@ const RelationEdge = ({
     />
   ) : null;
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { relationType } = data!;
   const [markerStart, markerEnd] = {
     'm-n': ['url(#prismaliser-many)', 'url(#prismaliser-many)'],
