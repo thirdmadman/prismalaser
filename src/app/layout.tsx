@@ -28,30 +28,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Prismaliser</title>
-        <meta name="description" content="Visualise your Prisma schema!" />
-        <meta name="keywords" content="Prisma, GraphQL, Schema, Visualisation, Graph, Database, Design" />
+        <title>Prismalaser</title>
+        <meta name="description" content="Visualize your Prisma schema!" />
+        <meta name="keywords" content="Prisma, GraphQL, Schema, Visualization, Graph, Database, Design" />
         <meta name="theme-color" content="#6366F1" />
         {/* OpenGraph */}
         <meta property="og:type" content="object" />
-        <meta property="og:site_name" content="Prismaliser" />
-        <meta property="og:title" content="Prismaliser" />
-        <meta property="og:description" content="Visualise your Prisma schema!" />
+        <meta property="og:site_name" content="Prismalaser" />
+        <meta property="og:title" content="Prismalaser" />
+        <meta property="og:description" content="Visualize your Prisma schema!" />
         <meta property="og:image" content="/img/banner.png" />
         <meta property="og:image:width" content="1000" />
         <meta property="og:image:height" content="500" />
-        <meta property="og:image:alt" content="Visualise your Prisma schema - Prismaliser" />
-        {/* Other social media */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:creator" content="@ovyerus" />
-        <meta property="twitter:title" content="Prismaliser" />
-        <meta property="twitter:description" content="Visualise your Prisma schema!" />
-        {/* TEMP hardcoding */}
-        <meta property="twitter:image" content="https://prismaliser.app/img/banner.png" />
-        <meta property="twitter:image:alt" content="Visualise your Prisma schema - Prismaliser" />
-        {!!process.env.NEXT_PUBLIC_UMAMI_SITE && (
-          <script data-website-id={process.env.NEXT_PUBLIC_UMAMI_SITE} src="/script.js" defer />
-        )}
+        <meta property="og:image:alt" content="Visualise your Prisma schema - Prismalaser" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
     </html>

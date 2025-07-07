@@ -8,7 +8,7 @@ import styles from './FlowView.module.css';
 const downloadImage = (dataUrl: string) => {
   const a = document.createElement('a');
 
-  a.setAttribute('download', 'prismaliser.png');
+  a.setAttribute('download', 'prismalaser-export.png');
   a.setAttribute('href', dataUrl);
   a.click();
 };

@@ -3,7 +3,7 @@ export default function Markers() {
     <svg width="0" height="0">
       <defs>
         <marker
-          id="prismaliser-one"
+          id="schema-maker-one"
           markerWidth="12.5"
           markerHeight="12.5"
           viewBox="-10 -10 20 20"
@@ -21,7 +21,7 @@ export default function Markers() {
         </marker>
 
         <marker
-          id="prismaliser-many"
+          id="schema-maker-many"
           markerWidth="12.5"
           markerHeight="12.5"
           viewBox="-10 -10 20 20"

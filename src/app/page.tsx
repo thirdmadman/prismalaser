@@ -23,7 +23,7 @@ interface ISchemaValidationResult {
 
 export default function IndexPage() {
   // TODO: multiple save states.
-  const [storedText, setStoredText] = useLocalStorage('prismaliser.text', INITIAL_PLACEHOLDER_SCHEMA);
+  const [storedText, setStoredText] = useLocalStorage('prismalaser.text', INITIAL_PLACEHOLDER_SCHEMA);
   const [text, setText] = useState(storedText ?? null);
   const [schemaErrors, setSchemaErrors] = useState<Array<SchemaError>>([]);
   const [dmmf, setDMMF] = useState<DMMF.Datamodel | null>(null);
@@ -81,7 +81,7 @@ export default function IndexPage() {
     }));
     const [model] = monaco.editor.getModels();
 
-    monaco.editor.setModelMarkers(model, 'prismaliser', markers);
+    monaco.editor.setModelMarkers(model, 'prismalaser', markers);
   }, [monaco, schemaErrors]);
 
   useEffect(() => {

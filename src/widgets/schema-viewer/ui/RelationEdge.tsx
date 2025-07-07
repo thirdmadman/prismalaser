@@ -49,9 +49,9 @@ const RelationEdge = ({
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { relationType } = data!;
   const [markerStart, markerEnd] = {
-    'm-n': ['url(#prismaliser-many)', 'url(#prismaliser-many)'],
-    '1-n': ['url(#prismaliser-many)', 'url(#prismaliser-one)'],
-    '1-1': ['url(#prismaliser-one)', 'url(#prismaliser-one)'],
+    'm-n': ['url(#schema-maker-many)', 'url(#schema-maker-many)'],
+    '1-n': ['url(#schema-maker-many)', 'url(#schema-maker-one)'],
+    '1-1': ['url(#schema-maker-one)', 'url(#schema-maker-one)'],
   }[relationType];
 
   // TODO: markers look weird when the edge needs to rotate perpendicular to the

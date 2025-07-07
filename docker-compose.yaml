@@ -1,7 +1,7 @@
-name: prismaliser
+name: prismalaser
 services:
   frontend:
-    container_name: prismaliser-frontend
+    container_name: prismalaser-frontend
     env_file: ./.env
     build:
       context: .
