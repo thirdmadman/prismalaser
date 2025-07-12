@@ -1,19 +1,17 @@
 'use client';
 
-import { useMonaco } from '@monaco-editor/react';
 import { useEffect, useState } from 'react';
+import { useMonaco } from '@monaco-editor/react';
 import { useDebounce, useLocalStorage } from 'react-use';
 
-import { CopyButton, EditorView } from '@/widgets/schema-editor/';
-import { FlowView } from '@/widgets/schema-viewer/';
-
+import { INITIAL_PLACEHOLDER_SCHEMA } from '@/shared/config';
 import { fromUrlSafeB64 } from '@/shared/lib';
 import { ISchemaError } from '@/shared/lib/types';
-
+import { Layout } from '@/shared/ui';
+import { CopyButton, EditorView } from '@/widgets/schema-editor/';
+import { FlowView } from '@/widgets/schema-viewer/';
 import type { DMMF } from '@prisma/generator-helper';
 import type { editor } from 'monaco-editor';
-import { INITIAL_PLACEHOLDER_SCHEMA } from '@/shared/config';
-import { Layout } from '@/shared/ui';
 
 interface ISchemaValidationResult {
   isOk?: boolean;

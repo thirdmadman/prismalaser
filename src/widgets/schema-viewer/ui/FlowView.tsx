@@ -1,8 +1,8 @@
+import { useEffect, useState } from 'react';
 import doubleChevron from '@iconify/icons-gg/chevron-double-left';
 import listTree from '@iconify/icons-gg/list-tree';
 import { Icon } from '@iconify/react';
 import { ElkNode } from 'elkjs/lib/elk.bundled';
-import { useEffect, useState } from 'react';
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -13,18 +13,17 @@ import ReactFlow, {
 } from 'reactflow';
 
 import DownloadButton from './DownloadButton';
-import styles from './FlowView.module.css';
-
 import EnumNode from './EnumNode';
+import Markers from './Markers';
 import ModelNode from './ModelNode';
 import RelationEdge from './RelationEdge';
+import { updateSchemaStringByChanges } from '../lib/updateSchemaStringByChanges';
 import { getLayout } from '@/shared/lib/layout';
 import { generateFlowFromDMMF } from '@/shared/lib/prismaToFlow';
 import { DMMFToElementsResult, TCustomEdge, TCustomNode, TCustomNodeData } from '@/shared/lib/types';
-
 import type { DMMF } from '@prisma/generator-helper';
-import { updateSchemaStringByChanges } from '../lib/updateSchemaStringByChanges';
-import Markers from './Markers';
+
+import styles from './FlowView.module.css';
 
 const nodeTypes = {
   model: ModelNode,

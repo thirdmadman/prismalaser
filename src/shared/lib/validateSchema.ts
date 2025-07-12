@@ -1,7 +1,8 @@
 import { getDMMF } from '@prisma/internals';
 import stripAnsi from 'strip-ansi';
-import { TErrorTypes } from './types';
+
 import { parseDMMFError } from '.';
+import { TErrorTypes } from './types';
 
 export async function validateSchema(schemaString: string) {
   let result = null;

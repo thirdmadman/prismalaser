@@ -1,10 +1,10 @@
-import cc from 'classcat';
 import { useState } from 'react';
+import cc from 'classcat';
 import { Handle, Position } from 'reactflow';
 
-import styles from './Node.module.scss';
-
 import { IEnumNodeData } from '@/shared/lib/types';
+
+import styles from './Node.module.scss';
 
 const MAX_VALUES = 12;
 

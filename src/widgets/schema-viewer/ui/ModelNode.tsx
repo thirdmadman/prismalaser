@@ -1,8 +1,6 @@
-import cc from 'classcat';
 import { JSX } from 'react';
+import cc from 'classcat';
 import { Handle, Position, useReactFlow, useStoreApi } from 'reactflow';
-
-import styles from './Node.module.scss';
 
 import {
   generateEnumEdgeTargetHandleId,
@@ -10,6 +8,8 @@ import {
   generateRelationEdgeTargetHandleId,
 } from '@/shared/lib/prismaToFlow';
 import { IModelNodeData, IModelNodeDataColumn } from '@/shared/lib/types';
+
+import styles from './Node.module.scss';
 
 const isRelationed = ({ relationData }: IModelNodeDataColumn) => !!relationData?.side;
 

@@ -14,7 +14,6 @@ import {
   TRelationSide,
   TRelationType,
 } from './types';
-
 import type { DMMF } from '@prisma/generator-helper';
 
 const letters = ['A', 'B'];

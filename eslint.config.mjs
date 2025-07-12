@@ -10,6 +10,8 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
+import importPlugin from 'eslint-plugin-import';
+import sortExports from 'eslint-plugin-sort-exports';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,6 +28,11 @@ export default tseslint.config(
   {
     files: ['**/*.{ts,tsx}'],
   },
+  {
+    // disable type-aware linting on JS files
+    files: ['**/*.js'],
+    extends: [tseslint.configs.disableTypeChecked],
+  },
   ...compat.extends('next/typescript'),
   eslint.configs.recommended,
   tseslint.configs.eslintRecommended,
@@ -34,7 +41,7 @@ export default tseslint.config(
   reactPlugin.configs.flat.recommended,
   reactPlugin.configs.flat['jsx-runtime'],
   reactHooks.configs['recommended-latest'],
-  reactRefresh.configs.vite,
+  reactRefresh.configs.recommended,
   jsxA11y.flatConfigs.strict,
   // needs to be at the bottom to override any other rules
   prettierConfig,
@@ -53,6 +60,13 @@ export default tseslint.config(
     },
   },
   {
+    plugins: {
+      'react': reactPlugin,
+      'import': importPlugin,
+      'sort-exports': sortExports,
+    },
+  },
+  {
     settings: {
       'react': {
         version: 'detect',
@@ -62,6 +76,44 @@ export default tseslint.config(
   },
   {
     rules: {
+      'import/no-unresolved': [
+        'error',
+        {
+          commonjs: true,
+          amd: true,
+        },
+      ],
+      'import/no-namespace': ['error', { ignore: ['*.ext'] }],
+      'import/newline-after-import': 'error',
+      'import/no-duplicates': 'error',
+      'import/order': [
+        'error',
+        {
+          'groups': [['builtin', 'external'], ['internal', 'parent', 'sibling', 'index', 'type'], ['object']],
+          'newlines-between': 'always',
+          'pathGroups': [
+            {
+              pattern: '{react,react-dom/**,redux}',
+              group: 'external',
+              position: 'before',
+            },
+            {
+              pattern: '*.{scss,css}',
+              group: 'object',
+              patternOptions: { matchBase: true },
+              position: 'after',
+            },
+          ],
+          'warnOnUnassignedImports': true,
+          'pathGroupsExcludedImportTypes': ['react', 'react-dom/**'],
+          'distinctGroup': false,
+          'alphabetize': {
+            order: 'asc',
+            orderImportKind: 'asc',
+            caseInsensitive: true,
+          },
+        },
+      ],
       'sort-imports': [
         'error',
         {
@@ -70,6 +122,15 @@ export default tseslint.config(
           ignoreMemberSort: false,
           memberSyntaxSortOrder: ['all', 'multiple', 'single', 'none'],
           allowSeparatedGroups: false,
+        },
+      ],
+      'sort-exports/sort-exports': [
+        'error',
+        {
+          sortDir: 'asc',
+          ignoreCase: false,
+          sortExportKindFirst: 'type',
+          pattern: '**/index.*',
         },
       ],
       '@typescript-eslint/array-type': ['error', { default: 'generic' }],
@@ -90,11 +151,8 @@ export default tseslint.config(
           },
         },
       ],
+      '@typescript-eslint/ban-ts-comment': 'warn',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
-  },
-  {
-    // disable type-aware linting on JS files
-    files: ['**/*.js'],
-    extends: [tseslint.configs.disableTypeChecked],
   }
 );

@@ -1,8 +1,9 @@
-import cc from 'classcat';
 import React from 'react';
+import cc from 'classcat';
+
+import { HeaderNavigation } from '@/widgets/header-navigation';
 
 import styles from './Layout.module.scss';
-import { HeaderNavigation } from '@/widgets/header-navigation';
 
 interface IPageLayoutProps {
   children: React.ReactNode;
