@@ -1,20 +1,20 @@
 import { Edge, Node } from 'reactflow';
 
-export type RelationType = '1-1' | '1-n' | 'm-n';
-export type RelationSide = 'source' | 'target';
+export type TRelationType = '1-1' | '1-n' | 'm-n';
+export type TRelationSide = 'source' | 'target';
 
-export interface SchemaError {
+export interface ISchemaError {
   reason: string;
   row: string;
 }
 
-export interface ModelRelationData {
-  side: RelationSide;
-  type: RelationType;
+export interface IModelRelationData {
+  side: TRelationSide;
+  type: TRelationType;
   name: string;
 }
 
-export interface EnumNodeData {
+export interface IEnumNodeData {
   type: 'enum';
   name: string;
   dbName?: string | null;
@@ -22,34 +22,41 @@ export interface EnumNodeData {
   values: Array<string>;
 }
 
-export interface ModelNodeData {
+export interface IModelNodeDataColumn {
+  name: string;
+  type: string;
+  displayType: string;
+  kind: string;
+  documentation?: string;
+  isList: boolean;
+  isRequired: boolean;
+  defaultValue?: string | null;
+  relationData: IModelRelationData | null;
+}
+
+export interface IModelNodeData {
   type: 'model';
   name: string;
   dbName?: string | null;
   documentation?: string;
-  columns: Array<{
-    name: string;
-    type: string;
-    displayType: string;
-    kind: string;
-    documentation?: string;
-    isList: boolean;
-    isRequired: boolean;
-    defaultValue?: string | null;
-    relationData: ModelRelationData | null;
-  }>;
+  columns: Array<IModelNodeDataColumn>;
 }
 
-export interface RelationEdgeData {
-  relationType: RelationType;
+export interface IRelationEdgeData {
+  relationType: TRelationType;
 }
 
-export enum ErrorTypes {
+export enum TErrorTypes {
   Prisma,
   Other,
 }
 
+export type TCustomNodeData = IEnumNodeData | IModelNodeData;
+export type TCustomNode = Node<TCustomNodeData>;
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type TCustomEdge = Edge<IRelationEdgeData | {}>;
+
 export interface DMMFToElementsResult {
-  nodes: Array<Node<EnumNodeData> | Node<ModelNodeData>>;
-  edges: Array<Edge>;
+  nodes: Array<TCustomNode>;
+  edges: Array<TCustomEdge>;
 }

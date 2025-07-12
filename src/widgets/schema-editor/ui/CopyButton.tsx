@@ -2,11 +2,11 @@ import React, { useRef, useState } from 'react';
 
 import { toUrlSafeB64 } from '@/shared/lib';
 
-interface CopyButtonProps {
+interface ICopyButtonProps {
   input: string;
 }
 
-export default function CopyButton({ input }: CopyButtonProps) {
+export function CopyButton({ input }: ICopyButtonProps) {
   const [showCopied, setShowCopied] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-deprecated
   const timerRef: React.MutableRefObject<NodeJS.Timeout | null> = useRef(null);

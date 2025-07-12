@@ -4,12 +4,12 @@ import React from 'react';
 import styles from './Layout.module.scss';
 import { HeaderNavigation } from '@/widgets/header-navigation';
 
-interface LayoutProps {
+interface IPageLayoutProps {
   children: React.ReactNode;
   noEditor?: boolean;
 }
 
-export default function Layout({ children, noEditor = false }: LayoutProps) {
+export function PageLayout({ children, noEditor = false }: IPageLayoutProps) {
   return (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <main className={cc([styles.grid, 'relative', 'h-screen', 'w-screen', { [styles.noEditor as any]: noEditor }])}>

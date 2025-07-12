@@ -15,12 +15,12 @@ import ReactFlow, {
 import DownloadButton from './DownloadButton';
 import styles from './FlowView.module.css';
 
-import EnumNode from '@/widgets/schema-viewer/ui/EnumNode';
-import ModelNode from '@/widgets/schema-viewer/ui/ModelNode';
-import RelationEdge from '@/widgets/schema-viewer/ui/RelationEdge';
+import EnumNode from './EnumNode';
+import ModelNode from './ModelNode';
+import RelationEdge from './RelationEdge';
 import { getLayout } from '@/shared/lib/layout';
 import { generateFlowFromDMMF } from '@/shared/lib/prismaToFlow';
-import { DMMFToElementsResult } from '@/shared/lib/types';
+import { DMMFToElementsResult, TCustomEdge, TCustomNode, TCustomNodeData } from '@/shared/lib/types';
 
 import type { DMMF } from '@prisma/generator-helper';
 import { updateSchemaStringByChanges } from '../lib/updateSchemaStringByChanges';
@@ -35,7 +35,7 @@ const edgeTypes = {
   relation: RelationEdge,
 };
 
-export interface FlowViewProps {
+interface IFlowViewProps {
   dmmf: DMMF.Datamodel | null;
   toggleEditor(): void;
   schemaText: string;
@@ -43,14 +43,14 @@ export interface FlowViewProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-export function FlowView({ dmmf, toggleEditor, schemaText, onTextChange }: FlowViewProps) {
-  const [nodes, setNodes] = useState<DMMFToElementsResult['nodes']>([]);
-  const [edges, setEdges] = useState<DMMFToElementsResult['edges']>([]);
+export function FlowView({ dmmf, toggleEditor, schemaText, onTextChange }: IFlowViewProps) {
+  const [nodes, setNodes] = useState<Array<TCustomNode>>([]);
+  const [edges, setEdges] = useState<Array<TCustomEdge>>([]);
 
   const regenerateNodes = (layout: ElkNode | null) => {
-    const { nodes: newNodes, edges: newEdges } = dmmf
+    const { nodes: newNodes, edges: newEdges }: DMMFToElementsResult = dmmf
       ? generateFlowFromDMMF(dmmf, nodes, layout)
-      : ({ nodes: [], edges: [] } as DMMFToElementsResult);
+      : { nodes: [], edges: [] };
 
     // See if `applyNodeChanges` can work here?
     setNodes(newNodes);
@@ -70,8 +70,11 @@ export function FlowView({ dmmf, toggleEditor, schemaText, onTextChange }: FlowV
     const newSchemaString = updateSchemaStringByChanges(schemaText, changes);
     onTextChange(newSchemaString);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
-    setNodes((nodes) => applyNodeChanges(changes, nodes as any) as any);
+    setNodes((nodes) => {
+      const updatedNodes = applyNodeChanges<TCustomNodeData>(changes, nodes);
+
+      return updatedNodes;
+    });
   };
 
   useEffect(() => {

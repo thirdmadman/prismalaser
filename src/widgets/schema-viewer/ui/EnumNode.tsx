@@ -4,15 +4,15 @@ import { Handle, Position } from 'reactflow';
 
 import styles from './Node.module.scss';
 
-import { EnumNodeData } from '@/shared/lib/types';
+import { IEnumNodeData } from '@/shared/lib/types';
 
 const MAX_VALUES = 12;
 
-export interface EnumNodeProps {
-  data: EnumNodeData;
+interface IEnumNodeProps {
+  data: IEnumNodeData;
 }
 
-export default function EnumNode({ data }: EnumNodeProps) {
+export default function EnumNode({ data }: IEnumNodeProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (

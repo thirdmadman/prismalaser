@@ -6,7 +6,7 @@ import {
   getSmoothStepPath,
 } from 'reactflow';
 
-import { RelationEdgeData } from '@/shared/lib/types';
+import { IRelationEdgeData } from '@/shared/lib/types';
 
 const RelationEdge = ({
   sourceX,
@@ -22,7 +22,7 @@ const RelationEdge = ({
   labelBgPadding,
   labelBgStyle,
   data,
-}: EdgeProps<RelationEdgeData>) => {
+}: EdgeProps<IRelationEdgeData>) => {
   const [path, centerX, centerY] = getSmoothStepPath({
     sourceX,
     sourceY,

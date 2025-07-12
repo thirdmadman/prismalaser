@@ -9,17 +9,15 @@ import {
   generateRelationEdgeSourceHandleId,
   generateRelationEdgeTargetHandleId,
 } from '@/shared/lib/prismaToFlow';
-import { ModelNodeData } from '@/shared/lib/types';
+import { IModelNodeData, IModelNodeDataColumn } from '@/shared/lib/types';
 
-type ColumnData = ModelNodeData['columns'][number];
+const isRelationed = ({ relationData }: IModelNodeDataColumn) => !!relationData?.side;
 
-const isRelationed = ({ relationData }: ColumnData) => !!relationData?.side;
-
-export interface ModelNodeProps {
-  data: ModelNodeData;
+interface IModelNodeProps {
+  data: IModelNodeData;
 }
 
-export default function ModelNode({ data }: ModelNodeProps) {
+export default function ModelNode({ data }: IModelNodeProps) {
   const store = useStoreApi();
   const { setCenter, getZoom } = useReactFlow();
 

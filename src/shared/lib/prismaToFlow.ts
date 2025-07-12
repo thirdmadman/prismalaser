@@ -1,15 +1,18 @@
 import { ElkNode } from 'elkjs';
 import { count, groupBy, pick } from 'ramda';
-import { Edge, Node } from 'reactflow';
+import { Edge } from 'reactflow';
 
 import {
   DMMFToElementsResult,
-  EnumNodeData,
-  ModelNodeData,
-  ModelRelationData,
-  RelationEdgeData,
-  RelationSide,
-  RelationType,
+  IEnumNodeData,
+  IModelNodeData,
+  IModelNodeDataColumn,
+  IModelRelationData,
+  TCustomEdge,
+  TCustomNode,
+  TCustomNodeData,
+  TRelationSide,
+  TRelationType,
 } from './types';
 
 import type { DMMF } from '@prisma/generator-helper';
@@ -19,7 +22,7 @@ const letters = ['A', 'B'];
 interface IGotModelRelations {
   name: string;
   dbName?: string;
-  type: RelationType;
+  type: TRelationType;
   virtual?: {
     name: string;
     field: {
@@ -30,12 +33,12 @@ interface IGotModelRelations {
   fields: Array<{
     name: string;
     tableName: string;
-    side: RelationSide;
+    side: TRelationSide;
     type: string;
   }>;
 }
 
-const getRelationType = (listCount: number): RelationType => {
+const getRelationType = (listCount: number): TRelationType => {
   if (listCount > 1) {
     return 'm-n';
   }
@@ -47,7 +50,7 @@ const getRelationType = (listCount: number): RelationType => {
   return '1-1';
 };
 
-const getRelationSide = (field: DMMF.Field): RelationSide => {
+const getRelationSide = (field: DMMF.Field): TRelationSide => {
   if (field.relationFromFields?.length || field.relationToFields?.length) {
     return 'source';
   }
@@ -76,10 +79,6 @@ const generateVirtualTableName = (relation: string, table: string) => `${relatio
  * relationship, as well as what side of the relationships they are on.
  */
 const getModelRelations = ({ models }: DMMF.Datamodel): Record<string, IGotModelRelations> => {
-  // if (!models) {
-  //   return null;
-  // }
-
   const objectMapping = models.map((m) => {
     const groupByObject = m.fields
       // Don't bother processing any fields that aren't part of a relationship.
@@ -204,10 +203,8 @@ const getEnumRelations = ({ models }: DMMF.Datamodel) =>
 const relationsToEdges = (
   modelRelations: ReturnType<typeof getModelRelations>,
   enumRelations: ReturnType<typeof getEnumRelations>
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-): Array<Edge<RelationEdgeData | {}>> => {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  let result: Array<Edge<RelationEdgeData | {}>> = [];
+) => {
+  let result: Array<TCustomEdge> = [];
 
   // Enum edges are dead shrimple
   for (const relation of enumRelations) {
@@ -235,9 +232,12 @@ const relationsToEdges = (
       data: { relationType: relation.type },
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const source = relation.fields.find((f) => f.side === 'source')!;
+    const source = relation.fields.find((f) => f.side === 'source');
     let target = relation.fields.find((f) => f.side === 'target');
+
+    if (!source) {
+      throw new Error('Invalid source');
+    }
 
     if (!target && relation.virtual) {
       target = relation.fields.find((field) => field.tableName === relation.virtual?.name);
@@ -267,7 +267,7 @@ const relationsToEdges = (
  * Does not generate position data.
  */
 const generateNodes = ({ enums, models }: DMMF.Datamodel, relations: Record<string, IGotModelRelations>) => {
-  let nodes = [] as Array<EnumNodeData | ModelNodeData>;
+  let nodes = [] as Array<TCustomNodeData>;
 
   nodes = nodes.concat(generateModelNodes(models, relations));
   nodes = nodes.concat(generateImplicitModelNodes(relations));
@@ -276,8 +276,8 @@ const generateNodes = ({ enums, models }: DMMF.Datamodel, relations: Record<stri
   return nodes;
 };
 
-const generateEnumNodes = (enums: ReadonlyArray<DMMF.DatamodelEnum>): Array<EnumNodeData> =>
-  enums.map(({ name, dbName, documentation, values }) => ({
+const generateEnumNodes = (enums: ReadonlyArray<DMMF.DatamodelEnum>) => {
+  const enumNodes: Array<IEnumNodeData> = enums.map(({ name, dbName, documentation, values }) => ({
     type: 'enum',
     name,
     dbName,
@@ -285,12 +285,12 @@ const generateEnumNodes = (enums: ReadonlyArray<DMMF.DatamodelEnum>): Array<Enum
     values: values.map(({ name }) => name),
   }));
 
-const generateModelNodes = (
-  models: ReadonlyArray<DMMF.Model>,
-  relations: Record<string, IGotModelRelations>
-): Array<ModelNodeData> =>
-  models.map(({ name, dbName, documentation, fields }) => {
-    const columns: ModelNodeData['columns'] = fields.map((f) => {
+  return enumNodes;
+};
+
+const generateModelNodes = (models: ReadonlyArray<DMMF.Model>, relations: Record<string, IGotModelRelations>) => {
+  const data: Array<IModelNodeData> = models.map(({ name, dbName, documentation, fields }) => {
+    const columns: Array<IModelNodeDataColumn> = fields.map((f) => {
       // `isList` and `isRequired` are mutually exclusive as per the spec
       const displayType = f.type + (f.isList ? '[]' : !f.isRequired ? '?' : '');
       let defaultValue: string | null = null;
@@ -308,14 +308,18 @@ const generateModelNodes = (
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       const thisRel = relData?.fields.find((g) => g.name === f.name && g.tableName === name);
 
+      const relationSide = thisRel?.side ?? null;
+
+      if (!relationSide) {
+        throw new Error(`Relation ${f.relationName ?? 'unknown'} not found`);
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      const relationData: ModelRelationData | null = relData
+      const relationData: IModelRelationData | null = relData
         ? {
             name: relData.name,
             type: relData.type,
-            // If we can't find the matching field, sucks to suck I guess.
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-            side: thisRel?.side ?? ('' as any),
+            side: relationSide,
           }
         : null;
 
@@ -327,21 +331,26 @@ const generateModelNodes = (
       };
     });
 
-    return {
+    const modelNodeData: IModelNodeData = {
       type: 'model',
       name,
       dbName,
       documentation,
       columns,
     };
+
+    return modelNodeData;
   });
+
+  return data;
+};
 
 /**
  * Generates intermediary tables to represent how implicit many-to-many
  * relationships work under the hood (mostly because I'm too lazy to distinguish
  * between implicit and explicit).
  */
-const generateImplicitModelNodes = (relations: Record<string, IGotModelRelations>): Array<ModelNodeData> => {
+const generateImplicitModelNodes = (relations: Record<string, IGotModelRelations>) => {
   const hasVirtuals = Object.values(relations).filter((rel) => rel.virtual);
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -354,8 +363,8 @@ const generateImplicitModelNodes = (relations: Record<string, IGotModelRelations
     }
   );
 
-  return Object.entries(grouped).map(([name, { relationName, fields }]) => {
-    const columns: ModelNodeData['columns'] = fields.map((col, i) => ({
+  const implicitModelNodes: Array<IModelNodeData> = Object.entries(grouped).map(([name, { relationName, fields }]) => {
+    const columns: Array<IModelNodeDataColumn> = fields.map((col, i) => ({
       name: letters[i],
       kind: 'scalar',
       isList: false,
@@ -377,17 +386,15 @@ const generateImplicitModelNodes = (relations: Record<string, IGotModelRelations
       columns,
     };
   });
+
+  return implicitModelNodes;
 };
 
 /**
  * Takes in plain React Flow node data and positions them either based on an Elk
  * reflow, previous layout state, or with fresh positions.
  */
-const positionNodes = (
-  nodeData: Array<EnumNodeData | ModelNodeData>,
-  previousNodes: Array<Node<EnumNodeData> | Node<ModelNodeData>>,
-  layout: ElkNode | null
-): Array<Node<EnumNodeData> | Node<ModelNodeData>> =>
+const positionNodes = (nodeData: Array<TCustomNodeData>, previousNodes: Array<TCustomNode>, layout: ElkNode | null) =>
   nodeData.map((n) => {
     const positionedNode = layout?.children?.find((layoutNode) => layoutNode.id === n.name);
     const previousNode = previousNodes.find((prev) => prev.id === n.name);
@@ -428,10 +435,7 @@ const positionNodes = (
       },
       width: previousNode?.width ?? 0,
       height: previousNode?.height ?? 0,
-      // Shhhhh
-      // TODO: fix types to not need cast
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-      data: n as any,
+      data: n,
     };
   });
 
@@ -440,17 +444,17 @@ const positionNodes = (
  */
 export const generateFlowFromDMMF = (
   datamodel: DMMF.Datamodel,
-  previousNodes: Array<Node<EnumNodeData> | Node<ModelNodeData>>,
+  previousNodes: Array<TCustomNode>,
   layout: ElkNode | null
-): DMMFToElementsResult => {
+) => {
   const modelRelations = getModelRelations(datamodel);
   const enumRelations = getEnumRelations(datamodel);
   const nodeData = generateNodes(datamodel, modelRelations);
 
-  const nodes = positionNodes(nodeData, previousNodes, layout);
+  const nodes: Array<TCustomNode> = positionNodes(nodeData, previousNodes, layout);
   const edges = relationsToEdges(modelRelations, enumRelations);
 
-  const result = {
+  const result: DMMFToElementsResult = {
     nodes,
     edges,
   };

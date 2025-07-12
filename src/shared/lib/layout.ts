@@ -1,7 +1,7 @@
 import Elk, { ElkExtendedEdge, ElkNode } from 'elkjs/lib/elk.bundled';
-import { Edge, Node } from 'reactflow';
+import { Edge } from 'reactflow';
 
-import { EnumNodeData, ModelNodeData } from './types';
+import { TCustomNode } from './types';
 
 const elk = new Elk({
   defaultLayoutOptions: {
@@ -25,7 +25,7 @@ const normalizeSize = (value: number) => Math.max(value, MIN_SIZE) + MARGIN * 2;
  * Calculates node height based on number of fields.
  * For enums max height is MAX_ENUM_HEIGHT being height of a folded enum values
  */
-const calculateHeight = (node: Node<EnumNodeData> | Node<ModelNodeData>) => {
+const calculateHeight = (node: TCustomNode) => {
   if (node.data.type === 'enum') {
     const fieldsHeight = node.data.values.length * FIELD_HEIGHT;
     const height = fieldsHeight > MAX_ENUM_HEIGHT ? MAX_ENUM_HEIGHT : fieldsHeight + FIELD_HEIGHT;
@@ -42,7 +42,7 @@ const calculateHeight = (node: Node<EnumNodeData> | Node<ModelNodeData>) => {
 /**
  * Calculates node width based on column text lengths (CHAR_WIDTH per character in a text field)
  */
-const calculateWidth = (node: Node<EnumNodeData> | Node<ModelNodeData>) => {
+const calculateWidth = (node: TCustomNode) => {
   if (node.data.type === 'enum') {
     const width =
       node.data.values.reduce(
@@ -75,7 +75,7 @@ const calculateWidth = (node: Node<EnumNodeData> | Node<ModelNodeData>) => {
   return normalizeSize(width);
 };
 
-export const getLayout = async (nodes: Array<Node<EnumNodeData> | Node<ModelNodeData>>, edges: Array<Edge>) => {
+export const getLayout = async (nodes: Array<TCustomNode>, edges: Array<Edge>) => {
   const elkNodes: Array<ElkNode> = [];
   const elkEdges: Array<ElkExtendedEdge> = [];
 

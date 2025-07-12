@@ -2,12 +2,12 @@ import { config, language } from '@/shared/lib/monacoPrismaLanguage';
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { useEffect } from 'react';
 
-export interface EditorViewProps {
+interface IEditorViewProps {
   value: string;
   onChange: (text?: string) => void;
 }
 
-export function EditorView({ value, onChange }: EditorViewProps) {
+export function EditorView({ value, onChange }: IEditorViewProps) {
   const monaco = useMonaco();
 
   useEffect(() => {

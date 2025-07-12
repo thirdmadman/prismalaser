@@ -1,6 +1,6 @@
 import { getDMMF } from '@prisma/internals';
 import stripAnsi from 'strip-ansi';
-import { ErrorTypes } from './types';
+import { TErrorTypes } from './types';
 import { parseDMMFError } from '.';
 
 export async function validateSchema(schemaString: string) {
@@ -15,16 +15,16 @@ export async function validateSchema(schemaString: string) {
     const message = stripAnsi((err as Error).message);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let errors: any;
-    let errType: ErrorTypes;
+    let errType: TErrorTypes;
 
     if (message.includes('error: ')) {
       errors = parseDMMFError(message);
-      errType = ErrorTypes.Prisma;
+      errType = TErrorTypes.Prisma;
     } else {
       console.error(err);
 
       errors = message;
-      errType = ErrorTypes.Other;
+      errType = TErrorTypes.Other;
     }
     isError = true;
 

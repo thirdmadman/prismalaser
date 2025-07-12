@@ -4,28 +4,28 @@ import { useMonaco } from '@monaco-editor/react';
 import { useEffect, useState } from 'react';
 import { useDebounce, useLocalStorage } from 'react-use';
 
-import { EditorView } from '@/widgets/schema-editor/';
+import { CopyButton, EditorView } from '@/widgets/schema-editor/';
 import { FlowView } from '@/widgets/schema-viewer/';
-import Layout from '@/shared/ui/page-layout/Layout';
+
 import { fromUrlSafeB64 } from '@/shared/lib';
-import { SchemaError } from '@/shared/lib/types';
+import { ISchemaError } from '@/shared/lib/types';
 
 import type { DMMF } from '@prisma/generator-helper';
 import type { editor } from 'monaco-editor';
 import { INITIAL_PLACEHOLDER_SCHEMA } from '@/shared/config';
-import CopyButton from '@/widgets/schema-editor/ui/CopyButton';
+import { Layout } from '@/shared/ui';
 
 interface ISchemaValidationResult {
   isOk?: boolean;
   isLoading?: boolean;
-  errors?: Array<SchemaError>;
+  errors?: Array<ISchemaError>;
 }
 
 export default function IndexPage() {
   // TODO: multiple save states.
   const [storedText, setStoredText] = useLocalStorage('prismalaser.text', INITIAL_PLACEHOLDER_SCHEMA);
   const [text, setText] = useState(storedText ?? null);
-  const [schemaErrors, setSchemaErrors] = useState<Array<SchemaError>>([]);
+  const [schemaErrors, setSchemaErrors] = useState<Array<ISchemaError>>([]);
   const [dmmf, setDMMF] = useState<DMMF.Datamodel | null>(null);
   const [editorVisible, setEditorVisible] = useState(true);
   const [schemaValidationResult, setSchemaValidationResult] = useState<ISchemaValidationResult | null>(null);

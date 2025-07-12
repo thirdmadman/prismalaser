@@ -1,9 +1,9 @@
-import { SchemaError } from './types';
+import { ISchemaError } from './types';
 
 // eslint-disable-next-line no-regex-spaces
 const errRegex = /^(?:Error validating.*?:)?(.+?)\n  -->  schema\.prisma:(\d+)\n/;
 
-export const parseDMMFError = (error: string): Array<SchemaError> =>
+export const parseDMMFError = (error: string): Array<ISchemaError> =>
   error
     .split('error: ')
     .slice(1)
