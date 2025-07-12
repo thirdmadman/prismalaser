@@ -1,8 +1,6 @@
-import { ElkNode } from 'elkjs';
 import { count, groupBy, pick } from 'ramda';
-import { Edge } from 'reactflow';
 
-import {
+import type {
   DMMFToElementsResult,
   IEnumNodeData,
   IModelNodeData,
@@ -15,6 +13,8 @@ import {
   TRelationType,
 } from './types';
 import type { DMMF } from '@prisma/generator-helper';
+import type { ElkNode } from 'elkjs';
+import type { Edge } from 'reactflow';
 
 const letters = ['A', 'B'];
 

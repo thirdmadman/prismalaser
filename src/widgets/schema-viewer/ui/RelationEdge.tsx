@@ -1,12 +1,12 @@
 import { memo } from 'react';
 import {
-  EdgeProps,
   EdgeText,
   // getEdgeCenter,
   getSmoothStepPath,
 } from 'reactflow';
 
-import { IRelationEdgeData } from '@/shared/lib/types';
+import type { EdgeProps } from 'reactflow';
+import type { IRelationEdgeData } from '@/shared/lib/types';
 
 const RelationEdge = ({
   sourceX,

@@ -1,5 +1,6 @@
 import { formatSchema } from '@prisma/internals';
-import { NextRequest } from 'next/server';
+
+import type { NextRequest } from 'next/server';
 
 export async function POST(request: NextRequest) {
   let formattedSchemaString = null;

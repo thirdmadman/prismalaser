@@ -1,4 +1,4 @@
-import { Edge, Node } from 'reactflow';
+import type { Edge, Node } from 'reactflow';
 
 export type TRelationType = '1-1' | '1-n' | 'm-n';
 export type TRelationSide = 'source' | 'target';

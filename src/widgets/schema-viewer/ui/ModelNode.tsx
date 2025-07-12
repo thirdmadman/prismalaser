@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import type { JSX } from 'react';
 import cc from 'classcat';
 import { Handle, Position, useReactFlow, useStoreApi } from 'reactflow';
 
@@ -7,7 +7,7 @@ import {
   generateRelationEdgeSourceHandleId,
   generateRelationEdgeTargetHandleId,
 } from '@/shared/lib/prismaToFlow';
-import { IModelNodeData, IModelNodeDataColumn } from '@/shared/lib/types';
+import type { IModelNodeData, IModelNodeDataColumn } from '@/shared/lib/types';
 
 import styles from './Node.module.scss';
 

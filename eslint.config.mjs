@@ -7,11 +7,12 @@ import globals from 'globals';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { FlatCompat } from '@eslint/eslintrc';
 import importPlugin from 'eslint-plugin-import';
 import sortExports from 'eslint-plugin-sort-exports';
+import { fixupConfigRules } from '@eslint/compat';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -33,8 +34,10 @@ export default tseslint.config(
     files: ['**/*.js'],
     extends: [tseslint.configs.disableTypeChecked],
   },
+  ...fixupConfigRules(compat.extends('plugin:@next/next/core-web-vitals')),
   ...compat.extends('next/typescript'),
   eslint.configs.recommended,
+  tseslint.configs.recommended,
   tseslint.configs.eslintRecommended,
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
@@ -98,6 +101,11 @@ export default tseslint.config(
               position: 'before',
             },
             {
+              pattern: '@/**',
+              group: 'internal',
+              position: 'after',
+            },
+            {
               pattern: '*.{scss,css}',
               group: 'object',
               patternOptions: { matchBase: true },
@@ -133,6 +141,7 @@ export default tseslint.config(
           pattern: '**/index.*',
         },
       ],
+      '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/array-type': ['error', { default: 'generic' }],
       '@typescript-eslint/no-misused-promises': [
         'error',

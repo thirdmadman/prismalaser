@@ -2,15 +2,7 @@ import { useEffect, useState } from 'react';
 import doubleChevron from '@iconify/icons-gg/chevron-double-left';
 import listTree from '@iconify/icons-gg/list-tree';
 import { Icon } from '@iconify/react';
-import { ElkNode } from 'elkjs/lib/elk.bundled';
-import ReactFlow, {
-  Background,
-  BackgroundVariant,
-  ControlButton,
-  Controls,
-  OnNodesChange,
-  applyNodeChanges,
-} from 'reactflow';
+import ReactFlow, { Background, BackgroundVariant, ControlButton, Controls, applyNodeChanges } from 'reactflow';
 
 import DownloadButton from './DownloadButton';
 import EnumNode from './EnumNode';
@@ -18,10 +10,12 @@ import Markers from './Markers';
 import ModelNode from './ModelNode';
 import RelationEdge from './RelationEdge';
 import { updateSchemaStringByChanges } from '../lib/updateSchemaStringByChanges';
+import type { DMMF } from '@prisma/generator-helper';
+import type { ElkNode } from 'elkjs/lib/elk.bundled';
+import type { OnNodesChange } from 'reactflow';
 import { getLayout } from '@/shared/lib/layout';
 import { generateFlowFromDMMF } from '@/shared/lib/prismaToFlow';
-import { DMMFToElementsResult, TCustomEdge, TCustomNode, TCustomNodeData } from '@/shared/lib/types';
-import type { DMMF } from '@prisma/generator-helper';
+import type { DMMFToElementsResult, TCustomEdge, TCustomNode, TCustomNodeData } from '@/shared/lib/types';
 
 import styles from './FlowView.module.css';
 

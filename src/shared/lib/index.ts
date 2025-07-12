@@ -1,4 +1,4 @@
-import { ISchemaError } from './types';
+import type { ISchemaError } from './types';
 
 // eslint-disable-next-line no-regex-spaces
 const errRegex = /^(?:Error validating.*?:)?(.+?)\n  -->  schema\.prisma:(\d+)\n/;

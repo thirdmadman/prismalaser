@@ -2,7 +2,7 @@ import { useState } from 'react';
 import cc from 'classcat';
 import { Handle, Position } from 'reactflow';
 
-import { IEnumNodeData } from '@/shared/lib/types';
+import type { IEnumNodeData } from '@/shared/lib/types';
 
 import styles from './Node.module.scss';
 

@@ -1,4 +1,4 @@
-import { NodeChange } from 'reactflow';
+import type { NodeChange } from 'reactflow';
 
 export function updateSchemaStringByChanges(sourceSchemaString: string, changes: Array<NodeChange> | null | undefined) {
   let result = sourceSchemaString;

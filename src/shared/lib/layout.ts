@@ -1,7 +1,8 @@
-import Elk, { ElkExtendedEdge, ElkNode } from 'elkjs/lib/elk.bundled';
-import { Edge } from 'reactflow';
+import Elk from 'elkjs/lib/elk.bundled';
 
-import { TCustomNode } from './types';
+import type { TCustomNode } from './types';
+import type { ElkExtendedEdge, ElkNode } from 'elkjs/lib/elk.bundled';
+import type { Edge } from 'reactflow';
 
 const elk = new Elk({
   defaultLayoutOptions: {
