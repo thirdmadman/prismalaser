@@ -302,25 +302,30 @@ const generateModelNodes = (models: ReadonlyArray<DMMF.Model>, relations: Record
         else if (f.kind === 'enum') defaultValue = f.default.toString();
         else defaultValue = JSON.stringify(f.default);
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-non-null-assertion
-      const relData = relations[f.relationName!] || relations[generateVirtualTableName(f.relationName!, name)];
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      const thisRel = relData?.fields.find((g) => g.name === f.name && g.tableName === name);
+      let relationData: IModelRelationData | null = null;
 
-      const relationSide = thisRel?.side ?? null;
+      if (f.relationName) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        const relData = relations[f.relationName] || relations[generateVirtualTableName(f.relationName, name)];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        const thisRel = relData?.fields.find((g) => g.name === f.name && g.tableName === name);
 
-      if (!relationSide) {
-        throw new Error(`Relation ${f.relationName ?? 'unknown'} not found`);
+        const relationSide = thisRel?.side ?? null;
+
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (!relData || !relationSide) {
+          throw new Error(`Relation ${f.relationName ?? 'unknown'} not found`);
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        relationData = relData
+          ? {
+              name: relData.name,
+              type: relData.type,
+              side: relationSide,
+            }
+          : null;
       }
-
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      const relationData: IModelRelationData | null = relData
-        ? {
-            name: relData.name,
-            type: relData.type,
-            side: relationSide,
-          }
-        : null;
 
       return {
         ...pick(['name', 'kind', 'documentation', 'isList', 'isRequired', 'type'], f),
