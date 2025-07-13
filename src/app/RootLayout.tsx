@@ -33,6 +33,7 @@ export default function RootLayout({
         <title>Prismalaser</title>
         <meta name="description" content="Visualize your Prisma schema!" />
         <meta name="keywords" content="Prisma, GraphQL, Schema, Visualization, Graph, Database, Design" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="theme-color" content="#6366F1" />
         {/* OpenGraph */}
         <meta property="og:type" content="object" />

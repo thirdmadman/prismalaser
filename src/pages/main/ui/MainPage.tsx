@@ -19,7 +19,7 @@ interface ISchemaValidationResult {
   errors?: Array<ISchemaError>;
 }
 
-export default function IndexPage() {
+export default function MainPage() {
   // TODO: multiple save states.
   const [storedText, setStoredText] = useLocalStorage('prismalaser.text', INITIAL_PLACEHOLDER_SCHEMA);
   const [text, setText] = useState(storedText ?? null);
