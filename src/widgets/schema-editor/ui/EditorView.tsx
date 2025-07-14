@@ -20,20 +20,23 @@ export function EditorView({ value, onChange }: IEditorViewProps) {
   }, [monaco]);
 
   return (
-    <Editor
-      height="100%"
-      language="prisma"
-      theme="light"
-      loading="Loading..."
-      path="schema.prisma"
-      options={{
-        minimap: { enabled: false },
-        smoothScrolling: true,
-        cursorSmoothCaretAnimation: 'on',
-        scrollBeyondLastLine: true,
-      }}
-      value={value}
-      onChange={onChange}
-    />
+    <>
+      <div className="w-full h-8 px-4 py-1 text-sm shadow-md text-gray-400">prisma.schema</div>
+      <Editor
+        height="100%"
+        language="prisma"
+        theme="light"
+        loading="Loading..."
+        path="schema.prisma"
+        options={{
+          minimap: { enabled: false },
+          smoothScrolling: true,
+          cursorSmoothCaretAnimation: 'on',
+          scrollBeyondLastLine: true,
+        }}
+        value={value}
+        onChange={onChange}
+      />
+    </>
   );
 }
