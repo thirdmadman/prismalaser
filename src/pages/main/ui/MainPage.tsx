@@ -10,7 +10,7 @@ import { INITIAL_PLACEHOLDER_SCHEMA } from '@/shared/config';
 import { fromUrlSafeB64 } from '@/shared/lib';
 import type { ISchemaError } from '@/shared/lib/types';
 import { Layout } from '@/shared/ui';
-import { CopyButton, EditorView } from '@/widgets/schema-editor/';
+import SchemaEditor from '@/widgets/schema-editor';
 import { FlowView } from '@/widgets/schema-viewer/';
 
 interface ISchemaValidationResult {
@@ -103,27 +103,12 @@ export default function MainPage() {
     <Layout noEditor={!editorVisible}>
       {}
       {editorVisible && (
-        <section className="relative flex flex-col items-start border-r-2">
-          <EditorView
-            value={text ?? ''}
-            onChange={(val) => {
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              setText(val!);
-            }}
-          />
-
-          <div className="absolute flex gap-2 left-4 bottom-4">
-            <CopyButton input={text ?? ''} />
-
-            <button type="button" className="button floating" onClick={format}>
-              Format
-            </button>
-          </div>
-
-          {schemaValidationResult?.isLoading ? (
-            <div className="absolute w-4 h-4 border-2 border-b-0 border-l-0 border-blue-500 rounded-full right-4 bottom-4 animate-spin" />
-          ) : null}
-        </section>
+        <SchemaEditor
+          sourceText={text}
+          handleSetSourceText={setText}
+          isSchemaValidationResultLoading={schemaValidationResult?.isLoading ?? null}
+          handleFormatSource={format}
+        />
       )}
       <FlowView
         dmmf={dmmf}

@@ -1,2 +1,1 @@
-export { CopyButton } from './ui/CopyButton';
-export { EditorView } from './ui/EditorView';
+export { default } from './ui/SchemaEditor';
