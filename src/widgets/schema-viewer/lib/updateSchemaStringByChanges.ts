@@ -39,7 +39,7 @@ export function updateSchemaStringByChanges(sourceSchemaString: string, changes:
 
     const commentString = result.substring(modelNodeCommentStarts, endOfCommentLine);
 
-    const POSITION_START_TAG = `@prli-position {`;
+    const POSITION_START_TAG = `@prla-position {`;
     const POSITION_END_TAG = `}`;
 
     const startOfPositionJsonRelative = commentString.lastIndexOf(POSITION_START_TAG);

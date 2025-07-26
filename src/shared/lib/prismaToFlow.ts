@@ -408,7 +408,7 @@ const positionNodes = (nodeData: Array<TCustomNodeData>, previousNodes: Array<TC
     let schemaNodePosition = null;
 
     if (isNodeHasDocumentation) {
-      const isDocumentationStartPosition = schemaNodeDocumentation.indexOf('@prli-position');
+      const isDocumentationStartPosition = schemaNodeDocumentation.indexOf('@prla-position');
 
       if (isDocumentationStartPosition > -1) {
         const positionJsonStart = schemaNodeDocumentation.indexOf('{', isDocumentationStartPosition);
