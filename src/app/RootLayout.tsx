@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 
+import { StoreProvider } from './StoreProvider';
 import type { Metadata } from 'next';
 
 import './globals.css';
@@ -28,24 +29,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <title>Prismalaser</title>
-        <meta name="description" content="Visualize your Prisma schema!" />
-        <meta name="keywords" content="Prisma, GraphQL, Schema, Visualization, Graph, Database, Design" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <meta name="theme-color" content="#6366F1" />
-        {/* OpenGraph */}
-        <meta property="og:type" content="object" />
-        <meta property="og:site_name" content="Prismalaser" />
-        <meta property="og:title" content="Prismalaser" />
-        <meta property="og:description" content="Visualize your Prisma schema!" />
-        <meta property="og:image" content="/img/banner.png" />
-        <meta property="og:image:width" content="1000" />
-        <meta property="og:image:height" content="500" />
-        <meta property="og:image:alt" content="Visualise your Prisma schema - Prismalaser" />
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
-    </html>
+    <StoreProvider>
+      <html lang="en">
+        <head>
+          <title>Prismalaser</title>
+          <meta name="description" content="Visualize your Prisma schema!" />
+          <meta name="keywords" content="Prisma, GraphQL, Schema, Visualization, Graph, Database, Design" />
+          <link rel="icon" href="/favicon.ico" sizes="any" />
+          <meta name="theme-color" content="#6366F1" />
+          {/* OpenGraph */}
+          <meta property="og:type" content="object" />
+          <meta property="og:site_name" content="Prismalaser" />
+          <meta property="og:title" content="Prismalaser" />
+          <meta property="og:description" content="Visualize your Prisma schema!" />
+          <meta property="og:image" content="/img/banner.png" />
+          <meta property="og:image:width" content="1000" />
+          <meta property="og:image:height" content="500" />
+          <meta property="og:image:alt" content="Visualise your Prisma schema - Prismalaser" />
+        </head>
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      </html>
+    </StoreProvider>
   );
 }

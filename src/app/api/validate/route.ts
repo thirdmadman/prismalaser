@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const requestData = await request.json();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    result = await validateSchema(requestData.text);
+    result = await validateSchema(requestData.sourceText);
 
     isOk = !result.isError;
   } catch (error) {

@@ -1,69 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useMonaco } from '@monaco-editor/react';
-import { useDebounce, useLocalStorage } from 'react-use';
 
-import type { DMMF } from '@prisma/generator-helper';
 import type { editor } from 'monaco-editor';
-import { INITIAL_PLACEHOLDER_SCHEMA } from '@/shared/config';
-import { fromUrlSafeB64 } from '@/shared/lib';
-import type { ISchemaError } from '@/shared/lib/types';
+import { selectIsEditorOpened, selectSchemaErrors } from '@/app/features/editor/editorSlice';
+import { useAppSelector } from '@/app/hooks';
 import { Layout } from '@/shared/ui';
 import SchemaEditor from '@/widgets/schema-editor';
 import { FlowView } from '@/widgets/schema-viewer/';
 
-interface ISchemaValidationResult {
-  isOk?: boolean;
-  isLoading?: boolean;
-  errors?: Array<ISchemaError>;
-}
-
 export default function MainPage() {
-  // TODO: multiple save states.
-  const [storedText, setStoredText] = useLocalStorage('prismalaser.text', INITIAL_PLACEHOLDER_SCHEMA);
-  const [text, setText] = useState(storedText ?? null);
-  const [schemaErrors, setSchemaErrors] = useState<Array<ISchemaError>>([]);
-  const [dmmf, setDMMF] = useState<DMMF.Datamodel | null>(null);
-  const [editorVisible, setEditorVisible] = useState(true);
-  const [schemaValidationResult, setSchemaValidationResult] = useState<ISchemaValidationResult | null>(null);
-
+  const schemaErrors = useAppSelector(selectSchemaErrors);
+  const isEditorOpened = useAppSelector(selectIsEditorOpened);
   const monaco = useMonaco();
-
-  const submit = async () => {
-    setStoredText(text ?? '');
-    setSchemaValidationResult({ isLoading: true });
-    const response = await fetch('api/validate', { method: 'POST', body: JSON.stringify({ text }) });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const responseData = await response.json();
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (responseData.isOk) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      const data = JSON.parse(responseData.data);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      setDMMF(data);
-      setSchemaErrors([]);
-      setSchemaValidationResult({ isLoading: false, isOk: true });
-    } else {
-      console.error(response);
-      setSchemaValidationResult({ isLoading: false, isOk: false });
-    }
-  };
-
-  const format = async () => {
-    const response = await fetch('api/format', { method: 'POST', body: JSON.stringify({ text }) });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const responseData = await response.json();
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (responseData.isOk) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      setText(responseData.data);
-    }
-  };
-
-  useDebounce(submit, 1000, [text]);
 
   useEffect(() => {
     // Set error squiggles in the editor if we have any
@@ -82,42 +32,10 @@ export default function MainPage() {
     monaco.editor.setModelMarkers(model, 'prismalaser', markers);
   }, [monaco, schemaErrors]);
 
-  useEffect(() => {
-    // Populate state from a shared link if one is present
-    const params = new URLSearchParams(location.search);
-
-    if (params.has('code')) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const code = params.get('code')!;
-      const decoded = fromUrlSafeB64(code);
-
-      setText(decoded);
-    }
-  }, []);
-
-  const toggleEditor = () => {
-    setEditorVisible((v) => !v);
-  };
-
   return (
-    <Layout noEditor={!editorVisible}>
-      {}
-      {editorVisible && (
-        <SchemaEditor
-          sourceText={text}
-          handleSetSourceText={setText}
-          isSchemaValidationResultLoading={schemaValidationResult?.isLoading ?? null}
-          handleFormatSource={format}
-        />
-      )}
-      <FlowView
-        dmmf={dmmf}
-        toggleEditor={toggleEditor}
-        schemaText={text ?? ''}
-        onTextChange={(text) => {
-          setText(text ?? null);
-        }}
-      />
+    <Layout noEditor={!isEditorOpened}>
+      {isEditorOpened && <SchemaEditor />}
+      <FlowView />
     </Layout>
   );
 }

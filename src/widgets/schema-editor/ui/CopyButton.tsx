@@ -1,22 +1,19 @@
 import type React from 'react';
 import { useRef, useState } from 'react';
 
-import { toUrlSafeB64 } from '@/shared/lib';
+import { selectText } from '@/app/features/editor/editorSlice';
+import { useAppSelector } from '@/app/hooks';
+import { copyUrlToClipboard } from '@/shared/lib/copyUrlToClipboard';
 
-interface ICopyButtonProps {
-  input: string;
-}
-
-export function CopyButton({ input }: ICopyButtonProps) {
+export function CopyButton() {
   const [showCopied, setShowCopied] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-deprecated
   const timerRef: React.MutableRefObject<NodeJS.Timeout | null> = useRef(null);
 
-  const copy = async () => {
-    const params = new URLSearchParams({ code: toUrlSafeB64(input) });
-    const toCopy = `${location.origin}?${params.toString()}`;
+  const text = useAppSelector(selectText);
 
-    await navigator.clipboard.writeText(toCopy);
+  const copy = async () => {
+    await copyUrlToClipboard(text);
 
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {

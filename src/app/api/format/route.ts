@@ -11,13 +11,13 @@ export async function POST(request: NextRequest) {
     const schemaString = await request.json();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (!schemaString?.text) {
+    if (!schemaString?.sourceText) {
       throw new Error('No schema string provided');
     }
 
     const formatSchemaResult = await formatSchema({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      schemas: [['schema.prisma', schemaString.text]],
+      schemas: [['schema.prisma', schemaString.sourceText]],
     });
 
     if (!formatSchemaResult[0]?.[1]) {

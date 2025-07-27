@@ -1,24 +1,20 @@
-interface IDownloadFileButtonProps {
-  sourceText: string;
-}
+import { selectText } from '@/app/features/editor/editorSlice';
+import { useAppSelector } from '@/app/hooks';
+import { downloadTextAsFile } from '@/shared/lib/downloadTextAsFile';
 
-export function DownloadFileButton({ sourceText }: IDownloadFileButtonProps) {
-  const handleDownload = () => {
-    const fileName = 'prisma.schema';
-
-    const blob = new Blob([sourceText], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    a.click();
-
-    URL.revokeObjectURL(url);
-  };
+export function DownloadFileButton() {
+  const text = useAppSelector(selectText);
 
   return (
-    <button type="button" className="button floating" title="Copy link" aria-label="Copy link" onClick={handleDownload}>
+    <button
+      type="button"
+      className="button floating"
+      title="Download file"
+      aria-label="Download file"
+      onClick={() => {
+        downloadTextAsFile(text);
+      }}
+    >
       Download Schema
     </button>
   );

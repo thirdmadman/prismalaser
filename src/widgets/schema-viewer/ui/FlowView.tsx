@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import doubleChevron from '@iconify/icons-gg/chevron-double-left';
+import doubleChevronLeft from '@iconify/icons-gg/chevron-double-left';
+import doubleChevronRight from '@iconify/icons-gg/chevron-double-right';
 import listTree from '@iconify/icons-gg/list-tree';
 import { Icon } from '@iconify/react';
 import ReactFlow, { Background, BackgroundVariant, ControlButton, Controls, applyNodeChanges } from 'reactflow';
@@ -10,9 +11,16 @@ import Markers from './Markers';
 import ModelNode from './ModelNode';
 import RelationEdge from './RelationEdge';
 import { updateSchemaStringByChanges } from '../lib/updateSchemaStringByChanges';
-import type { DMMF } from '@prisma/generator-helper';
 import type { ElkNode } from 'elkjs/lib/elk.bundled';
 import type { OnNodesChange } from 'reactflow';
+import {
+  selectDmmf,
+  selectIsEditorOpened,
+  selectText,
+  setIsEditorOpened,
+  setText,
+} from '@/app/features/editor/editorSlice';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getLayout } from '@/shared/lib/layout';
 import { generateFlowFromDMMF } from '@/shared/lib/prismaToFlow';
 import type { DMMFToElementsResult, TCustomEdge, TCustomNode, TCustomNodeData } from '@/shared/lib/types';
@@ -28,17 +36,13 @@ const edgeTypes = {
   relation: RelationEdge,
 };
 
-interface IFlowViewProps {
-  dmmf: DMMF.Datamodel | null;
-  toggleEditor(): void;
-  schemaText: string;
-  onTextChange: (text?: string) => void;
-}
-
-// eslint-disable-next-line @typescript-eslint/unbound-method
-export function FlowView({ dmmf, toggleEditor, schemaText, onTextChange }: IFlowViewProps) {
+export function FlowView() {
   const [nodes, setNodes] = useState<Array<TCustomNode>>([]);
   const [edges, setEdges] = useState<Array<TCustomEdge>>([]);
+  const dispatch = useAppDispatch();
+  const schemaText = useAppSelector(selectText);
+  const dmmf = useAppSelector(selectDmmf);
+  const isEditorOpened = useAppSelector(selectIsEditorOpened);
 
   const regenerateNodes = (layout: ElkNode | null) => {
     const { nodes: newNodes, edges: newEdges }: DMMFToElementsResult = dmmf
@@ -48,9 +52,6 @@ export function FlowView({ dmmf, toggleEditor, schemaText, onTextChange }: IFlow
     // See if `applyNodeChanges` can work here?
     setNodes(newNodes);
     setEdges(newEdges);
-
-    console.log(newNodes);
-    console.log(newEdges);
   };
 
   const refreshLayout = async () => {
@@ -59,9 +60,9 @@ export function FlowView({ dmmf, toggleEditor, schemaText, onTextChange }: IFlow
   };
 
   const onNodesChange: OnNodesChange = (changes) => {
-    console.log(changes);
+    // console.log(changes);
     const newSchemaString = updateSchemaStringByChanges(schemaText, changes);
-    onTextChange(newSchemaString);
+    dispatch(setText(newSchemaString));
 
     setNodes((nodes) => {
       const updatedNodes = applyNodeChanges<TCustomNodeData>(changes, nodes);
@@ -95,8 +96,12 @@ export function FlowView({ dmmf, toggleEditor, schemaText, onTextChange }: IFlow
         </Controls>
 
         <Controls position="top-left" showZoom={false} showFitView={false} showInteractive={false}>
-          <ControlButton className={styles.noShrinkIcon} title="Hide editor" onClick={toggleEditor}>
-            <Icon icon={doubleChevron} height={24} width={24} />
+          <ControlButton
+            className={styles.noShrinkIcon}
+            title={isEditorOpened ? 'Hide editor' : 'Show editor'}
+            onClick={() => dispatch(setIsEditorOpened(!isEditorOpened))}
+          >
+            <Icon icon={isEditorOpened ? doubleChevronLeft : doubleChevronRight} height={24} width={24} />
           </ControlButton>
         </Controls>
       </ReactFlow>

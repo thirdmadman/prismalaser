@@ -27,15 +27,15 @@ export function updateSchemaStringByChanges(sourceSchemaString: string, changes:
 
     if (modelNodeStart < 0) schemaNodeStart = enumNodeStart;
 
-    console.log(result.substring(0, schemaNodeStart));
+    // console.log(result.substring(0, schemaNodeStart));
     if (schemaNodeStart === -1) return;
     const modelNodeCommentStarts = result.lastIndexOf('///', schemaNodeStart);
-    console.log(result.substring(modelNodeCommentStarts));
+    // console.log(result.substring(modelNodeCommentStarts));
 
     if (modelNodeCommentStarts === -1) return;
 
     const endOfCommentLine = result.indexOf('\n', modelNodeCommentStarts);
-    console.log(result.substring(0, endOfCommentLine));
+    // console.log(result.substring(0, endOfCommentLine));
 
     const commentString = result.substring(modelNodeCommentStarts, endOfCommentLine);
 
