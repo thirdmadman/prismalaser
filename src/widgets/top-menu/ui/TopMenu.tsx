@@ -1,22 +1,49 @@
 import { useEffect, useRef, useState } from 'react';
-import CrownIcon from '@iconify/icons-gg/crown';
-import FileIcon from '@iconify/icons-gg/file';
-import OptionsIcon from '@iconify/icons-gg/options';
+import crownIcon from '@iconify/icons-gg/crown';
+import fileIcon from '@iconify/icons-gg/file';
+import optionsIcon from '@iconify/icons-gg/options';
 import { Icon } from '@iconify/react';
 import Image from 'next/image';
 
+import { formatSchemaAsync, selectText } from '@/app/features/editor/editorSlice';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { copyUrlToClipboard } from '@/shared/lib/copyUrlToClipboard';
+import { downloadTextAsFile } from '@/shared/lib/downloadTextAsFile';
+
 const menuItems = [
-  { id: 'file', icon: FileIcon, submenu: <FilePanel />, label: 'File' },
-  { id: 'settings', icon: OptionsIcon, submenu: <SettingsPanel />, label: 'Settings' },
-  { id: 'about', icon: CrownIcon, submenu: <AboutPanel />, label: 'About' },
+  { id: 'file', icon: fileIcon, submenu: <FilePanel />, label: 'File' },
+  { id: 'settings', icon: optionsIcon, submenu: <SettingsPanel />, label: 'Settings' },
+  { id: 'about', icon: crownIcon, submenu: <AboutPanel />, label: 'About' },
 ];
 
 function FilePanel() {
+  const text = useAppSelector(selectText);
+  const dispatch = useAppDispatch();
+
   return (
     <div className="flex flex-col gap-2 text-sm">
-      <button className="block px-2 py-1 rounded hover:bg-[#333] transition text-left">Format</button>
-      <button className="block px-2 py-1 rounded hover:bg-[#333] transition text-left">Download Schema</button>
-      <button className="block px-2 py-1 rounded hover:bg-[#333] transition text-left">Copy link</button>
+      <button
+        className="block px-2 py-1 rounded hover:bg-[#333] transition text-left"
+        onClick={() => dispatch(formatSchemaAsync(text))}
+      >
+        Format
+      </button>
+      <button
+        className="block px-2 py-1 rounded hover:bg-[#333] transition text-left"
+        onClick={() => {
+          downloadTextAsFile(text);
+        }}
+      >
+        Download Schema
+      </button>
+      <button
+        className="block px-2 py-1 rounded hover:bg-[#333] transition text-left"
+        onClick={async () => {
+          await copyUrlToClipboard(text);
+        }}
+      >
+        Copy link
+      </button>
     </div>
   );
 }

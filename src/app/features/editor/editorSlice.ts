@@ -48,9 +48,8 @@ export const editorSlice = createAppSlice({
           state.status = 'loading';
         },
         fulfilled: (state, action) => {
-          state.status = 'idle';
           const { isOk, data } = action.payload;
-
+          state.status = 'idle';
           if (isOk) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const dataObject = JSON.parse(data);
@@ -60,6 +59,7 @@ export const editorSlice = createAppSlice({
             state.schemaErrors = [];
           } else {
             console.error(action.payload);
+            state.status = 'failed';
           }
         },
         rejected: (state) => {
@@ -85,6 +85,7 @@ export const editorSlice = createAppSlice({
             state.schemaErrors = [];
           } else {
             console.error(action.payload);
+            state.status = 'failed';
           }
         },
         rejected: (state) => {
