@@ -1,6 +1,7 @@
 {
   "name": "prismalaser",
   "version": "0.1.0",
+  "description": "Prisma schema visualization and more.",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
@@ -11,6 +12,16 @@
     "docker:start": "docker-compose -f docker-compose.yaml up --detach ",
     "start:prod": "npm run docker:build && npm run docker:start"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thirdmadman/prismalaser.git"
+  },
+  "author": "thirdmadman",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/thirdmadman/prismalaser/issues"
+  },
+  "homepage": "https://github.com/thirdmadman/prismalaser#readme",
   "dependencies": {
     "@iconify/icons-gg": "^1.2.4",
     "@iconify/icons-simple-icons": "^1.2.74",
