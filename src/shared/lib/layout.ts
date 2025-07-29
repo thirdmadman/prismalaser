@@ -76,7 +76,7 @@ const calculateWidth = (node: TCustomNode) => {
   return normalizeSize(width);
 };
 
-export const getLayout = async (nodes: Array<TCustomNode>, edges: Array<Edge>) => {
+export const getElkLayout = async (nodes: Array<TCustomNode>, edges: Array<Edge>) => {
   const elkNodes: Array<ElkNode> = [];
   const elkEdges: Array<ElkExtendedEdge> = [];
 

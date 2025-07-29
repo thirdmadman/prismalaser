@@ -22,7 +22,7 @@ import {
 } from '@/app/features/editor/editorSlice';
 import { selectEdges, selectNodes, setEdges, setNodes } from '@/app/features/flowView/flowViewSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { getLayout } from '@/shared/lib/layout';
+import { getElkLayout } from '@/shared/lib/layout';
 import { generateFlowFromDMMF } from '@/shared/lib/prismaToFlow';
 import type { DMMFToElementsResult, TCustomNodeData } from '@/shared/lib/types';
 
@@ -45,7 +45,7 @@ export function FlowView() {
   const dmmf = useAppSelector(selectDmmf);
   const isEditorOpened = useAppSelector(selectIsEditorOpened);
 
-  const regenerateNodes = (layout: ElkNode | null) => {
+  const rearrangeNodes = (layout: ElkNode | null) => {
     const { nodes: newNodes, edges: newEdges }: DMMFToElementsResult = dmmf
       ? generateFlowFromDMMF(dmmf, nodes, layout)
       : { nodes: [], edges: [] };
@@ -55,13 +55,13 @@ export function FlowView() {
     dispatch(setEdges(newEdges));
   };
 
-  const refreshLayout = async () => {
-    const layout = await getLayout(nodes, edges);
-    regenerateNodes(layout);
+  const disperseLayout = async () => {
+    const layout = await getElkLayout(nodes, edges);
+    console.log(layout);
+    rearrangeNodes(layout);
   };
 
   const onNodesChange: OnNodesChange = (changes) => {
-    // console.log(changes);
     const newSchemaString = updateSchemaStringByChanges(schemaText, changes);
     dispatch(setText(newSchemaString));
 
@@ -69,7 +69,7 @@ export function FlowView() {
   };
 
   useEffect(() => {
-    regenerateNodes(null);
+    rearrangeNodes(null);
   }, [dmmf]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -86,7 +86,7 @@ export function FlowView() {
       >
         <Background variant={BackgroundVariant.Dots} gap={24} size={2} color="currentColor" className="text-gray-200" />
         <Controls>
-          <ControlButton title="Disperse nodes" onClick={refreshLayout}>
+          <ControlButton title="Disperse nodes" onClick={disperseLayout}>
             <Icon icon={listTree} />
           </ControlButton>
           <DownloadButton />
