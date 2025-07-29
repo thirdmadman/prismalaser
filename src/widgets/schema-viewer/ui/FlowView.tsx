@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import doubleChevronLeft from '@iconify/icons-gg/chevron-double-left';
 import doubleChevronRight from '@iconify/icons-gg/chevron-double-right';
 import listTree from '@iconify/icons-gg/list-tree';
@@ -20,10 +20,11 @@ import {
   setIsEditorOpened,
   setText,
 } from '@/app/features/editor/editorSlice';
+import { selectEdges, selectNodes, setEdges, setNodes } from '@/app/features/flowView/flowViewSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getLayout } from '@/shared/lib/layout';
 import { generateFlowFromDMMF } from '@/shared/lib/prismaToFlow';
-import type { DMMFToElementsResult, TCustomEdge, TCustomNode, TCustomNodeData } from '@/shared/lib/types';
+import type { DMMFToElementsResult, TCustomNodeData } from '@/shared/lib/types';
 
 import styles from './FlowView.module.css';
 
@@ -37,9 +38,9 @@ const edgeTypes = {
 };
 
 export function FlowView() {
-  const [nodes, setNodes] = useState<Array<TCustomNode>>([]);
-  const [edges, setEdges] = useState<Array<TCustomEdge>>([]);
   const dispatch = useAppDispatch();
+  const nodes = useAppSelector(selectNodes);
+  const edges = useAppSelector(selectEdges);
   const schemaText = useAppSelector(selectText);
   const dmmf = useAppSelector(selectDmmf);
   const isEditorOpened = useAppSelector(selectIsEditorOpened);
@@ -50,8 +51,8 @@ export function FlowView() {
       : { nodes: [], edges: [] };
 
     // See if `applyNodeChanges` can work here?
-    setNodes(newNodes);
-    setEdges(newEdges);
+    dispatch(setNodes(newNodes));
+    dispatch(setEdges(newEdges));
   };
 
   const refreshLayout = async () => {
@@ -64,11 +65,7 @@ export function FlowView() {
     const newSchemaString = updateSchemaStringByChanges(schemaText, changes);
     dispatch(setText(newSchemaString));
 
-    setNodes((nodes) => {
-      const updatedNodes = applyNodeChanges<TCustomNodeData>(changes, nodes);
-
-      return updatedNodes;
-    });
+    dispatch(setNodes(applyNodeChanges<TCustomNodeData>(changes, nodes)));
   };
 
   useEffect(() => {

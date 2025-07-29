@@ -1,9 +1,10 @@
 import { combineSlices, configureStore } from '@reduxjs/toolkit';
 
 import { editorSlice } from './features/editor/editorSlice';
+import { flowViewSlice } from './features/flowView/flowViewSlice';
 import type { Action, ThunkAction } from '@reduxjs/toolkit';
 
-const rootReducer = combineSlices(editorSlice);
+const rootReducer = combineSlices(editorSlice, flowViewSlice);
 export type TRootState = ReturnType<typeof rootReducer>;
 
 export const makeStore = () => {
