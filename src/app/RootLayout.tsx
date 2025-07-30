@@ -1,3 +1,4 @@
+import { GoogleTagManager } from '@next/third-parties/google';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import { StoreProvider } from './StoreProvider';
@@ -47,6 +48,7 @@ export default function RootLayout({
           <meta property="og:image:height" content="500" />
           <meta property="og:image:alt" content="Visualise your Prisma schema - Prismalaser" />
         </head>
+        <GoogleTagManager gtmId="GTM-T7999C3W" />
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
       </html>
     </StoreProvider>
