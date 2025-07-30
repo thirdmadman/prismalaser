@@ -33,20 +33,23 @@ export default function RootLayout({
     <StoreProvider>
       <html lang="en">
         <head>
-          <title>Prismalaser</title>
-          <meta name="description" content="Visualize your Prisma schema!" />
-          <meta name="keywords" content="Prisma, GraphQL, Schema, Visualization, Graph, Database, Design" />
+          <title>Prismalaser - Editor/Visualization</title>
+          <meta name="description" content="Prisma schema visualization, editor and more" />
+          <meta
+            name="keywords"
+            content="Prisma, Prisma ORM, Schema, Visualization, React Flow, Prisma Schema Visualization"
+          />
           <link rel="icon" href="/favicon.ico" sizes="any" />
-          <meta name="theme-color" content="#6366F1" />
+          <meta name="theme-color" content="#1e1e1e" />
           {/* OpenGraph */}
           <meta property="og:type" content="object" />
           <meta property="og:site_name" content="Prismalaser" />
           <meta property="og:title" content="Prismalaser" />
-          <meta property="og:description" content="Visualize your Prisma schema!" />
-          <meta property="og:image" content="/img/banner.png" />
-          <meta property="og:image:width" content="1000" />
-          <meta property="og:image:height" content="500" />
-          <meta property="og:image:alt" content="Visualise your Prisma schema - Prismalaser" />
+          <meta property="og:description" content="Prisma schema visualization, editor and more" />
+          <meta property="og:image" content="/img/og-banner.png" />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+          <meta property="og:image:alt" content="Prismalaser - schema visualization and more" />
         </head>
         <GoogleTagManager gtmId="GTM-T7999C3W" />
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
