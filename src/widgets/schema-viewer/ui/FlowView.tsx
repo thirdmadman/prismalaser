@@ -12,7 +12,7 @@ import ModelNode from './ModelNode';
 import RelationEdge from './RelationEdge';
 import { updateSchemaStringByChanges } from '../lib/updateSchemaStringByChanges';
 import type { ElkNode } from 'elkjs/lib/elk.bundled';
-import type { OnNodesChange } from 'reactflow';
+import type { NodeChange } from 'reactflow';
 import {
   selectDmmf,
   selectIsEditorOpened,
@@ -24,7 +24,7 @@ import { selectEdges, selectNodes, setEdges, setNodes } from '@/app/features/flo
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getElkLayout } from '@/shared/lib/layout';
 import { generateFlowFromDMMF } from '@/shared/lib/prismaToFlow';
-import type { DMMFToElementsResult, TCustomNodeData } from '@/shared/lib/types';
+import type { DMMFToElementsResult, TCustomEdge, TCustomNode, TCustomNodeData } from '@/shared/lib/types';
 
 import styles from './FlowView.module.css';
 
@@ -55,13 +55,13 @@ export function FlowView() {
     dispatch(setEdges(newEdges));
   };
 
-  const disperseLayout = async () => {
+  const disperseLayout = async (nodes: Array<TCustomNode>, edges: Array<TCustomEdge>) => {
     const layout = await getElkLayout(nodes, edges);
-    console.log(layout);
+
     rearrangeNodes(layout);
   };
 
-  const onNodesChange: OnNodesChange = (changes) => {
+  const onNodesChangeAction = (changes: Array<NodeChange>, nodes: Array<TCustomNode>, schemaText: string) => {
     const newSchemaString = updateSchemaStringByChanges(schemaText, changes);
     dispatch(setText(newSchemaString));
 
@@ -82,11 +82,13 @@ export function FlowView() {
         nodeTypes={nodeTypes}
         minZoom={0.05}
         style={{ gridArea: 'flow' }}
-        onNodesChange={onNodesChange}
+        onNodesChange={(changes) => {
+          onNodesChangeAction(changes, nodes, schemaText);
+        }}
       >
         <Background variant={BackgroundVariant.Dots} gap={24} size={2} color="currentColor" className="text-gray-200" />
         <Controls>
-          <ControlButton title="Disperse nodes" onClick={disperseLayout}>
+          <ControlButton title="Disperse nodes" onClick={() => disperseLayout(nodes, edges)}>
             <Icon icon={listTree} />
           </ControlButton>
           <DownloadButton />
