@@ -1,5 +1,8 @@
+import type { DMMF } from '@prisma/generator-helper';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import type { ElkNode } from 'elkjs';
 import { createAppSlice } from '@/app/createAppSlice';
+import { generateFlowFromDMMF } from '@/shared/lib/prismaToFlow';
 import type { TCustomEdge, TCustomNode } from '@/shared/lib/types';
 
 export interface IFlowViewSliceSliceState {
@@ -19,6 +22,26 @@ export const flowViewSlice = createAppSlice({
     setNodes: create.reducer((state, action: PayloadAction<Array<TCustomNode>>) => {
       state.nodes = action.payload;
     }),
+    rearrangeNodes: create.reducer(
+      (state, action: PayloadAction<{ dmmf: DMMF.Datamodel | null; layout: ElkNode | null }>) => {
+        const { dmmf, layout } = action.payload;
+
+        const { nodes } = state;
+
+        let newNodes: Array<TCustomNode> = [];
+        let newEdges: Array<TCustomEdge> = [];
+
+        if (dmmf) {
+          const { nodes: generatedNodes, edges: generatedEdges } = generateFlowFromDMMF(dmmf, nodes, layout);
+
+          newNodes = generatedNodes;
+          newEdges = generatedEdges;
+        }
+
+        state.nodes = newNodes;
+        state.edges = newEdges;
+      }
+    ),
     setEdges: create.reducer((state, action: PayloadAction<Array<TCustomEdge>>) => {
       state.edges = action.payload;
     }),
@@ -29,5 +52,5 @@ export const flowViewSlice = createAppSlice({
   },
 });
 
-export const { setNodes, setEdges } = flowViewSlice.actions;
+export const { setNodes, setEdges, rearrangeNodes } = flowViewSlice.actions;
 export const { selectNodes, selectEdges } = flowViewSlice.selectors;

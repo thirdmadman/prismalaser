@@ -11,7 +11,6 @@ import Markers from './Markers';
 import ModelNode from './ModelNode';
 import RelationEdge from './RelationEdge';
 import { updateSchemaStringByChanges } from '../lib/updateSchemaStringByChanges';
-import type { ElkNode } from 'elkjs/lib/elk.bundled';
 import type { NodeChange } from 'reactflow';
 import {
   selectDmmf,
@@ -20,11 +19,10 @@ import {
   setIsEditorOpened,
   setText,
 } from '@/app/features/editor/editorSlice';
-import { selectEdges, selectNodes, setEdges, setNodes } from '@/app/features/flowView/flowViewSlice';
+import { rearrangeNodes, selectEdges, selectNodes, setNodes } from '@/app/features/flowView/flowViewSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getElkLayout } from '@/shared/lib/layout';
-import { generateFlowFromDMMF } from '@/shared/lib/prismaToFlow';
-import type { DMMFToElementsResult, TCustomEdge, TCustomNode, TCustomNodeData } from '@/shared/lib/types';
+import type { TCustomEdge, TCustomNode, TCustomNodeData } from '@/shared/lib/types';
 
 import styles from './FlowView.module.css';
 
@@ -45,20 +43,10 @@ export function FlowView() {
   const dmmf = useAppSelector(selectDmmf);
   const isEditorOpened = useAppSelector(selectIsEditorOpened);
 
-  const rearrangeNodes = (layout: ElkNode | null) => {
-    const { nodes: newNodes, edges: newEdges }: DMMFToElementsResult = dmmf
-      ? generateFlowFromDMMF(dmmf, nodes, layout)
-      : { nodes: [], edges: [] };
-
-    // See if `applyNodeChanges` can work here?
-    dispatch(setNodes(newNodes));
-    dispatch(setEdges(newEdges));
-  };
-
   const disperseLayout = async (nodes: Array<TCustomNode>, edges: Array<TCustomEdge>) => {
     const layout = await getElkLayout(nodes, edges);
 
-    rearrangeNodes(layout);
+    dispatch(rearrangeNodes({ dmmf, layout }));
   };
 
   const onNodesChangeAction = (changes: Array<NodeChange>, nodes: Array<TCustomNode>, schemaText: string) => {
@@ -69,8 +57,8 @@ export function FlowView() {
   };
 
   useEffect(() => {
-    rearrangeNodes(null);
-  }, [dmmf]); // eslint-disable-line react-hooks/exhaustive-deps
+    dispatch(rearrangeNodes({ dmmf, layout: null }));
+  }, [dispatch, dmmf]);
 
   return (
     <>
