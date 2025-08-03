@@ -41,7 +41,7 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
     }
   };
 
-  const reled = isRelationed(sourceTableColumn);
+  const isRelations = isRelationed(sourceTableColumn);
   let targetHandle: ReactNode | null = null;
   let sourceHandle: ReactNode | null = null;
 
@@ -95,12 +95,14 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
 
   return (
     <tr key={sourceTableColumn.name} className={styles.row} title={sourceTableColumn.documentation}>
-      <td className="font-mono font-semibold border-t-2 border-r-2 border-gray-300">
+      <td className="font-mono font-semibold border-t-2 border-r-2 border-gray-300 text-[#0e107e]">
         <button
           type="button"
-          className={cc(['relative', 'p-2', { 'cursor-pointer': reled }])}
+          className={cc(['relative', 'p-2', { 'cursor-pointer': isRelations }])}
           onClick={() => {
-            if (!reled) return;
+            if (!isRelations) {
+              return;
+            }
             focusNode(sourceTableColumn.type);
           }}
         >
@@ -108,10 +110,17 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
           {targetHandle}
         </button>
       </td>
-      <td className="p-2 font-mono border-t-2 border-r-2 border-gray-300">{sourceTableColumn.displayType}</td>
+      <td
+        className={cc([
+          'p-2 font-mono border-t-2 border-r-2 border-gray-300 text-[#2e7f98]',
+          { 'text-[#2702fc]': isRelations },
+        ])}
+      >
+        {sourceTableColumn.displayType}
+      </td>
       <td className="font-mono border-t-2 border-gray-300">
         <div className="relative p-2">
-          {sourceTableColumn.defaultValue ?? ''}
+          <p className="text-[#148659]">{sourceTableColumn.defaultValue ?? ''}</p>
           {sourceHandle}
         </div>
       </td>
