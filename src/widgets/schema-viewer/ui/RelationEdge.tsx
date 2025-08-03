@@ -60,11 +60,13 @@ const RelationEdge = ({
   return (
     <>
       <path
-        className="text-gray-400 stroke-current stroke-2 fill-none"
         d={path}
+        fill="none"
+        className="react-flow__edge-path"
         markerStart={markerStart}
         markerEnd={markerEnd}
-      />
+      ></path>
+      <path d={path} fill="none" strokeOpacity="0" strokeWidth="20" className="react-flow__edge-interaction"></path>
       {text}
     </>
   );

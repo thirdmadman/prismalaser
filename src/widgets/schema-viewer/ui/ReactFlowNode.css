@@ -1,0 +1,36 @@
+.react-flow__node.selected table {
+  border: 2px solid #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+.react-flow__node table:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  transition: all 0.2s;
+}
+
+.react-flow__edge.selected .react-flow__edge-path .react-flow__edge-interaction {
+  stroke-width: 4px;
+  stroke: #007bff;
+}
+
+.react-flow__edge-custom.selected .react-flow__edge-path {
+  stroke-width: 4px;
+  stroke: #007bff;
+}
+
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:focus .react-flow__edge-path,
+.react-flow__edge:focus-visible .react-flow__edge-path {
+  stroke-width: 4px;
+  stroke: #007bff;
+  stroke-dasharray: 5;
+  animation: dashdraw 0.5s linear infinite;
+}
+
+.react-flow__edge:hover .react-flow__edge-path {
+  transition: all 0.2s;
+  cursor: pointer;
+  stroke-width: 4px;
+  stroke: #156cc9;
+}

@@ -10,6 +10,7 @@ import {
 import type { IModelNodeData, IModelNodeDataColumn } from '@/shared/lib/types';
 
 import styles from './Node.module.scss';
+import './ReactFlowNode.css';
 
 const isRelationed = ({ relationData }: IModelNodeDataColumn) => !!relationData?.side;
 
