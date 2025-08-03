@@ -55,6 +55,7 @@ export function FlowView() {
   };
 
   const onNodesChangeAction = (changes: Array<NodeChange>, nodes: Array<TCustomNode>, schemaText: string) => {
+    dispatch(setNodes(applyNodeChanges<TCustomNodeData>(changes, nodes)));
     const filteredChangesOnlyPosition = changes.filter((el) => el.type === 'position');
     if (filteredChangesOnlyPosition.length === 0) {
       return;
@@ -63,19 +64,18 @@ export function FlowView() {
     let isFinished = false;
 
     const isFinishedDragging = filteredChangesOnlyPosition.filter((el) => el.dragging === false);
+    const accumulatedChanges = [...viewChanges.changes, ...filteredChangesOnlyPosition];
 
     if (isFinishedDragging.length === 0) {
-      setViewChanges((state) => ({
-        changes: [...state.changes, ...filteredChangesOnlyPosition],
+      setViewChanges({
+        changes: accumulatedChanges,
         isStopped: isFinished,
-      }));
-      dispatch(setNodes(applyNodeChanges<TCustomNodeData>(viewChanges.changes, nodes)));
+      });
+
       return;
     }
 
     isFinished = true;
-
-    const accumulatedChanges = [...viewChanges.changes, ...filteredChangesOnlyPosition];
 
     setViewChanges({
       changes: [],
@@ -99,6 +99,8 @@ export function FlowView() {
         edgeTypes={edgeTypes}
         nodeTypes={nodeTypes}
         minZoom={0.05}
+        snapToGrid={true}
+        snapGrid={[10, 10]}
         style={{ gridArea: 'flow' }}
         onNodesChange={(changes) => {
           onNodesChangeAction(changes, nodes, schemaText);
