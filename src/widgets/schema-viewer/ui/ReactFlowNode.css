@@ -4,7 +4,6 @@
 }
 
 .react-flow__node table:hover {
-  cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
   transition: all 0.2s;
 }

@@ -21,7 +21,7 @@ export default function EnumNode({ data }: IEnumNodeProps) {
         className="font-sans bg-white border-2 border-separate border-black rounded-lg"
         style={{ minWidth: 200, maxWidth: 500, borderSpacing: 0 }}
       >
-        <thead title={data.documentation}>
+        <thead title={data.documentation} className={cc([styles.head, 'drag-handle__custom'])}>
           <tr>
             <th className="p-2 font-extrabold border-b-2 border-black bg-emerald-200 rounded-t-md" colSpan={1}>
               {data.name}
@@ -31,6 +31,8 @@ export default function EnumNode({ data }: IEnumNodeProps) {
         </thead>
         <tbody
           className={cc([
+            'nodrag',
+            'cursor-auto',
             'flex',
             'flex-col',
             'overflow-hidden',
@@ -44,12 +46,12 @@ export default function EnumNode({ data }: IEnumNodeProps) {
           ))}
         </tbody>
         {data.values.length > MAX_VALUES && (
-          <tbody>
+          <tbody className="nodrag cursor-auto">
             <tr>
               <td className="flex">
                 <button
                   type="button"
-                  className="w-full px-4 py-2 font-semibold bg-blue-200 rounded"
+                  className="w-full px-4 py-2 font-semibold bg-blue-200 rounded cursor-pointer"
                   onClick={() => {
                     setExpanded(!expanded);
                   }}

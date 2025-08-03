@@ -433,6 +433,7 @@ const positionNodes = (nodeData: Array<TCustomNodeData>, previousNodes: Array<TC
     return {
       id: n.name,
       type: n.type,
+      dragHandle: '.drag-handle__custom',
       position: {
         x: positionedNode?.x ?? schemaNodePosition?.x ?? previousNode?.position.x ?? 0,
         y: positionedNode?.y ?? schemaNodePosition?.y ?? previousNode?.position.y ?? 0,
