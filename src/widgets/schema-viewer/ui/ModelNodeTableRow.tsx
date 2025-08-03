@@ -93,6 +93,9 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
       ) : null;
   }
 
+  const isEnum = sourceTableColumn.kind === 'enum';
+  const isContainsKeywords = sourceTableColumn.defaultValue?.match(/\(.*\)/);
+
   return (
     <tr key={sourceTableColumn.name} className={styles.row} title={sourceTableColumn.documentation}>
       <td className="font-mono font-semibold border-t-2 border-r-2 border-gray-300 text-[#0e107e]">
@@ -112,15 +115,24 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
       </td>
       <td
         className={cc([
-          'p-2 font-mono border-t-2 border-r-2 border-gray-300 text-[#2e7f98]',
-          { 'text-[#2702fc]': isRelations },
+          'p-2 font-mono border-t-2 border-r-2 border-gray-300 ',
+          { 'text-[#2e7f98]': !isRelations && !isEnum },
+          { 'text-[#2702fc]': isRelations || isEnum },
         ])}
       >
         {sourceTableColumn.displayType}
       </td>
       <td className="font-mono border-t-2 border-gray-300">
         <div className="relative p-2">
-          <p className="text-[#148659]">{sourceTableColumn.defaultValue ?? ''}</p>
+          <p
+            className={cc([
+              { 'text-[#148659]': !isEnum && !isContainsKeywords },
+              { 'text-[#3b3b3b]': isEnum },
+              { 'text-[#785e29]': isContainsKeywords },
+            ])}
+          >
+            {sourceTableColumn.defaultValue ?? ''}
+          </p>
           {sourceHandle}
         </div>
       </td>
