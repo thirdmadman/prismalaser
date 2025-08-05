@@ -1,5 +1,7 @@
+import { defaultSchemaFileName } from '../config';
+
 export const downloadTextAsFile = (text: string, fileName: string | null = null) => {
-  fileName ??= 'prisma.schema';
+  fileName ??= defaultSchemaFileName;
 
   const blob = new Blob([text], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);

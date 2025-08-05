@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 
 import { StoreProvider } from './StoreProvider';
 import type { Metadata } from 'next';
+import { isDevEnvironment } from '@/shared/config';
 
 import './globals.css';
 import './tailwind.css';
@@ -51,7 +52,7 @@ export default function RootLayout({
           <meta property="og:image:height" content="630" />
           <meta property="og:image:alt" content="Prismalaser - schema visualization and more" />
         </head>
-        <GoogleTagManager gtmId="GTM-T7999C3W" />
+        {!isDevEnvironment && <GoogleTagManager gtmId="GTM-T7999C3W" />}
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
       </html>
     </StoreProvider>

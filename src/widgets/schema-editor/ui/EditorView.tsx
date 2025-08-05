@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
 
+import { defaultSchemaFileName } from '@/shared/config';
 import { config, language } from '@/shared/lib/monacoPrismaLanguage';
 
 interface IEditorViewProps {
@@ -10,6 +11,7 @@ interface IEditorViewProps {
 
 export function EditorView({ value, onChange }: IEditorViewProps) {
   const monaco = useMonaco();
+  const [fileName] = useState(defaultSchemaFileName);
 
   useEffect(() => {
     if (monaco) {
@@ -21,7 +23,7 @@ export function EditorView({ value, onChange }: IEditorViewProps) {
 
   return (
     <>
-      <div className="w-full h-8 px-4 py-1 text-sm shadow-md text-gray-400">prisma.schema</div>
+      <div className="w-full h-8 px-4 py-1 text-sm shadow-md text-gray-400">{fileName}</div>
       <Editor
         height="100%"
         language="prisma"

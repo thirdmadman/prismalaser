@@ -32,3 +32,8 @@ enum Role {
   ADMIN
 }
 `.trim();
+
+export const defaultSchemaFileName = 'schema.prisma';
+
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+export const isDevEnvironment = process?.env.NODE_ENV === 'development';
