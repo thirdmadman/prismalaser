@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
 
-import { defaultSchemaFileName } from '@/shared/config';
+import { selectFileName } from '@/app/features/editor/editorSlice';
+import { useAppSelector } from '@/app/hooks';
 import { config, language } from '@/shared/lib/monacoPrismaLanguage';
 
 interface IEditorViewProps {
@@ -11,7 +12,7 @@ interface IEditorViewProps {
 
 export function EditorView({ value, onChange }: IEditorViewProps) {
   const monaco = useMonaco();
-  const [fileName] = useState(defaultSchemaFileName);
+  const fileName = useAppSelector(selectFileName);
 
   useEffect(() => {
     if (monaco) {

@@ -2,9 +2,11 @@ import { formatSchema, validateSchema } from './editorAPI';
 import type { DMMF } from '@prisma/generator-helper';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '@/app/createAppSlice';
+import { INITIAL_PLACEHOLDER_SCHEMA, defaultSchemaFileName } from '@/shared/config';
 import type { ISchemaError } from '@/shared/lib/types';
 
 export interface IEditorSliceState {
+  fileName: string;
   text: string;
   schemaErrors: Array<ISchemaError>;
   dmmf: DMMF.Datamodel | null;
@@ -13,7 +15,8 @@ export interface IEditorSliceState {
 }
 
 const initialState: IEditorSliceState = {
-  text: '',
+  fileName: defaultSchemaFileName,
+  text: INITIAL_PLACEHOLDER_SCHEMA,
   schemaErrors: [],
   dmmf: null,
   status: 'idle',
@@ -25,6 +28,9 @@ export const editorSlice = createAppSlice({
   name: 'editor',
   initialState,
   reducers: (create) => ({
+    setFileName: create.reducer((state, action: PayloadAction<string>) => {
+      state.fileName = action.payload;
+    }),
     setText: create.reducer((state, action: PayloadAction<string>) => {
       state.text = action.payload;
     }),
@@ -95,6 +101,7 @@ export const editorSlice = createAppSlice({
     ),
   }),
   selectors: {
+    selectFileName: (editor) => editor.fileName,
     selectStatus: (editor) => editor.status,
     selectText: (editor) => editor.text,
     selectSchemaErrors: (editor) => editor.schemaErrors,
@@ -103,6 +110,14 @@ export const editorSlice = createAppSlice({
   },
 });
 
-export const { setText, setSchemaErrors, setDmmf, validateSchemaAsync, formatSchemaAsync, setIsEditorOpened } =
-  editorSlice.actions;
-export const { selectStatus, selectText, selectSchemaErrors, selectDmmf, selectIsEditorOpened } = editorSlice.selectors;
+export const {
+  setFileName,
+  setText,
+  setSchemaErrors,
+  setDmmf,
+  validateSchemaAsync,
+  formatSchemaAsync,
+  setIsEditorOpened,
+} = editorSlice.actions;
+export const { selectFileName, selectStatus, selectText, selectSchemaErrors, selectDmmf, selectIsEditorOpened } =
+  editorSlice.selectors;

@@ -1,26 +1,21 @@
+'use client';
+
 import { useEffect } from 'react';
 import closeIcon from '@iconify/icons-gg/close-o';
 import { Icon } from '@iconify/react';
-import { useDebounce, useLocalStorage } from 'react-use';
+import { useLocalStorage } from 'react-use';
 
 import { EditorView } from './EditorView';
-import { selectStatus, selectText, setText, validateSchemaAsync } from '@/app/features/editor/editorSlice';
+import { selectStatus, selectText, setText } from '@/app/features/editor/editorSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { INITIAL_PLACEHOLDER_SCHEMA } from '@/shared/config';
 import { fromUrlSafeB64 } from '@/shared/lib';
 
 export default function SchemaEditor() {
-  const [storedText, setStoredText] = useLocalStorage('prismalaser.text', INITIAL_PLACEHOLDER_SCHEMA);
+  const [storedText] = useLocalStorage<string>('prismalaser.text', INITIAL_PLACEHOLDER_SCHEMA, { raw: true });
   const dispatch = useAppDispatch();
   const sourceText = useAppSelector(selectText);
   const status = useAppSelector(selectStatus);
-
-  const submit = async () => {
-    setStoredText(sourceText);
-    await dispatch(validateSchemaAsync(sourceText));
-  };
-
-  useDebounce(submit, 1000, [sourceText]);
 
   useEffect(() => {
     dispatch(setText(storedText ?? ''));

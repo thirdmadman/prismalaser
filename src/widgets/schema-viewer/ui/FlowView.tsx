@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import doubleChevronLeft from '@iconify/icons-gg/chevron-double-left';
 import doubleChevronRight from '@iconify/icons-gg/chevron-double-right';
 import listTree from '@iconify/icons-gg/list-tree';
@@ -85,10 +85,6 @@ export function FlowView() {
     const newSchemaString = updateSchemaStringByChanges(schemaText, accumulatedChanges);
     dispatch(setText(newSchemaString));
   };
-
-  useEffect(() => {
-    dispatch(rearrangeNodes({ dmmf, layout: null }));
-  }, [dispatch, dmmf]);
 
   return (
     <>
