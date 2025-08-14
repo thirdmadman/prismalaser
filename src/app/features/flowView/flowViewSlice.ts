@@ -38,7 +38,7 @@ export const flowViewSlice = createAppSlice({
     }),
     rearrangeNodes: create.reducer(
       (state, action: PayloadAction<{ dmmf: DMMF.Datamodel | null; layout: ElkNode | null }>) => {
-        if (!state.nodes || state.nodes.length === 0) {
+        if (state.nodes.length === 0) {
           state.isFirstSchemaRender = true;
         }
         const { dmmf, layout } = action.payload;
