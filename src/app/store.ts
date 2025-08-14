@@ -48,7 +48,6 @@ listenerMiddleware.startListening.withTypes<TRootState, TAppDispatch>()({
     await listenerApi.delay(1000);
 
     try {
-      console.log('object :>> ', text);
       localStorage.setItem('prismalaser.text', text);
     } catch (error) {
       console.error(error);

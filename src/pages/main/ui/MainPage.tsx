@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useMonaco } from '@monaco-editor/react';
+import { ReactFlowProvider } from 'reactflow';
 
 import type { editor } from 'monaco-editor';
 import { selectIsEditorOpened, selectSchemaErrors } from '@/app/features/editor/editorSlice';
@@ -35,7 +36,9 @@ export default function MainPage() {
   return (
     <Layout noEditor={!isEditorOpened}>
       {isEditorOpened && <SchemaEditor />}
-      <FlowView />
+      <ReactFlowProvider>
+        <FlowView />
+      </ReactFlowProvider>
     </Layout>
   );
 }

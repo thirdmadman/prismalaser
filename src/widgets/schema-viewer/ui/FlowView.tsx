@@ -3,7 +3,16 @@ import doubleChevronLeft from '@iconify/icons-gg/chevron-double-left';
 import doubleChevronRight from '@iconify/icons-gg/chevron-double-right';
 import listTree from '@iconify/icons-gg/list-tree';
 import { Icon } from '@iconify/react';
-import ReactFlow, { Background, BackgroundVariant, ControlButton, Controls, applyNodeChanges } from 'reactflow';
+import { useDebounce } from 'react-use';
+import ReactFlow, {
+  Background,
+  BackgroundVariant,
+  ControlButton,
+  Controls,
+  applyNodeChanges,
+  useOnViewportChange,
+  useReactFlow,
+} from 'reactflow';
 
 import DownloadButton from './DownloadButton';
 import EnumNode from './EnumNode';
@@ -12,7 +21,7 @@ import ModelNode from './ModelNode';
 import RelationEdge from './RelationEdge';
 import { updateSchemaStringByChanges } from '../lib/updateSchemaStringByChanges';
 import type { DMMF } from '@prisma/generator-helper';
-import type { NodeChange } from 'reactflow';
+import type { NodeChange, Viewport } from 'reactflow';
 import {
   selectDmmf,
   selectIsEditorOpened,
@@ -20,7 +29,15 @@ import {
   setIsEditorOpened,
   setText,
 } from '@/app/features/editor/editorSlice';
-import { rearrangeNodes, selectEdges, selectNodes, setNodes } from '@/app/features/flowView/flowViewSlice';
+import {
+  rearrangeNodes,
+  selectEdges,
+  selectIsFirstSchemaRender,
+  selectNodes,
+  setIsFirstSchemaRender,
+  setNodes,
+  setViewport,
+} from '@/app/features/flowView/flowViewSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getElkLayout } from '@/shared/lib/layout';
 import type { TCustomEdge, TCustomNode, TCustomNodeData } from '@/shared/lib/types';
@@ -43,9 +60,40 @@ export function FlowView() {
   const schemaText = useAppSelector(selectText);
   const dmmf = useAppSelector(selectDmmf);
   const isEditorOpened = useAppSelector(selectIsEditorOpened);
+  const isFirstSchemaRender = useAppSelector(selectIsFirstSchemaRender);
+  const { fitView } = useReactFlow();
   const [viewChanges, setViewChanges] = useState<{ changes: Array<NodeChange>; isStopped: boolean }>({
     changes: [],
     isStopped: true,
+  });
+  const [viewportState, setViewportState] = useState<Viewport>({ x: 0, y: 0, zoom: 1 });
+
+  useDebounce(
+    () => {
+      dispatch(setViewport(viewportState));
+    },
+    10000,
+    [viewportState]
+  );
+
+  if (isFirstSchemaRender) {
+    setTimeout(() => {
+      dispatch(setIsFirstSchemaRender(false));
+      fitView();
+    }, 1000);
+  }
+
+  useOnViewportChange({
+    onChange: (viewport: Viewport) => {
+      if (
+        Math.floor(viewport.x / 10) === Math.floor(viewportState.x / 10) &&
+        Math.floor(viewport.y / 10) === Math.floor(viewportState.y / 10) &&
+        Math.floor(viewport.zoom / 10) === Math.floor(viewportState.zoom / 10)
+      ) {
+        return;
+      }
+      setViewportState(viewport);
+    },
   });
 
   const disperseLayout = async (dmmf: DMMF.Datamodel | null, nodes: Array<TCustomNode>, edges: Array<TCustomEdge>) => {
