@@ -1,6 +1,12 @@
 import type { NextRequest } from 'next/server';
 import { validateSchema } from '@/shared/lib/validateSchema';
 
+interface IResponse {
+  isOk: boolean;
+  data?: string;
+  errors?: string;
+}
+
 export async function POST(request: NextRequest) {
   let result = null;
   let isOk = false;
@@ -17,7 +23,19 @@ export async function POST(request: NextRequest) {
     console.error(error);
   }
 
-  const responseJson = { isOk, data: result?.resultString };
+  const responseJson: IResponse = { isOk };
+
+  if (!isOk) {
+    const errorsDataString = result?.resultString;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const errorsData = JSON.parse(errorsDataString ?? '');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    responseJson.errors = errorsData;
+  }
+
+  if (isOk) {
+    responseJson.data = result?.resultString;
+  }
 
   return new Response(JSON.stringify(responseJson), {
     status: isOk ? 200 : 400,

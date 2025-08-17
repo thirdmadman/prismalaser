@@ -46,11 +46,6 @@ export interface IRelationEdgeData {
   relationType: TRelationType;
 }
 
-export enum TErrorTypes {
-  Prisma,
-  Other,
-}
-
 export type TCustomNodeData = IEnumNodeData | IModelNodeData;
 export type TCustomNode = Node<TCustomNodeData>;
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type

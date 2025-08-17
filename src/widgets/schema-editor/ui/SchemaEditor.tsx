@@ -37,12 +37,7 @@ export default function SchemaEditor() {
 
   return (
     <section className="relative flex flex-col items-start border-r-2">
-      <EditorView
-        value={sourceText}
-        onChange={(val) => {
-          dispatch(setText(val ?? ''));
-        }}
-      />
+      <EditorView value={sourceText} />
 
       {status === 'failed' && (
         <div className="absolute right-4 bottom-4 w-8 h-8">

@@ -56,7 +56,7 @@ export const editorSlice = createAppSlice({
         fulfilled: (state, action) => {
           const { isOk, data } = action.payload;
           state.status = 'idle';
-          if (isOk) {
+          if (isOk && data) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const dataObject = JSON.parse(data);
 
@@ -66,6 +66,7 @@ export const editorSlice = createAppSlice({
           } else {
             console.error(action.payload);
             state.status = 'failed';
+            state.schemaErrors = action.payload.errors ?? [];
           }
         },
         rejected: (state) => {
@@ -86,7 +87,7 @@ export const editorSlice = createAppSlice({
           state.status = 'idle';
           const { isOk, data } = action.payload;
 
-          if (isOk) {
+          if (isOk && data) {
             state.text = data;
             state.schemaErrors = [];
           } else {
