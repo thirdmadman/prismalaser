@@ -2,7 +2,10 @@ name: prismalaser
 services:
   frontend:
     container_name: prismalaser-frontend
+    image: ghcr.io/thirdmadman/prismalaser:latest
+    platform: linux/amd64
     env_file: ./.env
+    pull_policy: always
     build:
       context: .
       dockerfile: ./Dockerfile
