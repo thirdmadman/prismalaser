@@ -52,7 +52,9 @@ export default function RootLayout({
           <meta property="og:image:height" content="630" />
           <meta property="og:image:alt" content="Prismalaser - schema visualization and more" />
         </head>
-        {!isDevEnvironment && <GoogleTagManager gtmId="GTM-T7999C3W" />}
+        {!isDevEnvironment && !!process.env.NEXT_PUBLIC_GTM_ID && (
+          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+        )}
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
       </html>
     </StoreProvider>
