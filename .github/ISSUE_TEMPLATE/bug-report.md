@@ -1,3 +1,11 @@
+---
+name: "Bug Report"
+about: Report a bug or issue
+title: "[Bug]: "
+labels: ["bug"]
+assignees: ""
+---
+
 ## Description
 
 <!-- A clear and concise description of the bug -->
