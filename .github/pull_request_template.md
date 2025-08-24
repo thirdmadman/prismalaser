@@ -1,11 +1,3 @@
----
-name: "Pull Request"
-about: Submit changes for review
-title: "[PR]: "
-labels: ["pull request"]
-assignees: ""
----
-
 ## Description
 
 <!-- Briefly describe the changes introduced by this PR -->
