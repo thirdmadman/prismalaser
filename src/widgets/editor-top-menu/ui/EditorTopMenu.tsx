@@ -5,10 +5,9 @@ import optionsIcon from '@iconify/icons-gg/options';
 import { Icon } from '@iconify/react';
 import Image from 'next/image';
 
-import { formatSchemaAsync, selectText } from '@/app/features/editor/editorSlice';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { copyUrlToClipboard } from '@/shared/lib/copyUrlToClipboard';
-import { downloadTextAsFile } from '@/shared/lib/downloadTextAsFile';
+import AboutPanel from './AboutPanel';
+import FilePanel from './FilePanel';
+import SettingsPanel from './SettingsPanel';
 
 const menuItems = [
   { id: 'file', icon: fileIcon, submenu: <FilePanel />, label: 'File' },
@@ -16,55 +15,7 @@ const menuItems = [
   { id: 'about', icon: crownIcon, submenu: <AboutPanel />, label: 'About' },
 ];
 
-function FilePanel() {
-  const text = useAppSelector(selectText);
-  const dispatch = useAppDispatch();
-
-  return (
-    <div className="flex flex-col gap-2 text-sm">
-      <button
-        className="block px-2 py-1 rounded hover:bg-[#333] transition text-left"
-        onClick={() => dispatch(formatSchemaAsync(text))}
-      >
-        Format
-      </button>
-      <button
-        className="block px-2 py-1 rounded hover:bg-[#333] transition text-left"
-        onClick={() => {
-          downloadTextAsFile(text);
-        }}
-      >
-        Download Schema
-      </button>
-      <button
-        className="block px-2 py-1 rounded hover:bg-[#333] transition text-left"
-        onClick={async () => {
-          await copyUrlToClipboard(text);
-        }}
-      >
-        Copy link
-      </button>
-    </div>
-  );
-}
-
-function AboutPanel() {
-  return (
-    <div className="flex flex-col gap-2 text-sm">
-      <button className="block px-2 py-1 rounded hover:bg-[#333] transition text-left">Empty</button>
-    </div>
-  );
-}
-
-function SettingsPanel() {
-  return (
-    <div className="flex flex-col gap-2 text-sm">
-      <button className="block px-2 py-1 rounded hover:bg-[#333] transition text-left">Empty</button>
-    </div>
-  );
-}
-
-export default function TopMenu() {
+export default function EditorTopMenu() {
   const [active, setActive] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -92,7 +43,7 @@ export default function TopMenu() {
   return (
     <nav
       className="flex items-center w-full px-4 py-3 bg-[#1e1e1e] text-white items-center gap-5"
-      style={{ gridArea: 'nav' }}
+      style={{ position: 'absolute', zIndex: 10 }}
       ref={dropdownRef}
     >
       <div className="flex items-center gap-4">

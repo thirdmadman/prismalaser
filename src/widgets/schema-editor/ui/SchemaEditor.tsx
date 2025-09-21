@@ -36,7 +36,7 @@ export default function SchemaEditor() {
   }, [dispatch]);
 
   return (
-    <section className="relative flex flex-col items-start border-r-2">
+    <section className="relative flex flex-col items-start border-r-2" style={{ maxWidth: '600px', width: '100%' }}>
       <EditorView value={sourceText} />
 
       {status === 'failed' && (

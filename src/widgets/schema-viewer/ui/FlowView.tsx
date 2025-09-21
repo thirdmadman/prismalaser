@@ -135,7 +135,7 @@ export function FlowView() {
   };
 
   return (
-    <>
+    <section style={{ width: '100%' }}>
       <Markers />
       <ReactFlow
         nodes={nodes}
@@ -168,6 +168,6 @@ export function FlowView() {
           </ControlButton>
         </Controls>
       </ReactFlow>
-    </>
+    </section>
   );
 }

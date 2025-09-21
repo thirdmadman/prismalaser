@@ -407,6 +407,8 @@ const positionNodes = (nodeData: Array<TCustomNodeData>, previousNodes: Array<TC
     const isNodeHasDocumentation = !!schemaNodeDocumentation;
     let schemaNodePosition = null;
 
+    /// @Prismalaser.position(x: 100, y: -100)
+
     if (isNodeHasDocumentation) {
       const isDocumentationStartPosition = schemaNodeDocumentation.indexOf('@prla-position');
 
