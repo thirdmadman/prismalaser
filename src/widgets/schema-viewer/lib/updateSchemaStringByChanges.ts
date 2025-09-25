@@ -3,13 +3,19 @@ import type { NodeChange } from 'reactflow';
 export function updateSchemaStringByChanges(sourceSchemaString: string, changes: Array<NodeChange> | null | undefined) {
   let result = sourceSchemaString;
 
-  if (!sourceSchemaString) return result;
+  if (!sourceSchemaString) {
+    return result;
+  }
 
-  if (!changes || changes.length === 0) return result;
+  if (!changes || changes.length === 0) {
+    return result;
+  }
 
   const schemaChangesToImplement = changes.filter((el) => el.type === 'position' && el.id !== '');
 
-  if (schemaChangesToImplement.length === 0) return result;
+  if (schemaChangesToImplement.length === 0) {
+    return result;
+  }
 
   schemaChangesToImplement.forEach((el) => {
     if (el.type !== 'position') {
@@ -18,40 +24,47 @@ export function updateSchemaStringByChanges(sourceSchemaString: string, changes:
 
     const { id, position } = el;
 
-    if (!position?.x || !position.y) return;
+    if (!position?.x || !position.y) {
+      return;
+    }
 
     const modelNodeStart = result.indexOf(`model ${id}`);
     const enumNodeStart = result.indexOf(`enum ${id}`);
 
     let schemaNodeStart = modelNodeStart;
 
-    if (modelNodeStart < 0) schemaNodeStart = enumNodeStart;
+    if (modelNodeStart < 0) {
+      schemaNodeStart = enumNodeStart;
+    }
 
     // console.log(result.substring(0, schemaNodeStart));
-    if (schemaNodeStart === -1) return;
+    if (schemaNodeStart === -1) {
+      return;
+    }
     const modelNodeCommentStarts = result.lastIndexOf('///', schemaNodeStart);
     // console.log(result.substring(modelNodeCommentStarts));
 
-    if (modelNodeCommentStarts === -1) return;
+    if (modelNodeCommentStarts === -1) {
+      return;
+    }
 
     const endOfCommentLine = result.indexOf('\n', modelNodeCommentStarts);
     // console.log(result.substring(0, endOfCommentLine));
 
     const commentString = result.substring(modelNodeCommentStarts, endOfCommentLine);
 
-    const POSITION_START_TAG = `@prla-position {`;
-    const POSITION_END_TAG = `}`;
+    const POSITION_START_TAG = `@Prismalaser.position(`;
+    const POSITION_END_TAG = `)`;
 
     const startOfPositionJsonRelative = commentString.lastIndexOf(POSITION_START_TAG);
 
-    if (startOfPositionJsonRelative < 0) return;
+    if (startOfPositionJsonRelative < 0) {
+      return;
+    }
 
     const endOfPositionJsonRelative = commentString.indexOf(POSITION_END_TAG, startOfPositionJsonRelative);
 
-    const positionJsonString = JSON.stringify({
-      x: Math.round(position.x),
-      y: Math.round(position.y),
-    });
+    const positionString = `(x:${String(position.x)}, y:${String(position.y)})`;
 
     const leftPart = result.substring(
       0,
@@ -59,7 +72,7 @@ export function updateSchemaStringByChanges(sourceSchemaString: string, changes:
     );
     const rightPart = result.substring(modelNodeCommentStarts + endOfPositionJsonRelative + POSITION_END_TAG.length);
 
-    result = `${leftPart}${positionJsonString}${rightPart}`;
+    result = `${leftPart}${positionString}${rightPart}`;
   });
 
   return result;

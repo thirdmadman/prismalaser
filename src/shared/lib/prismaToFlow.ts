@@ -394,6 +394,70 @@ const generateImplicitModelNodes = (relations: Record<string, IGotModelRelations
   return implicitModelNodes;
 };
 
+const extractNodePositionDataFromCommentString = (commentString: string) => {
+  /// @Prismalaser.position(x: 100, y: -100)
+
+  const positionCommentSignature = '@Prismalaser.position';
+
+  const positionDataCommentStartIndex = commentString.indexOf(positionCommentSignature);
+  if (positionDataCommentStartIndex < 0) {
+    return null;
+  }
+
+  let positionOfNewLine = commentString.indexOf('\n', positionDataCommentStartIndex);
+  if (positionOfNewLine < 0) {
+    positionOfNewLine = commentString.length;
+  }
+
+  let positionDataString = commentString.substring(
+    positionDataCommentStartIndex + positionCommentSignature.length,
+    positionOfNewLine
+  );
+
+  positionDataString = positionDataString.trim().replaceAll(' ', '').replaceAll('\t', '');
+
+  if (positionDataString.length < 9) {
+    return null;
+  }
+
+  const positionDataStartIndex = positionDataString.indexOf('(');
+  const positionDataEndIndex = positionDataString.indexOf(')', positionDataStartIndex + 1);
+
+  if (positionDataStartIndex < 0 || positionDataEndIndex < 0 || positionDataStartIndex > positionDataEndIndex) {
+    return null;
+  }
+
+  const positionDataXStartIndex = positionDataString.indexOf('x:');
+  const positionDataYStartIndex = positionDataString.indexOf('y:');
+  const positionDataSeparator = positionDataString.indexOf(',');
+
+  if (positionDataXStartIndex < 0 || positionDataYStartIndex < 0 || positionDataSeparator < 0) {
+    return null;
+  }
+
+  const isXPositionLeading = positionDataXStartIndex < positionDataYStartIndex;
+
+  let x = NaN;
+  let y = NaN;
+
+  if (isXPositionLeading) {
+    x = parseInt(positionDataString.substring(positionDataXStartIndex + 2, positionDataSeparator), 10);
+    y = parseInt(positionDataString.substring(positionDataYStartIndex + 2, positionDataEndIndex), 10);
+  } else {
+    x = parseInt(positionDataString.substring(positionDataXStartIndex + 2, positionDataEndIndex), 10);
+    y = parseInt(positionDataString.substring(positionDataYStartIndex + 2, positionDataSeparator), 10);
+  }
+
+  if (isNaN(x) || isNaN(y)) {
+    return null;
+  }
+
+  return {
+    x,
+    y,
+  };
+};
+
 /**
  * Takes in plain React Flow node data and positions them either based on an Elk
  * reflow, previous layout state, or with fresh positions.
@@ -409,26 +473,17 @@ const positionNodes = (nodeData: Array<TCustomNodeData>, previousNodes: Array<TC
 
     /// @Prismalaser.position(x: 100, y: -100)
 
+    // We can user this to replace old comments
+    // const output = input.replace(
+    //   /\/\/\/\s*@prla-position\s*\{"x":(-?\d+),"y":(-?\d+)\}/g,
+    //   '/// @Prismalaser.position(x:$1,y:$2)'
+    // );
+
     if (isNodeHasDocumentation) {
-      const isDocumentationStartPosition = schemaNodeDocumentation.indexOf('@prla-position');
+      const positionData = extractNodePositionDataFromCommentString(schemaNodeDocumentation);
 
-      if (isDocumentationStartPosition > -1) {
-        const positionJsonStart = schemaNodeDocumentation.indexOf('{', isDocumentationStartPosition);
-        const positionJsonEnd = schemaNodeDocumentation.indexOf('}', positionJsonStart);
-
-        const positionJson = schemaNodeDocumentation.substring(positionJsonStart, positionJsonEnd + 1);
-
-        let positionJsonObject = null;
-
-        try {
-          positionJsonObject = JSON.parse(positionJson) as { x: number; y: number };
-        } catch {
-          console.error('Position JSON is not valid');
-        }
-
-        if (positionJsonObject?.x && positionJsonObject.y) {
-          schemaNodePosition = { x: positionJsonObject.x, y: positionJsonObject.y };
-        }
+      if (positionData?.x && positionData.y) {
+        schemaNodePosition = { x: positionData.x, y: positionData.y };
       }
     }
 
