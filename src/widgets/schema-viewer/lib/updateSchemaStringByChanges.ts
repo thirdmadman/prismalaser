@@ -41,10 +41,17 @@ export function updateSchemaStringByChanges(sourceSchemaString: string, changes:
     if (schemaNodeStart === -1) {
       return;
     }
-    const modelNodeCommentStarts = result.lastIndexOf('///', schemaNodeStart);
+
+    let previousBlockStart = result.lastIndexOf('}', schemaNodeStart);
+
+    if (previousBlockStart === -1) {
+      previousBlockStart = 0;
+    }
+
+    const modelNodeCommentStarts = result.indexOf('///', previousBlockStart);
     // console.log(result.substring(modelNodeCommentStarts));
 
-    if (modelNodeCommentStarts === -1) {
+    if (modelNodeCommentStarts === -1 || modelNodeCommentStarts > schemaNodeStart) {
       return;
     }
 
