@@ -49,35 +49,43 @@ export function updateSchemaStringByChanges(sourceSchemaString: string, changes:
     }
 
     const modelNodeCommentStarts = result.indexOf('///', previousBlockStart);
-    // console.log(result.substring(modelNodeCommentStarts));
 
     if (modelNodeCommentStarts === -1 || modelNodeCommentStarts > schemaNodeStart) {
       return;
     }
 
-    const endOfCommentLine = result.indexOf('\n', modelNodeCommentStarts);
-    // console.log(result.substring(0, endOfCommentLine));
+    const endOfCommentIndex = result.lastIndexOf('\n', schemaNodeStart);
 
-    const commentString = result.substring(modelNodeCommentStarts, endOfCommentLine);
+    const commentString = result.substring(modelNodeCommentStarts, endOfCommentIndex);
 
-    const POSITION_START_TAG = `@Prismalaser.position(`;
-    const POSITION_END_TAG = `)`;
+    const EXTRACTION_START_TAG = `@Prismalaser.position(`;
+    const EXTRACTION_END_TAG = `)`;
 
-    const startOfPositionJsonRelative = commentString.lastIndexOf(POSITION_START_TAG);
+    const extractionStartTagStartPositionIndexRelative = commentString.lastIndexOf(EXTRACTION_START_TAG);
 
-    if (startOfPositionJsonRelative < 0) {
+    if (extractionStartTagStartPositionIndexRelative < 0) {
       return;
     }
 
-    const endOfPositionJsonRelative = commentString.indexOf(POSITION_END_TAG, startOfPositionJsonRelative);
+    const controlNewLine = commentString.indexOf('\n', extractionStartTagStartPositionIndexRelative);
 
-    const positionString = `(x:${String(position.x)}, y:${String(position.y)})`;
+    const extractionEndTagStartPositionIndexRelative = commentString.indexOf(
+      EXTRACTION_END_TAG,
+      extractionStartTagStartPositionIndexRelative
+    );
+
+    if (controlNewLine > 0 && extractionEndTagStartPositionIndexRelative > controlNewLine) {
+      console.error('Prismalaser comment parsing error: no end tag ")"');
+      return;
+    }
+
+    const positionString = `x:${String(position.x)}, y:${String(position.y)}`;
 
     const leftPart = result.substring(
       0,
-      modelNodeCommentStarts + POSITION_START_TAG.length + startOfPositionJsonRelative - 1
+      modelNodeCommentStarts + EXTRACTION_START_TAG.length + extractionStartTagStartPositionIndexRelative
     );
-    const rightPart = result.substring(modelNodeCommentStarts + endOfPositionJsonRelative + POSITION_END_TAG.length);
+    const rightPart = result.substring(modelNodeCommentStarts + extractionEndTagStartPositionIndexRelative);
 
     result = `${leftPart}${positionString}${rightPart}`;
   });

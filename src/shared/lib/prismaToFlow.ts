@@ -399,7 +399,7 @@ const extractNodePositionDataFromCommentString = (commentString: string) => {
 
   const positionCommentSignature = '@Prismalaser.position';
 
-  const positionDataCommentStartIndex = commentString.indexOf(positionCommentSignature);
+  const positionDataCommentStartIndex = commentString.lastIndexOf(positionCommentSignature);
   if (positionDataCommentStartIndex < 0) {
     return null;
   }
