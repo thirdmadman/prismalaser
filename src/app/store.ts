@@ -1,7 +1,12 @@
 import { combineSlices, configureStore, createListenerMiddleware } from '@reduxjs/toolkit';
 
 import { editorSlice, validateSchemaAsync } from './features/editor/editorSlice';
-import { flowViewSlice, rearrangeNodes } from './features/flowView/flowViewSlice';
+import {
+  flowViewSlice,
+  rearrangeNodes,
+  setIsFirstSchemaRender,
+  setIsSetFitViewNeeded,
+} from './features/flowView/flowViewSlice';
 import type { Action, ThunkAction } from '@reduxjs/toolkit';
 
 const rootReducer = combineSlices(editorSlice, flowViewSlice);
@@ -39,6 +44,10 @@ listenerMiddleware.startListening.withTypes<TRootState, TAppDispatch>()({
 
 listenerMiddleware.startListening.withTypes<TRootState, TAppDispatch>()({
   predicate: (_action, currentState, previousState) => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return false;
+    }
+
     return currentState.editor.text !== previousState.editor.text;
   },
   effect: async (_action, listenerApi) => {
@@ -54,5 +63,23 @@ listenerMiddleware.startListening.withTypes<TRootState, TAppDispatch>()({
     }
 
     await listenerApi.dispatch(validateSchemaAsync(text));
+  },
+});
+
+listenerMiddleware.startListening.withTypes<TRootState, TAppDispatch>()({
+  predicate: (_action, currentState, previousState) => {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      return false;
+    }
+
+    return previousState.flowView.isFirstSchemaRender && !currentState.flowView.isFirstSchemaRender;
+  },
+  effect: async (_action, listenerApi) => {
+    const { editor } = listenerApi.getState();
+    const { text } = editor;
+    listenerApi.dispatch(setIsFirstSchemaRender(false));
+
+    await listenerApi.dispatch(validateSchemaAsync(text));
+    listenerApi.dispatch(setIsSetFitViewNeeded(true));
   },
 });

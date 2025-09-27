@@ -17,13 +17,15 @@ export interface IFlowViewSliceSliceState {
   edges: Array<TCustomEdge>;
   viewport: IViewport;
   isFirstSchemaRender: boolean;
+  isSetFitViewNeeded: boolean;
 }
 
 const initialState: IFlowViewSliceSliceState = {
   nodes: [],
   edges: [],
   viewport: { x: 0, y: 0, zoom: 1 },
-  isFirstSchemaRender: false,
+  isFirstSchemaRender: true,
+  isSetFitViewNeeded: false,
 };
 
 export const flowViewSlice = createAppSlice({
@@ -39,7 +41,7 @@ export const flowViewSlice = createAppSlice({
     rearrangeNodes: create.reducer(
       (state, action: PayloadAction<{ dmmf: DMMF.Datamodel | null; layout: ElkNode | null }>) => {
         if (state.nodes.length === 0) {
-          state.isFirstSchemaRender = true;
+          state.isSetFitViewNeeded = true;
         }
         const { dmmf, layout } = action.payload;
 
@@ -65,14 +67,20 @@ export const flowViewSlice = createAppSlice({
     setIsFirstSchemaRender: create.reducer((state, action: PayloadAction<boolean>) => {
       state.isFirstSchemaRender = action.payload;
     }),
+    setIsSetFitViewNeeded: create.reducer((state, action: PayloadAction<boolean>) => {
+      state.isSetFitViewNeeded = action.payload;
+    }),
   }),
   selectors: {
     selectNodes: (editor) => editor.nodes,
     selectEdges: (editor) => editor.edges,
     selectViewport: (editor) => editor.viewport,
     selectIsFirstSchemaRender: (editor) => editor.isFirstSchemaRender,
+    selectIsSetFitViewNeeded: (editor) => editor.isSetFitViewNeeded,
   },
 });
 
-export const { setViewport, setNodes, setEdges, rearrangeNodes, setIsFirstSchemaRender } = flowViewSlice.actions;
-export const { selectNodes, selectEdges, selectViewport, selectIsFirstSchemaRender } = flowViewSlice.selectors;
+export const { setViewport, setNodes, setEdges, rearrangeNodes, setIsFirstSchemaRender, setIsSetFitViewNeeded } =
+  flowViewSlice.actions;
+export const { selectNodes, selectEdges, selectViewport, selectIsFirstSchemaRender, selectIsSetFitViewNeeded } =
+  flowViewSlice.selectors;

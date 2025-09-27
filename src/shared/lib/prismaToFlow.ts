@@ -487,7 +487,7 @@ const positionNodes = (nodeData: Array<TCustomNodeData>, previousNodes: Array<TC
       }
     }
 
-    return {
+    const nodeReactFlowData = {
       id: n.name,
       type: n.type,
       dragHandle: '.drag-handle__custom',
@@ -499,6 +499,8 @@ const positionNodes = (nodeData: Array<TCustomNodeData>, previousNodes: Array<TC
       height: previousNode?.height ?? 0,
       data: n,
     };
+
+    return nodeReactFlowData;
   });
 
 /**

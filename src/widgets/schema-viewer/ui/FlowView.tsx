@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import doubleChevronLeft from '@iconify/icons-gg/chevron-double-left';
 import doubleChevronRight from '@iconify/icons-gg/chevron-double-right';
 import listTree from '@iconify/icons-gg/list-tree';
@@ -10,6 +10,7 @@ import ReactFlow, {
   ControlButton,
   Controls,
   applyNodeChanges,
+  useNodesInitialized,
   useOnViewportChange,
   useReactFlow,
 } from 'reactflow';
@@ -32,9 +33,10 @@ import {
 import {
   rearrangeNodes,
   selectEdges,
-  selectIsFirstSchemaRender,
+  selectIsSetFitViewNeeded,
   selectNodes,
   setIsFirstSchemaRender,
+  setIsSetFitViewNeeded,
   setNodes,
   setViewport,
 } from '@/app/features/flowView/flowViewSlice';
@@ -59,9 +61,10 @@ export function FlowView() {
   const edges = useAppSelector(selectEdges);
   const schemaText = useAppSelector(selectText);
   const dmmf = useAppSelector(selectDmmf);
-  const isEditorOpened = useAppSelector(selectIsEditorOpened);
-  const isFirstSchemaRender = useAppSelector(selectIsFirstSchemaRender);
+  const isSetFitViewNeeded = useAppSelector(selectIsSetFitViewNeeded);
   const { fitView } = useReactFlow();
+  const isEditorOpened = useAppSelector(selectIsEditorOpened);
+  const nodesInitialized = useNodesInitialized();
   const [viewChanges, setViewChanges] = useState<{ changes: Array<NodeChange>; isStopped: boolean }>({
     changes: [],
     isStopped: true,
@@ -76,12 +79,19 @@ export function FlowView() {
     [viewportState]
   );
 
-  if (isFirstSchemaRender) {
-    setTimeout(() => {
-      dispatch(setIsFirstSchemaRender(false));
-      fitView();
-    }, 1000);
-  }
+  useEffect(() => {
+    dispatch(setIsFirstSchemaRender(false));
+    dispatch(setIsSetFitViewNeeded(true));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!nodesInitialized || !isSetFitViewNeeded) {
+      return;
+    }
+
+    setIsSetFitViewNeeded(false);
+    fitView();
+  }, [fitView, isSetFitViewNeeded, nodesInitialized]);
 
   useOnViewportChange({
     onChange: (viewport: Viewport) => {
