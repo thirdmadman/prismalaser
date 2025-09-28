@@ -3,7 +3,8 @@ import type { DMMF } from '@prisma/generator-helper';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '@/app/createAppSlice';
 import { INITIAL_PLACEHOLDER_SCHEMA, defaultSchemaFileName } from '@/shared/config';
-import type { ISchemaError } from '@/shared/lib/types';
+import { insertPositionCommentsToSchemaString } from '@/shared/lib/insertPositionCommentsToSchemaString';
+import type { ISchemaError, TCustomNode } from '@/shared/lib/types';
 
 export interface IEditorSliceState {
   fileName: string;
@@ -50,6 +51,12 @@ export const editorSlice = createAppSlice({
         localStorage.removeItem('prismalaser.text');
       } catch (error) {
         console.error(error);
+      }
+    }),
+    insertPositionComments: create.reducer((state, action: PayloadAction<Array<TCustomNode>>) => {
+      const result = insertPositionCommentsToSchemaString(state.text, action.payload);
+      if (result) {
+        state.text = result;
       }
     }),
     validateSchemaAsync: create.asyncThunk(
@@ -128,6 +135,7 @@ export const {
   formatSchemaAsync,
   setIsEditorOpened,
   clearStoredData,
+  insertPositionComments,
 } = editorSlice.actions;
 export const { selectFileName, selectStatus, selectText, selectSchemaErrors, selectDmmf, selectIsEditorOpened } =
   editorSlice.selectors;
