@@ -44,6 +44,14 @@ export const editorSlice = createAppSlice({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       state.dmmf = action.payload as any;
     }),
+    clearStoredData: create.reducer((state) => {
+      state.text = INITIAL_PLACEHOLDER_SCHEMA;
+      try {
+        localStorage.removeItem('prismalaser.text');
+      } catch (error) {
+        console.error(error);
+      }
+    }),
     validateSchemaAsync: create.asyncThunk(
       async (sourceString: string) => {
         const response = await validateSchema(sourceString);
@@ -119,6 +127,7 @@ export const {
   validateSchemaAsync,
   formatSchemaAsync,
   setIsEditorOpened,
+  clearStoredData,
 } = editorSlice.actions;
 export const { selectFileName, selectStatus, selectText, selectSchemaErrors, selectDmmf, selectIsEditorOpened } =
   editorSlice.selectors;

@@ -1,4 +1,4 @@
-import { formatSchemaAsync, selectText } from '@/app/features/editor/editorSlice';
+import { clearStoredData, formatSchemaAsync, selectText } from '@/app/features/editor/editorSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { copyUrlToClipboard } from '@/shared/lib/copyUrlToClipboard';
 import { downloadTextAsFile } from '@/shared/lib/downloadTextAsFile';
@@ -30,6 +30,14 @@ export default function FilePanel() {
         }}
       >
         Copy link
+      </button>
+      <button
+        className="block px-2 py-1 rounded hover:bg-[#333] transition text-left"
+        onClick={() => {
+          dispatch(clearStoredData());
+        }}
+      >
+        Delete stored data
       </button>
     </div>
   );
