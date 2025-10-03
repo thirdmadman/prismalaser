@@ -3,13 +3,13 @@
 import { useEffect } from 'react';
 import closeIcon from '@iconify/icons-gg/close-o';
 import { Icon } from '@iconify/react';
+import LZString from 'lz-string';
 import { useLocalStorage } from 'react-use';
 
 import { EditorView } from './EditorView';
 import { selectStatus, selectText, setText } from '@/app/features/editor/editorSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { INITIAL_PLACEHOLDER_SCHEMA } from '@/shared/config';
-import { fromUrlSafeB64 } from '@/shared/lib';
 
 export default function SchemaEditor() {
   const [storedText] = useLocalStorage<string>('prismalaser.text', INITIAL_PLACEHOLDER_SCHEMA, { raw: true });
@@ -26,12 +26,12 @@ export default function SchemaEditor() {
     // Populate state from a shared link if one is present
     const params = new URLSearchParams(location.search);
 
-    if (params.has('code')) {
+    if (params.has('data')) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const code = params.get('code')!;
-      const decoded = fromUrlSafeB64(code);
+      const data = params.get('data')!;
+      const decompressed = LZString.decompressFromEncodedURIComponent(data);
 
-      dispatch(setText(decoded));
+      dispatch(setText(decompressed));
     }
   }, [dispatch]);
 

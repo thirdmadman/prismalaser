@@ -33,6 +33,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "elkjs": "^0.10.0",
     "html-to-image": "^1.11.13",
+    "lz-string": "^1.5.0",
     "next": "15.3.5",
     "rambda": "^10.2.0",
     "ramda": "^0.31.3",
