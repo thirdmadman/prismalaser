@@ -1,4 +1,5 @@
 import { combineSlices, configureStore, createListenerMiddleware } from '@reduxjs/toolkit';
+import LZString from 'lz-string';
 
 import { editorSlice, validateSchemaAsync } from './features/editor/editorSlice';
 import {
@@ -57,7 +58,8 @@ listenerMiddleware.startListening.withTypes<TRootState, TAppDispatch>()({
     await listenerApi.delay(1000);
 
     try {
-      localStorage.setItem('prismalaser.text', text);
+      const compressedText = LZString.compress(text);
+      localStorage.setItem('Prismalaser.schemaCompressed', compressedText);
     } catch (error) {
       console.error(error);
     }

@@ -12,13 +12,16 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { INITIAL_PLACEHOLDER_SCHEMA } from '@/shared/config';
 
 export default function SchemaEditor() {
-  const [storedText] = useLocalStorage<string>('prismalaser.text', INITIAL_PLACEHOLDER_SCHEMA, { raw: true });
+  const [storedText] = useLocalStorage<string>('Prismalaser.schemaCompressed', INITIAL_PLACEHOLDER_SCHEMA, {
+    raw: true,
+  });
   const dispatch = useAppDispatch();
   const sourceText = useAppSelector(selectText);
   const status = useAppSelector(selectStatus);
 
   useEffect(() => {
-    dispatch(setText(storedText ?? ''));
+    const decompressedString = LZString.decompress(storedText ?? '');
+    dispatch(setText(decompressedString));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
