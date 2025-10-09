@@ -20,8 +20,12 @@ export default function SchemaEditor() {
   const status = useAppSelector(selectStatus);
 
   useEffect(() => {
-    const decompressedString = LZString.decompress(storedText ?? '');
-    dispatch(setText(decompressedString));
+    let decompressedString = null;
+    if (storedText !== INITIAL_PLACEHOLDER_SCHEMA && !!storedText) {
+      decompressedString = LZString.decompress(storedText);
+    }
+
+    dispatch(setText(decompressedString ?? storedText ?? ''));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
