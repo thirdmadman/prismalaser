@@ -39,8 +39,6 @@ export function insertPositionCommentsToSchemaString(schemaString: string, nodes
 
     const extractedPosition = extractNodePositionDataFromCommentString(stringBetweenNodes);
 
-    console.log(extractedPosition);
-
     if (extractedPosition) {
       return false;
     }

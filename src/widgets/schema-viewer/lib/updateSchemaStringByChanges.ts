@@ -1,4 +1,4 @@
-import type { NodeChange } from 'reactflow';
+import type { NodeChange } from '@xyflow/react';
 
 export function updateSchemaStringByChanges(sourceSchemaString: string, changes: Array<NodeChange> | null | undefined) {
   let result = sourceSchemaString;
@@ -37,7 +37,6 @@ export function updateSchemaStringByChanges(sourceSchemaString: string, changes:
       schemaNodeStart = enumNodeStart;
     }
 
-    // console.log(result.substring(0, schemaNodeStart));
     if (schemaNodeStart === -1) {
       return;
     }

@@ -1,4 +1,4 @@
-import type { Edge, Node } from 'reactflow';
+import type { Edge, Node } from '@xyflow/react';
 
 export type TRelationType = '1-1' | '1-n' | 'm-n';
 export type TRelationSide = 'source' | 'target';
@@ -8,13 +8,13 @@ export interface ISchemaError {
   row: string;
 }
 
-export interface IModelRelationData {
+export interface IModelRelationData extends Record<string, unknown> {
   side: TRelationSide;
   type: TRelationType;
   name: string;
 }
 
-export interface IEnumNodeData {
+export interface IEnumNodeData extends Record<string, unknown> {
   type: 'enum';
   name: string;
   dbName?: string | null;
@@ -34,7 +34,7 @@ export interface IModelNodeDataColumn {
   relationData: IModelRelationData | null;
 }
 
-export interface IModelNodeData {
+export interface IModelNodeData extends Record<string, unknown> {
   type: 'model';
   name: string;
   dbName?: string | null;
@@ -42,7 +42,7 @@ export interface IModelNodeData {
   columns: Array<IModelNodeDataColumn>;
 }
 
-export interface IRelationEdgeData {
+export interface IRelationEdgeData extends Record<string, unknown> {
   relationType: TRelationType;
 }
 

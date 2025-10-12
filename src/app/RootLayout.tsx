@@ -6,8 +6,9 @@ import ThemeProvider from './ThemeProvider';
 import type { Metadata } from 'next';
 import { isDevEnvironment } from '@/shared/config';
 
+import '@xyflow/react/dist/style.css';
+// eslint-disable-next-line import/order
 import './tailwind.css';
-import 'reactflow/dist/style.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

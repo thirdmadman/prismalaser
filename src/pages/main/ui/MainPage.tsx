@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactFlowProvider } from 'reactflow';
+import { ReactFlowProvider } from '@xyflow/react';
 
 import { EditorPageLayout } from './EditorPageLayout';
 import { selectIsEditorOpened } from '@/app/features/editor/editorSlice';

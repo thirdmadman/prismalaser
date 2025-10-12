@@ -3,17 +3,21 @@ import doubleChevronLeft from '@iconify/icons-gg/chevron-double-left';
 import doubleChevronRight from '@iconify/icons-gg/chevron-double-right';
 import listTree from '@iconify/icons-gg/list-tree';
 import { Icon } from '@iconify/react';
-import { useDebounce } from 'react-use';
-import ReactFlow, {
+import {
   Background,
   BackgroundVariant,
   ControlButton,
   Controls,
+  type Node,
+  type NodeChange,
+  ReactFlow,
+  type Viewport,
   applyNodeChanges,
   useNodesInitialized,
   useOnViewportChange,
   useReactFlow,
-} from 'reactflow';
+} from '@xyflow/react';
+import { useDebounce } from 'react-use';
 
 import DownloadButton from './DownloadButton';
 import EnumNode from './EnumNode';
@@ -22,7 +26,6 @@ import ModelNode from './ModelNode';
 import RelationEdge from './RelationEdge';
 import { updateSchemaStringByChanges } from '../lib/updateSchemaStringByChanges';
 import type { DMMF } from '@prisma/generator-helper';
-import type { NodeChange, Viewport } from 'reactflow';
 import {
   selectDmmf,
   selectIsEditorOpened,
@@ -89,9 +92,12 @@ export function FlowView() {
       return;
     }
 
-    setIsSetFitViewNeeded(false);
-    fitView();
-  }, [fitView, isSetFitViewNeeded, nodesInitialized]);
+    fitView()
+      .then(() => dispatch(setIsSetFitViewNeeded(false)))
+      .catch((e: unknown) => {
+        console.error(e);
+      });
+  }, [dispatch, fitView, isSetFitViewNeeded, nodesInitialized]);
 
   useOnViewportChange({
     onChange: (viewport: Viewport) => {
@@ -112,8 +118,13 @@ export function FlowView() {
     dispatch(rearrangeNodes({ dmmf, layout }));
   };
 
-  const onNodesChangeAction = (changes: Array<NodeChange>, nodes: Array<TCustomNode>, schemaText: string) => {
-    dispatch(setNodes(applyNodeChanges<TCustomNodeData>(changes, nodes)));
+  const onNodesChangeAction = (
+    changes: Array<NodeChange<TCustomNode>>,
+    nodes: Array<TCustomNode>,
+    schemaText: string
+  ) => {
+    const calculatedChanges = applyNodeChanges<Node<TCustomNodeData>>(changes, nodes);
+    dispatch(setNodes(calculatedChanges));
     const filteredChangesOnlyPosition = changes.filter((el) => el.type === 'position');
     if (filteredChangesOnlyPosition.length === 0) {
       return;

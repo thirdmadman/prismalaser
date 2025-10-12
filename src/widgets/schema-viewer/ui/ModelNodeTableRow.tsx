@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
+import { Handle, Position, useReactFlow, useStoreApi } from '@xyflow/react';
 import cc from 'classcat';
-import { Handle, Position, useReactFlow, useStoreApi } from 'reactflow';
 
 import {
   generateEnumEdgeTargetHandleId,
@@ -22,9 +22,9 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
   const store = useStoreApi();
   const { setCenter, getZoom } = useReactFlow();
 
-  const focusNode = (nodeId: string) => {
-    const { nodeInternals } = store.getState();
-    const nodes = Array.from(nodeInternals).map(([, node]) => node);
+  const focusNode = async (nodeId: string) => {
+    const { nodeLookup } = store.getState();
+    const nodes = Array.from(nodeLookup).map(([, node]) => node);
 
     if (nodes.length > 0) {
       const node = nodes.find((iterNode) => iterNode.id === nodeId);
@@ -37,7 +37,7 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
       const y = node.position.y + node.height! / 2;
       const zoom = getZoom();
 
-      setCenter(x, y, { zoom, duration: 1000 });
+      await setCenter(x, y, { zoom, duration: 1000 });
     }
   };
 
@@ -102,11 +102,11 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
         <button
           type="button"
           className={cc(['relative', 'p-2', { 'cursor-pointer': isRelations }])}
-          onClick={() => {
+          onClick={async () => {
             if (!isRelations) {
               return;
             }
-            focusNode(sourceTableColumn.type);
+            await focusNode(sourceTableColumn.type);
           }}
         >
           {sourceTableColumn.name}

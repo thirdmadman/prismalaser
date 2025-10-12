@@ -1,7 +1,7 @@
 import downloadIcon from '@iconify/icons-gg/software-download';
 import { Icon } from '@iconify/react';
+import { ControlButton, getNodesBounds, getViewportForBounds, useReactFlow } from '@xyflow/react';
 import { toPng } from 'html-to-image';
-import { ControlButton, getRectOfNodes, getViewportForBounds, useReactFlow } from 'reactflow';
 
 import styles from './FlowView.module.css';
 
@@ -20,9 +20,9 @@ export default function DownloadButton() {
     // we calculate a transform for the nodes so that all nodes are visible
     // we then overwrite the transform of the `.react-flow__viewport` element
     // with the style option of the html-to-image library
-    const nodesBounds = getRectOfNodes(getNodes());
+    const nodesBounds = getNodesBounds(getNodes());
     const { height: imageHeight, width: imageWidth } = nodesBounds;
-    const transform = getViewportForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2);
+    const transform = getViewportForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2, 0);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const viewport: HTMLDivElement = document.querySelector('.react-flow__viewport')!;
 

@@ -51,7 +51,7 @@ export const flowViewSlice = createAppSlice({
         let newEdges: Array<TCustomEdge> = [];
 
         if (dmmf) {
-          const { nodes: generatedNodes, edges: generatedEdges } = generateFlowFromDMMF(dmmf, nodes, layout);
+          const { nodes: generatedNodes, edges: generatedEdges } = generateFlowFromDMMF(dmmf, [...nodes], layout);
 
           newNodes = generatedNodes;
           newEdges = generatedEdges;
