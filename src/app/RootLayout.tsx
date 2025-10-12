@@ -2,6 +2,7 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import { StoreProvider } from './StoreProvider';
+import ThemeProvider from './ThemeProvider';
 import type { Metadata } from 'next';
 import { isDevEnvironment } from '@/shared/config';
 
@@ -30,32 +31,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <StoreProvider>
-      <html lang="en">
-        <head>
-          <title>Prismalaser - Editor/Visualization</title>
-          <meta name="description" content="Prisma schema visualization, editor and more" />
-          <meta
-            name="keywords"
-            content="Prisma, Prisma ORM, Schema, Visualization, React Flow, Prisma Schema Visualization"
-          />
-          <link rel="icon" href="/favicon.ico" sizes="any" />
-          <meta name="theme-color" content="#1e1e1e" />
-          {/* OpenGraph */}
-          <meta property="og:type" content="object" />
-          <meta property="og:site_name" content="Prismalaser" />
-          <meta property="og:title" content="Prismalaser" />
-          <meta property="og:description" content="Prisma schema visualization, editor and more" />
-          <meta property="og:image" content="/img/og-banner.png" />
-          <meta property="og:image:width" content="1200" />
-          <meta property="og:image:height" content="630" />
-          <meta property="og:image:alt" content="Prismalaser - schema visualization and more" />
-        </head>
-        {!isDevEnvironment && !!process.env.NEXT_PUBLIC_GTM_ID && (
-          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
-        )}
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
-      </html>
-    </StoreProvider>
+    <html lang="en" className="light">
+      <head>
+        <title>Prismalaser - Editor/Visualization</title>
+        <meta name="description" content="Prisma schema visualization, editor and more" />
+        <meta
+          name="keywords"
+          content="Prisma, Prisma ORM, Schema, Visualization, React Flow, Prisma Schema Visualization"
+        />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <meta name="theme-color" content="#1e1e1e" />
+        {/* OpenGraph */}
+        <meta property="og:type" content="object" />
+        <meta property="og:site_name" content="Prismalaser" />
+        <meta property="og:title" content="Prismalaser" />
+        <meta property="og:description" content="Prisma schema visualization, editor and more" />
+        <meta property="og:image" content="/img/og-banner.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Prismalaser - schema visualization and more" />
+      </head>
+      {!isDevEnvironment && !!process.env.NEXT_PUBLIC_GTM_ID && (
+        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+      )}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <StoreProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </StoreProvider>
+      </body>
+    </html>
   );
 }
