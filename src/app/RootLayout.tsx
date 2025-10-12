@@ -5,7 +5,6 @@ import { StoreProvider } from './StoreProvider';
 import type { Metadata } from 'next';
 import { isDevEnvironment } from '@/shared/config';
 
-import './globals.css';
 import './tailwind.css';
 import 'reactflow/dist/style.css';
 
