@@ -1,6 +1,7 @@
 import { combineSlices, configureStore, createListenerMiddleware } from '@reduxjs/toolkit';
 import LZString from 'lz-string';
 
+import { configsSlice } from './features/configs/configsSlice';
 import { editorSlice, validateSchemaAsync } from './features/editor/editorSlice';
 import {
   flowViewSlice,
@@ -10,7 +11,7 @@ import {
 } from './features/flowView/flowViewSlice';
 import type { Action, ThunkAction } from '@reduxjs/toolkit';
 
-const rootReducer = combineSlices(editorSlice, flowViewSlice);
+const rootReducer = combineSlices(editorSlice, flowViewSlice, configsSlice);
 export type TRootState = ReturnType<typeof rootReducer>;
 
 const listenerMiddleware = createListenerMiddleware();

@@ -1,8 +1,8 @@
 import Elk from 'elkjs/lib/elk.bundled';
 
 import type { TCustomNode } from './types';
+import type { Edge } from '@xyflow/react';
 import type { ElkExtendedEdge, ElkNode } from 'elkjs/lib/elk.bundled';
-import type { Edge } from 'reactflow';
 
 const elk = new Elk({
   defaultLayoutOptions: {

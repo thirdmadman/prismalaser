@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import { Handle, Position } from '@xyflow/react';
 import cc from 'classcat';
-import { Handle, Position } from 'reactflow';
 
 import type { IEnumNodeData } from '@/shared/lib/types';
 
@@ -68,6 +68,7 @@ export default function EnumNode({ data }: IEnumNodeProps) {
         className={cc([styles.handle, styles.bottom])}
         type="source"
         position={Position.Bottom}
+        id={data.name}
         isConnectable={false}
       />
     </div>

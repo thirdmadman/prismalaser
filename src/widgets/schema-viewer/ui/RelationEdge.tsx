@@ -1,11 +1,7 @@
 import { memo } from 'react';
-import {
-  EdgeText,
-  // getEdgeCenter,
-  getSmoothStepPath,
-} from 'reactflow';
+import { EdgeText, getSmoothStepPath } from '@xyflow/react';
 
-import type { EdgeProps } from 'reactflow';
+import type { Edge, EdgeProps } from '@xyflow/react';
 import type { IRelationEdgeData } from '@/shared/lib/types';
 
 const RelationEdge = ({
@@ -22,7 +18,7 @@ const RelationEdge = ({
   labelBgPadding,
   labelBgStyle,
   data,
-}: EdgeProps<IRelationEdgeData>) => {
+}: EdgeProps<Edge<IRelationEdgeData>>) => {
   const [path, centerX, centerY] = getSmoothStepPath({
     sourceX,
     sourceY,
@@ -54,9 +50,6 @@ const RelationEdge = ({
     '1-1': ['url(#schema-maker-one)', 'url(#schema-maker-one)'],
   }[relationType];
 
-  // TODO: markers look weird when the edge needs to rotate perpendicular to the
-  // start or end. Maybe need to edit `getSmoothStepPath` so it adds some sort
-  // of padding at start and end to make it look nicer?
   return (
     <>
       <path

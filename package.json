@@ -31,6 +31,7 @@
     "@next/third-parties": "^15.4.5",
     "@prisma/internals": "^6.0.0",
     "@reduxjs/toolkit": "^2.8.2",
+    "@xyflow/react": "^12.8.6",
     "elkjs": "^0.10.0",
     "html-to-image": "^1.11.13",
     "lz-string": "^1.5.0",
@@ -41,7 +42,6 @@
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
     "react-use": "^17.6.0",
-    "reactflow": "^11.11.4",
     "strip-ansi": "^7.1.0"
   },
   "devDependencies": {

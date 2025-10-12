@@ -13,8 +13,8 @@ import type {
   TRelationType,
 } from './types';
 import type { DMMF } from '@prisma/generator-helper';
+import type { Edge } from '@xyflow/react';
 import type { ElkNode } from 'elkjs';
-import type { Edge } from 'reactflow';
 import { extractNodePositionDataFromCommentString } from '@/shared/lib/extractNodePositionDataFromCommentString';
 
 const letters = ['A', 'B'];
@@ -206,7 +206,6 @@ const relationsToEdges = (
 ) => {
   let result: Array<TCustomEdge> = [];
 
-  // Enum edges are dead shrimple
   for (const relation of enumRelations) {
     const { relations } = relation;
 
@@ -432,8 +431,6 @@ const positionNodes = (nodeData: Array<TCustomNodeData>, previousNodes: Array<TC
         x: positionedNode?.x ?? schemaNodePosition?.x ?? previousNode?.position.x ?? 0,
         y: positionedNode?.y ?? schemaNodePosition?.y ?? previousNode?.position.y ?? 0,
       },
-      width: previousNode?.width ?? 0,
-      height: previousNode?.height ?? 0,
       data: n,
     };
 
