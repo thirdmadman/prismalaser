@@ -40,7 +40,7 @@ export default function EnumNode({ data }: IEnumNodeProps) {
           ])}
         >
           {data.values.map((val) => (
-            <tr key={val} className={styles.row}>
+            <tr key={val} className={styles.fieldsTableRow}>
               <td className="flex p-2 font-mono border-t-2 border-gray-300">{val}</td>
             </tr>
           ))}

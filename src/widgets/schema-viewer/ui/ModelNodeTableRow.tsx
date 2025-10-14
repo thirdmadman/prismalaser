@@ -97,7 +97,7 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
   const isContainsKeywords = sourceTableColumn.defaultValue?.match(/\(.*\)/);
 
   return (
-    <tr key={sourceTableColumn.name} className={styles.row} title={sourceTableColumn.documentation}>
+    <tr key={sourceTableColumn.name} className={cc([styles.fieldsTableRow])} title={sourceTableColumn.documentation}>
       <td className="font-mono font-semibold border-t-2 border-r-2 border-gray-300 text-[#0e107e]">
         <button
           type="button"

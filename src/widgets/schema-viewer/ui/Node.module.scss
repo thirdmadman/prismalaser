@@ -1,7 +1,11 @@
 @reference "tailwindcss"
 
-.row:first-child > * {
-  border-top-width: 0 !important;
+.head {
+  cursor: move;
+}
+
+.fieldsTableRow:first-child > * {
+  border-top: 0px;
 }
 
 .handle {
@@ -22,6 +26,3 @@
   }
 }
 
-.head {
-  cursor: move;
-}
