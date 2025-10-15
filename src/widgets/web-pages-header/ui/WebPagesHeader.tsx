@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import BurgerMenuButton from './BurgerMenuButton';
-import { ThemeSwitch } from '@/shared/ui/theme-switch/ThemeSwitch';
 
 const HEADER_MENU_LINKS = [
   { name: 'Editor', href: '/' },
@@ -28,7 +27,7 @@ export default function WebPagesHeader() {
             </div>
           </Link>
           <div className="flex items-center lg:order-2 lg:hidden">
-            <ThemeSwitch />
+            {/* <ThemeSwitch /> */}
             <BurgerMenuButton
               isMenuOpened={isMenuOpened}
               onClickAction={() => {
@@ -40,9 +39,7 @@ export default function WebPagesHeader() {
             className={`justify-between items-center w-full lg:flex lg:w-auto lg:order-1 ${isMenuOpened ? '' : 'hidden'}`}
             id="mobile-menu-2"
           >
-            <div className="hidden px-6 flex items-center lg:block">
-              <ThemeSwitch />
-            </div>
+            <div className="hidden px-6 flex items-center lg:block">{/* <ThemeSwitch /> */}</div>
             <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
               {HEADER_MENU_LINKS.map((el) => (
                 <li key={el.name}>

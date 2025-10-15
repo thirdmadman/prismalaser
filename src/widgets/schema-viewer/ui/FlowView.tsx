@@ -26,6 +26,7 @@ import ModelNode from './ModelNode';
 import RelationEdge from './RelationEdge';
 import { updateSchemaStringByChanges } from '../lib/updateSchemaStringByChanges';
 import type { DMMF } from '@prisma/generator-helper';
+import { selectTheme } from '@/app/features/configs/configsSlice';
 import {
   selectDmmf,
   selectIsEditorOpened,
@@ -73,6 +74,7 @@ export function FlowView() {
     isStopped: true,
   });
   const [viewportState, setViewportState] = useState<Viewport>({ x: 0, y: 0, zoom: 1 });
+  const theme = useAppSelector(selectTheme);
 
   useDebounce(
     () => {
@@ -170,6 +172,7 @@ export function FlowView() {
         onNodesChange={(changes) => {
           onNodesChangeAction(changes, nodes, schemaText);
         }}
+        colorMode={theme}
       >
         <Background variant={BackgroundVariant.Dots} gap={24} size={2} color="currentColor" className="text-gray-200" />
         <Controls>
