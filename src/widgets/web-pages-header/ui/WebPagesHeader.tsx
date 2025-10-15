@@ -19,7 +19,7 @@ export default function WebPagesHeader() {
 
   return (
     <header className="fixed w-full z-10">
-      <nav className="flex justify-center items-center w-full min-h-16 bg-gray-100 border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
+      <nav className="flex justify-center items-center w-full min-h-16 bg-gray-100 border-gray-200 px-4 lg:px-6 py-2.5 bg-white dark:bg-neutral-900">
         <div className="max-w-screen-xl w-full h-full flex justify-between items-center flex-wrap">
           <Link href="/" className="flex items-center">
             <div className="flex items-center gap-2">

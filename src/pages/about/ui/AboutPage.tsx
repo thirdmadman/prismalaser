@@ -4,7 +4,7 @@ export default function AboutPage() {
   return (
     <>
       <WebPagesHeader />
-      <main className="relative flex flex-col justify-center sm:items-center size-full pt-16 bg-white dark:bg-gray-900 ">
+      <main className="relative flex flex-col justify-center sm:items-center size-full pt-16 bg-white dark:bg-neutral-800">
         <div className="max-w-4xl px-4 sm:px-6 lg:px-8 py-8 px-4 sm:px-6 lg:px-8 sm:text-lg text-gray-600 dark:text-gray-400">
           <h1 className="mt-1 sm:mt-3 text-4xl font-bold sm:text-6xl font-bold text-gray-900 dark:text-gray-100">
             About project
