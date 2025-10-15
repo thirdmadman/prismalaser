@@ -19,11 +19,11 @@ export default function WebPagesHeader() {
 
   return (
     <header className="fixed w-full z-10">
-      <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
-        <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+      <nav className="flex justify-center items-center w-full min-h-16 bg-gray-100 border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
+        <div className="max-w-screen-xl w-full h-full flex justify-between items-center flex-wrap">
           <Link href="/" className="flex items-center">
             <div className="flex items-center gap-2">
-              <Image src="/img/logo.svg" alt="Prismalaser" width={24} height={32} />
+              <Image src="/img/logo.svg" alt="Prismalaser" width={32} height={32} />
               <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Prismalaser</span>
             </div>
           </Link>
