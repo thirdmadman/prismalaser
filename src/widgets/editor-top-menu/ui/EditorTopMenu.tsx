@@ -8,6 +8,7 @@ import Image from 'next/image';
 import AboutPanel from './AboutPanel';
 import FilePanel from './FilePanel';
 import SettingsPanel from './SettingsPanel';
+import { ThemeSwitch } from '@/shared/ui/theme-switch/ThemeSwitch';
 
 const menuItems = [
   { id: 'file', icon: fileIcon, submenu: <FilePanel />, label: 'File' },
@@ -49,6 +50,7 @@ export default function EditorTopMenu() {
       <div className="flex items-center gap-4">
         <Image src="/img/logo.svg" alt="Prismalaser" width={24} height={32} />
       </div>
+      <ThemeSwitch />
       <div className="flex gap-2">
         {menuItems.map((item) => (
           <div className="relative" key={item.id}>

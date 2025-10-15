@@ -98,7 +98,7 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
 
   return (
     <tr key={sourceTableColumn.name} className={cc([styles.fieldsTableRow])} title={sourceTableColumn.documentation}>
-      <td className="font-mono font-semibold border-t-2 border-r-2 border-gray-300 text-[#0e107e]">
+      <td className="font-mono font-semibold border-t-2 border-r-2 border-gray-300 text-[#0e107e] dark:text-[#c8c9ff]">
         <button
           type="button"
           className={cc(['relative', 'p-2', { 'cursor-pointer': isRelations }])}
@@ -117,7 +117,7 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
         className={cc([
           'p-2 font-mono border-t-2 border-r-2 border-gray-300 ',
           { 'text-[#2e7f98]': !isRelations && !isEnum },
-          { 'text-[#2702fc]': isRelations || isEnum },
+          { 'text-[#2702fc] dark:text-[#7a7cff]': isRelations || isEnum },
         ])}
       >
         {sourceTableColumn.displayType}
