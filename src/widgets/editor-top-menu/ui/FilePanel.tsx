@@ -17,13 +17,13 @@ export default function FilePanel() {
   return (
     <div className="flex flex-col gap-2 text-sm">
       <button
-        className="block px-2 py-1 rounded hover:bg-[#333] transition text-left"
+        className="block px-2 py-1 rounded hover:bg-neutral-300 dark:hover:bg-neutral-600 transition text-left"
         onClick={() => dispatch(formatSchemaAsync(text))}
       >
         Format
       </button>
       <button
-        className="block px-2 py-1 rounded hover:bg-[#333] transition text-left"
+        className="block px-2 py-1 rounded hover:bg-neutral-300 dark:hover:bg-neutral-600 transition text-left"
         onClick={() => {
           downloadTextAsFile(text);
         }}
@@ -31,7 +31,7 @@ export default function FilePanel() {
         Download Schema
       </button>
       <button
-        className="block px-2 py-1 rounded hover:bg-[#333] transition text-left"
+        className="block px-2 py-1 rounded hover:bg-neutral-300 dark:hover:bg-neutral-600 transition text-left"
         onClick={async () => {
           await copyUrlToClipboard(text);
         }}
@@ -39,7 +39,7 @@ export default function FilePanel() {
         Copy link
       </button>
       <button
-        className="block px-2 py-1 rounded hover:bg-[#333] transition text-left"
+        className="block px-2 py-1 rounded hover:bg-neutral-300 dark:hover:bg-neutral-600 transition text-left"
         onClick={() => {
           dispatch(clearStoredData());
         }}
@@ -47,7 +47,7 @@ export default function FilePanel() {
         Delete stored data
       </button>
       <button
-        className="block px-2 py-1 rounded hover:bg-[#333] transition text-left"
+        className="block px-2 py-1 rounded hover:bg-neutral-300 dark:hover:bg-neutral-600 transition text-left"
         onClick={() => {
           dispatch(insertPositionComments(nodes));
         }}

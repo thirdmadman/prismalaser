@@ -55,7 +55,7 @@ const RelationEdge = ({
       <path
         d={path}
         fill="none"
-        className="react-flow__edge-path"
+        className="react-flow__edge-path stroke-red-500"
         markerStart={markerStart}
         markerEnd={markerEnd}
       ></path>

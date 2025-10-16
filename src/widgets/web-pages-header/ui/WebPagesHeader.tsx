@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import BurgerMenuButton from './BurgerMenuButton';
+import { ThemeSwitch } from '@/shared/ui/theme-switch/ThemeSwitch';
 
 const HEADER_MENU_LINKS = [
   { name: 'Editor', href: '/' },
@@ -18,16 +19,16 @@ export default function WebPagesHeader() {
 
   return (
     <header className="fixed w-full z-10">
-      <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
-        <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+      <nav className="flex justify-center items-center w-full min-h-16 bg-gray-100 border-gray-200 px-4 lg:px-6 py-2.5 bg-white dark:bg-neutral-900">
+        <div className="max-w-screen-xl w-full h-full flex justify-between items-center flex-wrap">
           <Link href="/" className="flex items-center">
             <div className="flex items-center gap-2">
-              <Image src="/img/logo.svg" alt="Prismalaser" width={24} height={32} />
+              <Image src="/img/logo.svg" alt="Prismalaser" width={32} height={32} />
               <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Prismalaser</span>
             </div>
           </Link>
           <div className="flex items-center lg:order-2 lg:hidden">
-            {/* <ThemeSwitch /> */}
+            <ThemeSwitch />
             <BurgerMenuButton
               isMenuOpened={isMenuOpened}
               onClickAction={() => {
@@ -39,7 +40,9 @@ export default function WebPagesHeader() {
             className={`justify-between items-center w-full lg:flex lg:w-auto lg:order-1 ${isMenuOpened ? '' : 'hidden'}`}
             id="mobile-menu-2"
           >
-            <div className="hidden px-6 flex items-center lg:block">{/* <ThemeSwitch /> */}</div>
+            <div className="hidden px-6 flex items-center lg:block">
+              <ThemeSwitch />
+            </div>
             <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
               {HEADER_MENU_LINKS.map((el) => (
                 <li key={el.name}>

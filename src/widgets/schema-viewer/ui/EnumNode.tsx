@@ -18,12 +18,15 @@ export default function EnumNode({ data }: IEnumNodeProps) {
   return (
     <div>
       <table
-        className="font-sans bg-white border-2 border-separate border-black rounded-lg"
+        className="font-sans bg-white border-2 border-separate border-black dark:border-white rounded-lg bg-white dark:bg-neutral-800 text-gray-800 dark:text-gray-200"
         style={{ minWidth: 200, maxWidth: 500, borderSpacing: 0 }}
       >
         <thead title={data.documentation} className={cc([styles.head, 'drag-handle__custom'])}>
           <tr>
-            <th className="p-2 font-extrabold border-b-2 border-black bg-emerald-200 rounded-t-md" colSpan={1}>
+            <th
+              className="p-2 font-extrabold border-b-2 border-black dark:border-white bg-emerald-200 dark:bg-emerald-900 rounded-t-md"
+              colSpan={1}
+            >
               {data.name}
               {!!data.dbName && <span className="font-mono font-normal">&nbsp;({data.dbName})</span>}
             </th>
@@ -51,7 +54,7 @@ export default function EnumNode({ data }: IEnumNodeProps) {
               <td className="flex">
                 <button
                   type="button"
-                  className="w-full px-4 py-2 font-semibold bg-blue-200 rounded cursor-pointer"
+                  className="w-full px-4 py-2 font-semibold bg-blue-200 dark:bg-blue-800 rounded cursor-pointer"
                   onClick={() => {
                     setExpanded(!expanded);
                   }}

@@ -3,6 +3,7 @@ import Editor, { useMonaco } from '@monaco-editor/react';
 
 import type { OnChange, OnMount } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
+import { selectTheme } from '@/app/features/configs/configsSlice';
 import { selectFileName, selectSchemaErrors, setText } from '@/app/features/editor/editorSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { config, language } from '@/shared/lib/monacoPrismaLanguage';
@@ -20,6 +21,7 @@ export function EditorView({ value }: IEditorViewProps) {
   const editorRef = useRef<IStandaloneCodeEditor | null>(null);
 
   const schemaErrors = useAppSelector(selectSchemaErrors);
+  const theme = useAppSelector(selectTheme);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -60,11 +62,13 @@ export function EditorView({ value }: IEditorViewProps) {
 
   return (
     <>
-      <div className="w-full h-8 px-4 py-1 text-sm shadow-md text-gray-400">{fileName}</div>
+      <div className="w-full h-8 px-4 py-1 mb-1 text-sm shadow-md bg-white dark:bg-neutral-800 text-gray-600 dark:text-gray-400">
+        {fileName}
+      </div>
       <Editor
         height="100%"
         language="prisma"
-        theme="light"
+        theme={theme === 'light' ? 'light' : 'vs-dark'}
         loading="Loading..."
         path="schema.prisma"
         options={{

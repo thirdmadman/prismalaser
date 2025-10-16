@@ -6,11 +6,23 @@ import { selectTheme, setTheme } from '@/app/features/configs/configsSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 
 const darkModeImage = (
-  <Image src="/img/svg/icons/icon-dark-mode.svg" width="24" height="24" alt="dark" className="min-w-6" />
+  <Image
+    src="/img/svg/icons/icon-dark-mode.svg"
+    width="24"
+    height="24"
+    alt="dark"
+    className="min-w-6  cursor-pointer"
+  />
 );
 
 const lightModeImage = (
-  <Image src="/img/svg/icons/icon-light-mode.svg" width="24" height="24" alt="light" className="min-w-6" />
+  <Image
+    src="/img/svg/icons/icon-light-mode.svg"
+    width="24"
+    height="24"
+    alt="light"
+    className="min-w-6 cursor-pointer"
+  />
 );
 
 export function ThemeSwitch() {
@@ -19,7 +31,7 @@ export function ThemeSwitch() {
   const isDark = theme === 'dark';
 
   return (
-    <div className="flex items-center justify-center min-w-[44px] min-h-[44px]">
+    <div className="flex items-center justify-center min-w-[44px] lg:min-w-auto min-h-[44px] lg:min-h-auto cursor-pointer">
       <button
         onClick={() => {
           dispatch(setTheme(isDark ? 'light' : 'dark'));

@@ -15,12 +15,15 @@ export default function ModelNode({ data }: IModelNodeProps) {
 
   return (
     <table
-      className="font-sans bg-white border-2 border-separate border-black rounded-lg"
+      className="font-sans bg-white border-2 border-separate border-black dark:border-white rounded-lg bg-white dark:bg-neutral-800 text-gray-800 dark:text-gray-200"
       style={{ minWidth: 200, maxWidth: 500, borderSpacing: 0 }}
     >
       <thead title={data.documentation} className={cc([styles.head, 'drag-handle__custom'])}>
         <tr>
-          <th className="p-2 font-extrabold bg-gray-200 border-b-2 border-black rounded-t-md" colSpan={4}>
+          <th
+            className="p-2 font-extrabold bg-neutral-200 dark:bg-neutral-900 border-b-2 border-black dark:border-white rounded-t-md"
+            colSpan={4}
+          >
             {data.name}
             {!!data.dbName && <span className="font-mono font-normal">&nbsp;({data.dbName})</span>}
           </th>
