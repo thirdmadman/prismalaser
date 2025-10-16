@@ -25,6 +25,7 @@ export default function AboutPage() {
               <li>Save full schema visualization as png file in good quality</li>
               <li>Create sharable link of your schema (no data stored on server)</li>
               <li>Save and load layout of your schema visualization in prisma schema</li>
+              <li>Light and dark theme</li>
             </ul>
           </div>
           <div className="flex flex-col py-4">
