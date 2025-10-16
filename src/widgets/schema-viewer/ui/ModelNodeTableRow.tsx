@@ -94,11 +94,12 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
   }
 
   const isEnum = sourceTableColumn.kind === 'enum';
+  const isString = sourceTableColumn.displayType.toLocaleLowerCase() === 'string';
   const isContainsKeywords = sourceTableColumn.defaultValue?.match(/\(.*\)/);
 
   return (
     <tr key={sourceTableColumn.name} className={cc([styles.fieldsTableRow])} title={sourceTableColumn.documentation}>
-      <td className="font-mono font-semibold border-t-2 border-r-2 border-gray-300 text-[#0e107e] dark:text-[#c8c9ff]">
+      <td className="font-mono font-semibold border-t-2 border-r-2 border-gray-300 text-[#0e107e] dark:text-[#76a2c0]">
         <button
           type="button"
           className={cc(['relative', 'p-2', { 'cursor-pointer': isRelations }])}
@@ -116,8 +117,8 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
       <td
         className={cc([
           'p-2 font-mono border-t-2 border-r-2 border-gray-300 ',
-          { 'text-[#2e7f98]': !isRelations && !isEnum },
-          { 'text-[#2702fc] dark:text-[#7a7cff]': isRelations || isEnum },
+          { 'text-[#2e7f98] dark:text-[#46b59a]': !isRelations && !isEnum },
+          { 'text-[#2702fc] dark:text-[#5385ae]': isRelations || isEnum },
         ])}
       >
         {sourceTableColumn.displayType}
@@ -126,9 +127,10 @@ export function ModelNodeTableRow({ data, sourceTableColumn }: IModelNodeTableRo
         <div className="relative p-2">
           <p
             className={cc([
-              { 'text-[#148659]': !isEnum && !isContainsKeywords },
-              { 'text-[#3b3b3b]': isEnum },
-              { 'text-[#785e29]': isContainsKeywords },
+              { 'text-[#64a897] dark:text-[#bfc7c1]': !isEnum && !isContainsKeywords && !isString },
+              { 'text-[#148659] dark:text-[#926b5b]': isString },
+              { 'text-[#3b3b3b] dark:text-[#b7c3c2]': isEnum },
+              { 'text-[#785e29] dark:text-[#c2c39c]': isContainsKeywords },
             ])}
           >
             {sourceTableColumn.defaultValue ?? ''}
