@@ -43,7 +43,7 @@ export default function SchemaEditor() {
   }, [dispatch]);
 
   return (
-    <section className="relative flex flex-col items-start border-r-2 bg-white dark:bg-neutral-800 dark:text-gray-400 xl:max-w-128 w-full max-h-screen xl:max-h-full">
+    <section className="relative flex flex-col items-start border-r-2 bg-neutral-100 dark:bg-neutral-800 dark:text-gray-400 xl:max-w-128 w-full max-h-screen xl:max-h-full">
       <EditorView value={sourceText} />
 
       {status === 'failed' && (

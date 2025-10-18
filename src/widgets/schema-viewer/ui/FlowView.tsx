@@ -17,6 +17,7 @@ import {
   useOnViewportChange,
   useReactFlow,
 } from '@xyflow/react';
+import cc from 'classcat';
 import { useDebounce } from 'react-use';
 
 import DownloadButton from './DownloadButton';
@@ -158,7 +159,7 @@ export function FlowView() {
   };
 
   return (
-    <section style={{ width: '100%' }}>
+    <section className={cc([styles.flowViewSection, 'xl:min-h-full'])}>
       <Markers />
       <ReactFlow
         nodes={nodes}
@@ -168,7 +169,6 @@ export function FlowView() {
         minZoom={0.05}
         snapToGrid={true}
         snapGrid={[10, 10]}
-        style={{ gridArea: 'flow' }}
         onNodesChange={(changes) => {
           onNodesChangeAction(changes, nodes, schemaText);
         }}

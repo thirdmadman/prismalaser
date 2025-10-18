@@ -7,3 +7,11 @@
     max-height: 100%;
   }
 }
+
+.flowViewSection {
+  width: 100%;
+  min-height: 100%;
+  min-height: calc(100vh - 14rem);
+  min-height: 100dvh;
+  min-height: calc(100dvh - calc(var(--spacing) * 14));
+}
