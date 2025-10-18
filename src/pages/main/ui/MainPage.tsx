@@ -13,7 +13,7 @@ export default function MainPage() {
 
   return (
     <EditorPageLayout>
-      <div style={{ display: 'flex', height: '100%', paddingTop: '50px' }}>
+      <div className="flex h-full pt-13 flex-wrap xl:flex-nowrap">
         {isEditorOpened && <SchemaEditor />}
         <ReactFlowProvider>
           <FlowView />

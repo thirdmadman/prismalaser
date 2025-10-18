@@ -43,7 +43,7 @@ export default function EditorTopMenu() {
 
   return (
     <nav
-      className="absolute z-10 flex items-center w-full px-4 py-3 text-white items-center bg-neutral-100 dark:bg-neutral-900"
+      className="fixed z-10 flex items-center w-full px-4 py-3 text-white items-center bg-neutral-100 dark:bg-neutral-800 max-h-13"
       ref={dropdownRef}
     >
       <div className="w-full flex gap-5">
