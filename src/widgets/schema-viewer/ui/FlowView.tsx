@@ -48,6 +48,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getElkLayout } from '@/shared/lib/layout';
 import type { TCustomEdge, TCustomNode, TCustomNodeData } from '@/shared/lib/types';
+import { useMediaQuery } from '@/shared/lib/useMediaQuery';
 
 import styles from './FlowView.module.css';
 
@@ -115,6 +116,8 @@ export function FlowView() {
     },
   });
 
+  const isBiggerThanXl = useMediaQuery('(min-width: 80rem)');
+
   const disperseLayout = async (dmmf: DMMF.Datamodel | null, nodes: Array<TCustomNode>, edges: Array<TCustomEdge>) => {
     const layout = await getElkLayout(nodes, edges);
 
@@ -175,18 +178,34 @@ export function FlowView() {
         colorMode={theme}
       >
         <Background variant={BackgroundVariant.Dots} gap={24} size={2} color="currentColor" className="text-gray-200" />
-        <Controls>
+        <Controls
+          position={isBiggerThanXl ? 'bottom-left' : 'bottom-right'}
+          orientation={isBiggerThanXl ? 'vertical' : 'horizontal'}
+        >
           <ControlButton title="Disperse nodes" onClick={() => disperseLayout(dmmf, nodes, edges)}>
             <Icon icon={listTree} />
           </ControlButton>
           <DownloadButton />
         </Controls>
 
-        <Controls position="top-left" showZoom={false} showFitView={false} showInteractive={false}>
+        <Controls
+          position={isBiggerThanXl ? 'top-left' : 'top-right'}
+          showZoom={false}
+          showFitView={false}
+          showInteractive={false}
+        >
           <ControlButton
-            className={styles.noShrinkIcon}
+            className={cc([styles.noShrinkIcon, 'rotate-270 xl:rotate-0'])}
             title={isEditorOpened ? 'Hide editor' : 'Show editor'}
-            onClick={() => dispatch(setIsEditorOpened(!isEditorOpened))}
+            onClick={() => {
+              dispatch(setIsEditorOpened(!isEditorOpened));
+              if (!isEditorOpened && !isBiggerThanXl) {
+                window.scrollTo({
+                  top: 0,
+                  behavior: 'smooth',
+                });
+              }
+            }}
           >
             <Icon icon={isEditorOpened ? doubleChevronLeft : doubleChevronRight} height={24} width={24} />
           </ControlButton>
