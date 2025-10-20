@@ -1,3 +1,5 @@
+import { MenuPanel } from './MenuPanel';
+import { MenuPanelButton } from './MenuPanelButton';
 import {
   clearStoredData,
   formatSchemaAsync,
@@ -15,45 +17,36 @@ export default function FilePanel() {
   const dispatch = useAppDispatch();
 
   return (
-    <div className="flex flex-col gap-2 text-sm">
-      <button
-        className="block px-2 py-1 rounded hover:bg-neutral-300 dark:hover:bg-neutral-600 transition text-left"
-        onClick={() => dispatch(formatSchemaAsync(text))}
-      >
-        Format
-      </button>
-      <button
-        className="block px-2 py-1 rounded hover:bg-neutral-300 dark:hover:bg-neutral-600 transition text-left"
+    <MenuPanel>
+      <MenuPanelButton onClick={() => dispatch(formatSchemaAsync(text))}>Format</MenuPanelButton>
+      <MenuPanelButton
         onClick={() => {
           downloadTextAsFile(text);
         }}
       >
         Download Schema
-      </button>
-      <button
-        className="block px-2 py-1 rounded hover:bg-neutral-300 dark:hover:bg-neutral-600 transition text-left"
+      </MenuPanelButton>
+      <MenuPanelButton
         onClick={async () => {
           await copyUrlToClipboard(text);
         }}
       >
         Copy link
-      </button>
-      <button
-        className="block px-2 py-1 rounded hover:bg-neutral-300 dark:hover:bg-neutral-600 transition text-left"
+      </MenuPanelButton>
+      <MenuPanelButton
         onClick={() => {
           dispatch(clearStoredData());
         }}
       >
         Delete stored data
-      </button>
-      <button
-        className="block px-2 py-1 rounded hover:bg-neutral-300 dark:hover:bg-neutral-600 transition text-left"
+      </MenuPanelButton>
+      <MenuPanelButton
         onClick={() => {
           dispatch(insertPositionComments(nodes));
         }}
       >
         Add position comments
-      </button>
-    </div>
+      </MenuPanelButton>
+    </MenuPanel>
   );
 }
