@@ -62,20 +62,23 @@ export function EditorView({ value }: IEditorViewProps) {
 
   return (
     <>
-      <div className="w-full h-8 px-4 py-1 mb-1 text-sm shadow-md bg-white dark:bg-neutral-800 text-gray-600 dark:text-gray-400">
+      <div className="h-8 px-6 py-1 text-sm bg-white dark:bg-neutral-900 text-gray-600 dark:text-gray-400 z-1">
         {fileName}
       </div>
       <Editor
-        height="100%"
+        height="100dvh"
         language="prisma"
         theme={theme === 'light' ? 'light' : 'vs-dark'}
         loading="Loading..."
         path="schema.prisma"
         options={{
           minimap: { enabled: false },
+          padding: {
+            top: 14,
+          },
           smoothScrolling: true,
           cursorSmoothCaretAnimation: 'on',
-          scrollBeyondLastLine: true,
+          scrollBeyondLastLine: false,
         }}
         value={value}
         onChange={handleEditorChange}
