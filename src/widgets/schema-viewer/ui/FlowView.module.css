@@ -11,7 +11,8 @@
 .flowViewSection {
   width: 100%;
   min-height: 100%;
-  min-height: calc(100vh - 13rem);
+  min-height: calc(100vh - 17rem);
   min-height: 100dvh;
-  min-height: calc(100dvh - calc(var(--spacing) * 13));
+  min-height: calc(100dvh - calc(var(--spacing) * 17));
 }
+
