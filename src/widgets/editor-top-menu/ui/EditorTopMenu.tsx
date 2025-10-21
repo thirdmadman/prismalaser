@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import arrowDown from '@iconify/icons-gg/arrow-down';
+import arrowUp from '@iconify/icons-gg/arrow-up';
 import crownIcon from '@iconify/icons-gg/crown';
 import fileIcon from '@iconify/icons-gg/file';
 import menu from '@iconify/icons-gg/menu';
@@ -79,6 +81,30 @@ export default function EditorTopMenu() {
           ))}
         </div>
         <div className="flex gap-4">
+          <div className="flex gap-4 pr-4 xl:hidden">
+            <button
+              className="flex items-center justify-center"
+              onClick={() => {
+                window.scrollTo({
+                  top: 0,
+                  behavior: 'instant',
+                });
+              }}
+            >
+              <Icon className="w-8 h-8" icon={arrowUp} />
+            </button>
+            <button
+              className="flex items-center justify-center"
+              onClick={() => {
+                window.scrollTo({
+                  top: document.body.scrollHeight,
+                  behavior: 'instant',
+                });
+              }}
+            >
+              <Icon className="w-8 h-8" icon={arrowDown} />
+            </button>
+          </div>
           <ThemeSwitch />
           <button
             className="flex xl:hidden items-center justify-center"
