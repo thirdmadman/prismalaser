@@ -87,4 +87,4 @@ docker run -p 3000:3000 ghcr.io/thirdmadman/prismalaser
 
 ## Credits
 
-This project deep rework of <https://github.com/Ovyerus/prismaliser>, thanks to @Ovyerus and contributors for this opportunity.
+This project deep rework of [Prismaliser](https://github.com/Ovyerus/prismaliser), thanks to [@Ovyerus](https://github.com/Ovyerus) and contributors for this opportunity.
