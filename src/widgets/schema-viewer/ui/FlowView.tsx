@@ -129,7 +129,10 @@ export function FlowView() {
     nodes: Array<TCustomNode>,
     schemaText: string
   ) => {
-    const calculatedChanges = applyNodeChanges<Node<TCustomNodeData>>(changes, nodes);
+    // Deep clone nodes before passing to applyNodeChanges because Redux uses Immer
+    // which creates read-only draft objects that cannot be mutated directly.
+    const clonedNodes = JSON.parse(JSON.stringify(nodes)) as Array<Node<TCustomNodeData>>;
+    const calculatedChanges = applyNodeChanges<Node<TCustomNodeData>>(changes, clonedNodes);
     dispatch(setNodes(calculatedChanges));
     const filteredChangesOnlyPosition = changes.filter((el) => el.type === 'position');
     if (filteredChangesOnlyPosition.length === 0) {
