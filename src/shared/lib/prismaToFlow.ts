@@ -209,16 +209,18 @@ const relationsToEdges = (
   for (const relation of enumRelations) {
     const { relations } = relation;
 
-    const edges = relations.map(
-      (r): Edge => ({
+    const edges = relations.map((r): Edge => {
+      const edgeData = {
         id: generateEdgeId(relation.name, r.enum, r.column),
         type: 'smoothstep',
         source: r.enum,
         target: relation.name,
         sourceHandle: r.enum,
         targetHandle: generateEnumEdgeTargetHandleId(relation.name, r.column),
-      })
-    );
+      };
+
+      return edgeData;
+    });
 
     result = result.concat(edges);
   }

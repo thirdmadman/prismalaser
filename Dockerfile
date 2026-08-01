@@ -6,6 +6,7 @@ COPY package.json ./
 
 RUN npm i && npm ci
 
+ENV NEXT_TELEMETRY_DISABLED=1
 COPY . .
 RUN npm run build
 
